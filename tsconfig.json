@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/renderer/*"
+      ],
+      "@public/*": [
+        "public/*"
+      ]
+    }
+  },
+  "exclude": ["node_modules"],
+  "include": [
+    "src/renderer/**/*.ts",
+    "src/renderer/**/*.d.ts",
+    "src/renderer/**/*.tsx",
+    "src/renderer/**/*.vue",
+    "src/main/**/*.ts",
+    "src/main/**/*.d.ts",
+    "src/main/**/*.tsx",
+    "src/main/**/*.vue"
+  ],
+  "outDir": "./build"
+}

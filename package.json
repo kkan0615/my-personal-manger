@@ -1,0 +1,43 @@
+{
+  "name": "my-personal-manager",
+  "author": "Youngjin Kwak",
+  "description": "Test",
+  "version": "0.0.0",
+  "main": "src/main/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "serve": "vite preview",
+    "electron": "wait-on tcp:3000 && cross-env IS_DEV=true electron .",
+    "electron:pack": "electron-builder --dir",
+    "electron:build": "tsc src/main/main.ts",
+    "electron:dev": "concurrently -k \"cross-env BROWSER=none yarn dev\" \"yarn electron\"",
+    "electron:builder": "electron-builder",
+    "build:for:electron": "vue-tsc --noEmit && cross-env ELECTRON=true vite build",
+    "app:build": "yarn build:for:electron && yarn electron:builder"
+  },
+  "devDependencies": {
+    "@popperjs/core": "^2.10.2",
+    "@typescript-eslint/eslint-plugin": "^5.2.0",
+    "@typescript-eslint/parser": "^5.2.0",
+    "@vitejs/plugin-vue": "^1.9.3",
+    "@vue/eslint-config-typescript": "^9.0.0",
+    "autoprefixer": "^10.4.0",
+    "bootstrap": "^5.1.3",
+    "concurrently": "^6.3.0",
+    "cross-env": "^7.0.3",
+    "electron": "^15.3.0",
+    "electron-builder": "^22.13.1",
+    "eslint": "^8.1.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "postcss": "^8.3.11",
+    "sass": "^1.43.4",
+    "tailwindcss": "^2.2.19",
+    "typescript": "^4.4.3",
+    "vite": "^2.6.4",
+    "vue": "^3.2.16",
+    "vue-router": "4",
+    "vue-tsc": "^0.3.0",
+    "wait-on": "^6.0.0"
+  }
+}
