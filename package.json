@@ -2,7 +2,7 @@
   "name": "my-personal-manager",
   "author": "Youngjin Kwak",
   "description": "Test",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "src/main/main.js",
   "scripts": {
     "dev": "vite",
@@ -38,6 +38,7 @@
     "vue": "^3.2.16",
     "vue-router": "4",
     "vue-tsc": "^0.3.0",
+    "vuex": "^4.0.2",
     "wait-on": "^6.0.0"
   }
 }

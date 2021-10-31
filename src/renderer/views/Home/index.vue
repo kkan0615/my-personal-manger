@@ -5,12 +5,22 @@
     >
       Home
     </div>
+    <div>
+      store data: [ {{ test }} ]
+    </div>
     <button
       class="btn btn-primary"
       type="button"
       @click="onClickOpenMangerBtn"
     >
       open the manager
+    </button>
+    <button
+      class="btn btn-primary"
+      type="button"
+      @click="onClickTryToChangeBtn"
+    >
+      change test data
     </button>
   </div>
 </template>
@@ -22,8 +32,26 @@ export default {
 }
 </script>
 <script setup lang="ts">
-const electron = window.require('electron')
+import { openManagerWindow } from '@/utils/electrons/ipc'
+import useStore from '@/store'
+import { computed, onBeforeMount } from 'vue'
+import { PrototypeActionTypes } from '@/store/modules/systems/prototype/actions'
+
+const store = useStore()
+
+const test = computed(() => store.state.prototype.test)
+
+onBeforeMount(async () => {
+  await store.dispatch(PrototypeActionTypes.ADD_TEST, 'Arrived at home')
+})
+
 const onClickOpenMangerBtn = () => {
-  electron.ipcRenderer.send('open-manager')
+  openManagerWindow()
 }
+
+const onClickTryToChangeBtn = async () => {
+  await store.dispatch(PrototypeActionTypes.ADD_TEST, 'changed from home')
+
+}
+
 </script>

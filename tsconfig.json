@@ -15,6 +15,9 @@
       "@/*": [
         "src/renderer/*"
       ],
+      "@root/*": [
+        "./*"
+      ],
       "@public/*": [
         "public/*"
       ]

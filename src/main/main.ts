@@ -1,15 +1,13 @@
-/**
- * @TODO
- * 1. const require to import from
- * 2. Set the type well!
- */
 import * as path from 'path'
 import { app, BrowserWindow, Tray, Menu, ipcMain } from 'electron'
 
 const isDev = true
 
+/* Main */
 let mainWindow: BrowserWindow
+/* Manager */
 let managerWindow: BrowserWindow
+/* Tray */
 let tray: Tray
 
 const createMainWindow = () => {
@@ -31,19 +29,19 @@ const createMainWindow = () => {
 }
 
 const createManagerWindow = () => {
-  managerWindow = new BrowserWindow({
-    // width: 800,
-    // height: 600,
-    transparent: true,
-    frame: false,
-    alwaysOnTop: true,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-    }
-  })
+  if (!managerWindow || managerWindow.isDestroyed()) {
+    managerWindow = new BrowserWindow({
+      transparent: true,
+      frame: false,
+      alwaysOnTop: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+      }
+    })
 
-  managerWindow.loadURL('http://localhost:3000/overlay/manger/')
+    managerWindow.loadURL('http://localhost:3000/overlay/manger/')
+  }
 }
 
 const createTray = () => {
@@ -84,10 +82,8 @@ app.whenReady()
   })
 
 app.on('ready', () => {
-  ipcMain.on('open-manager', (event, args) => {
-    console.log('event', event)
-    console.log('args', args)
-
+  /* Open manager */
+  ipcMain.on('open-manager', () => {
     createManagerWindow()
   })
 })

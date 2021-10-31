@@ -1,15 +1,13 @@
 "use strict";
 exports.__esModule = true;
-/**
- * @TODO
- * 1. const require to import from
- * 2. Set the type well!
- */
 var path = require("path");
 var electron_1 = require("electron");
 var isDev = true;
+/* Main */
 var mainWindow;
+/* Manager */
 var managerWindow;
+/* Tray */
 var tray;
 var createMainWindow = function () {
     mainWindow = new electron_1.BrowserWindow({
@@ -28,18 +26,18 @@ var createMainWindow = function () {
     }
 };
 var createManagerWindow = function () {
-    managerWindow = new electron_1.BrowserWindow({
-        // width: 800,
-        // height: 600,
-        transparent: true,
-        frame: false,
-        alwaysOnTop: true,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
-        }
-    });
-    managerWindow.loadURL('http://localhost:3000/overlay/manger/');
+    if (!managerWindow || managerWindow.isDestroyed()) {
+        managerWindow = new electron_1.BrowserWindow({
+            transparent: true,
+            frame: false,
+            alwaysOnTop: true,
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false
+            }
+        });
+        managerWindow.loadURL('http://localhost:3000/overlay/manger/');
+    }
 };
 var createTray = function () {
     tray = new electron_1.Tray(path.join(__dirname, '/assets/tray.jpg'));
@@ -77,9 +75,8 @@ electron_1.app.whenReady()
     });
 });
 electron_1.app.on('ready', function () {
-    electron_1.ipcMain.on('open-manager', function (event, args) {
-        console.log('event', event);
-        console.log('args', args);
+    /* Open manager */
+    electron_1.ipcMain.on('open-manager', function () {
         createManagerWindow();
     });
 });
