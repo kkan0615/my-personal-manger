@@ -2,6 +2,9 @@
 exports.__esModule = true;
 var path = require("path");
 var electron_1 = require("electron");
+var fs = require("fs");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+var Store = require('electron-store');
 var isDev = true;
 /* Main */
 var mainWindow;
@@ -9,6 +12,7 @@ var mainWindow;
 var managerWindow;
 /* Tray */
 var tray;
+var store = new Store();
 var createMainWindow = function () {
     mainWindow = new electron_1.BrowserWindow({
         width: 1280,
@@ -66,6 +70,22 @@ var createTray = function () {
 };
 electron_1.app.whenReady()
     .then(function () {
+    /* Check config file and remove */
+    !fs.existsSync('configs') && fs.mkdirSync('configs');
+    if (!fs.existsSync('./configs/character.json')) {
+        fs.writeFile('./configs/character.json', JSON.stringify({ 'test': 'test!' }), function (err) {
+            if (err) {
+                throw err;
+            }
+        });
+    }
+    fs.readFile('configs/character.json', 'utf-8', (function (err, data) {
+        if (err)
+            throw err;
+        console.log(JSON.parse(data));
+    }));
+    // store.set('unicorn', '🦄')
+    console.log(store.get('unicorn'));
     createMainWindow();
     createTray();
     electron_1.app.on('activate', function () {

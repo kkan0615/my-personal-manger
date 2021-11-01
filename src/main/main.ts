@@ -1,5 +1,8 @@
 import * as path from 'path'
 import { app, BrowserWindow, Tray, Menu, ipcMain } from 'electron'
+import * as fs from 'fs'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Store = require('electron-store')
 
 const isDev = true
 
@@ -9,6 +12,7 @@ let mainWindow: BrowserWindow
 let managerWindow: BrowserWindow
 /* Tray */
 let tray: Tray
+const store = new Store()
 
 const createMainWindow = () => {
   mainWindow = new BrowserWindow({
@@ -72,6 +76,25 @@ const createTray = () => {
 
 app.whenReady()
   .then(() => {
+    /* Check config file and remove */
+    !fs.existsSync('configs') && fs.mkdirSync('configs')
+
+    if (!fs.existsSync('./configs/character.json')) {
+      fs.writeFile('./configs/character.json', JSON.stringify({ 'test' : 'test!' }), (err) => {
+        if (err) {
+          throw err
+        }
+      })
+    }
+    fs.readFile('configs/character.json', 'utf-8', ((err, data) => {
+      if (err)
+        throw err
+      console.log(JSON.parse(data))
+    }))
+
+    store.set('unicorn', '🦄')
+    console.log(store.get('unicorn'))
+
     createMainWindow()
     createTray()
     app.on('activate', () => {
