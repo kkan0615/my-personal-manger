@@ -1,8 +1,7 @@
-import * as path from 'path'
+import path from 'path'
 import { app, BrowserWindow, Tray, Menu, ipcMain } from 'electron'
-import * as fs from 'fs'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Store = require('electron-store')
+import fs from 'fs'
+import { electronStore } from './store'
 
 const isDev = true
 
@@ -12,7 +11,6 @@ let mainWindow: BrowserWindow
 let managerWindow: BrowserWindow
 /* Tray */
 let tray: Tray
-const store = new Store()
 
 const createMainWindow = () => {
   mainWindow = new BrowserWindow({
@@ -44,13 +42,17 @@ const createManagerWindow = () => {
       }
     })
 
-    managerWindow.loadURL('http://localhost:3000/overlay/manger/')
+    managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : 'dist/index.html')
+    console.log(electronStore.get('test'))
+    electronStore.set('test', 'open!')
+    console.log('changed', electronStore.get('test'))
   }
 }
 
 const createTray = () => {
   tray = new Tray(path.join(__dirname, '/assets/tray.jpg'))
   tray.setToolTip('My Personal Manager')
+
   const contextMenuList = Menu.buildFromTemplate([{
     label: 'Open main',
     click: () => {
@@ -92,9 +94,8 @@ app.whenReady()
       console.log(JSON.parse(data))
     }))
 
-    store.set('unicorn', '🦄')
-    console.log(store.get('unicorn'))
-
+    console.log(electronStore.get('test'))
+    electronStore.set('test', 'when ready')
     createMainWindow()
     createTray()
     app.on('activate', () => {

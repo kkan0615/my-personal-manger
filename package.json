@@ -2,7 +2,7 @@
   "name": "my-personal-manager",
   "author": "Youngjin Kwak",
   "description": "Test",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "src/main/main.js",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,7 @@
     "serve": "vite preview",
     "electron": "wait-on tcp:3000 && cross-env IS_DEV=true electron .",
     "electron:pack": "electron-builder --dir",
-    "electron:build": "tsc src/main/main.ts",
+    "electron:build": "tsc -p src/main/tsconfig.json",
     "electron:dev": "concurrently -k \"cross-env BROWSER=none yarn dev\" \"yarn electron\"",
     "electron:builder": "electron-builder",
     "build:for:electron": "vue-tsc --noEmit && cross-env ELECTRON=true vite build",
