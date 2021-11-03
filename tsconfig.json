@@ -15,12 +15,9 @@
       "@/*": [
         "src/renderer/*"
       ],
-      "@root/*": [
-        "./*"
+      "@main/*": [
+        "src/main/*"
       ],
-      "@public/*": [
-        "public/*"
-      ]
     }
   },
   "exclude": ["node_modules"],

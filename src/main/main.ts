@@ -43,9 +43,9 @@ const createManagerWindow = () => {
     })
 
     managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : 'dist/index.html')
-    console.log(electronStore.get('test'))
-    electronStore.set('test', 'open!')
-    console.log('changed', electronStore.get('test'))
+    console.log(electronStore.get('manager'))
+    ipcMain.emit('sync-manager', electronStore.get('manager'))
+    mainWindow.webContents.emit('sync-manager')
   }
 }
 
@@ -79,25 +79,26 @@ const createTray = () => {
 app.whenReady()
   .then(() => {
     /* Check config file and remove */
-    !fs.existsSync('configs') && fs.mkdirSync('configs')
+    !fs.existsSync('configs') && fs.mkdirSync(path.join(__dirname, 'data'))
 
-    if (!fs.existsSync('./configs/character.json')) {
-      fs.writeFile('./configs/character.json', JSON.stringify({ 'test' : 'test!' }), (err) => {
-        if (err) {
-          throw err
-        }
-      })
+    // if (!fs.existsSync(path.join(__dirname, 'data/defaultManager.json'))) {
+    //   fs.writeFile(path.join(__dirname, 'data/defaultManager.json'), JSON.stringify({ 'test' : 'test!' }), (err) => {
+    //     if (err) {
+    //       throw err
+    //     }
+    //   })
+    // }
+    /* If no data, set the data */
+    if (!electronStore.get('manager')) {
+      fs.readFile(path.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
+        if (err) throw err
+        electronStore.set('manager', JSON.parse(data))
+      }))
     }
-    fs.readFile('configs/character.json', 'utf-8', ((err, data) => {
-      if (err)
-        throw err
-      console.log(JSON.parse(data))
-    }))
 
-    console.log(electronStore.get('test'))
-    electronStore.set('test', 'when ready')
     createMainWindow()
     createTray()
+    ipcMain.emit('sync-manager', electronStore.get('manager'))
     app.on('activate', () => {
       if (!BrowserWindow.getAllWindows().length) {
         createMainWindow()

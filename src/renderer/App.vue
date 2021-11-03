@@ -12,6 +12,13 @@
   </div>
 </template>
 <script setup lang="ts">
+const electron = window.require('electron')
+// import { ipcRenderer } from 'electron'
+
+electron.ipcRenderer.on('sync-manager', (event, args) => {
+  console.log('event', event)
+  console.log('args', args)
+})
 </script>
 <style>
 #app {
@@ -21,10 +28,5 @@
   /*text-align: center;*/
   /*color: #2c3e50;*/
   /*margin-top: 60px;*/
-}
-.draggable {
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-app-region: drag;
 }
 </style>

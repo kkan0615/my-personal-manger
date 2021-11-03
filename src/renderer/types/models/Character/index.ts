@@ -1,8 +1,8 @@
 export interface Character {
   id: string
   name: string
-  image: string
-  circle: string
+  img: string
+  circleImg: string
   morningMessages: Array<string>
   lunchMessages: Array<string>
   eveningsMessages: Array<string>

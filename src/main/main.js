@@ -42,9 +42,9 @@ const createManagerWindow = () => {
             }
         });
         managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : 'dist/index.html');
-        console.log(store_1.electronStore.get('test'));
-        store_1.electronStore.set('test', 'open!');
-        console.log('changed', store_1.electronStore.get('test'));
+        console.log(store_1.electronStore.get('manager'));
+        electron_1.ipcMain.emit('sync-manager', store_1.electronStore.get('manager'));
+        mainWindow.webContents.emit('sync-manager');
     }
 };
 const createTray = () => {
@@ -75,23 +75,25 @@ const createTray = () => {
 electron_1.app.whenReady()
     .then(() => {
     /* Check config file and remove */
-    !fs_1.default.existsSync('configs') && fs_1.default.mkdirSync('configs');
-    if (!fs_1.default.existsSync('./configs/character.json')) {
-        fs_1.default.writeFile('./configs/character.json', JSON.stringify({ 'test': 'test!' }), (err) => {
-            if (err) {
+    !fs_1.default.existsSync('configs') && fs_1.default.mkdirSync(path_1.default.join(__dirname, 'data'));
+    // if (!fs.existsSync(path.join(__dirname, 'data/defaultManager.json'))) {
+    //   fs.writeFile(path.join(__dirname, 'data/defaultManager.json'), JSON.stringify({ 'test' : 'test!' }), (err) => {
+    //     if (err) {
+    //       throw err
+    //     }
+    //   })
+    // }
+    /* If no data, set the data */
+    if (!store_1.electronStore.get('manager')) {
+        fs_1.default.readFile(path_1.default.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
+            if (err)
                 throw err;
-            }
-        });
+            store_1.electronStore.set('manager', JSON.parse(data));
+        }));
     }
-    fs_1.default.readFile('configs/character.json', 'utf-8', ((err, data) => {
-        if (err)
-            throw err;
-        console.log(JSON.parse(data));
-    }));
-    console.log(store_1.electronStore.get('test'));
-    store_1.electronStore.set('test', 'when ready');
     createMainWindow();
     createTray();
+    electron_1.ipcMain.emit('sync-manager', store_1.electronStore.get('manager'));
     electron_1.app.on('activate', () => {
         if (!electron_1.BrowserWindow.getAllWindows().length) {
             createMainWindow();

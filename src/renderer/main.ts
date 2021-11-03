@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 /* Tailwind */
 import '@/styles/tailwind.scss'
+import '@/styles/index.scss'
 
 const app = createApp(App)
 app
