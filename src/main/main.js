@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const electron_1 = require("electron");
-const fs_1 = __importDefault(require("fs"));
 const store_1 = require("./store");
-const isDev = true;
+const electron_is_dev_1 = __importDefault(require("electron-is-dev"));
+// const isDev = false
 /* Main */
 let mainWindow;
 /* Manager */
@@ -21,12 +21,14 @@ const createMainWindow = () => {
         transparent: true,
         webPreferences: {
             // preload: path.join(__dirname, 'preload.ts'),
+            webSecurity: false,
             nodeIntegration: true,
             contextIsolation: false,
         }
     });
-    mainWindow.loadURL('http://localhost:3000');
-    if (isDev) {
+    // mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html')}`)
+    mainWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000' : '../dist/index/html');
+    if (electron_is_dev_1.default) {
         mainWindow.webContents.openDevTools();
     }
 };
@@ -37,12 +39,14 @@ const createManagerWindow = () => {
             frame: false,
             alwaysOnTop: true,
             webPreferences: {
+                webSecurity: false,
                 nodeIntegration: true,
                 contextIsolation: false,
             }
         });
-        managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : 'dist/index.html');
-        if (isDev) {
+        // managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html')}`)
+        managerWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000/overlay/manger/' : '../dist/index/html');
+        if (electron_is_dev_1.default) {
             managerWindow.webContents.openDevTools();
         }
         console.log(store_1.electronStore.get('manager'));
@@ -76,15 +80,15 @@ const createTray = () => {
 electron_1.app.whenReady()
     .then(() => {
     /* Check config file and remove */
-    !fs_1.default.existsSync('configs') && fs_1.default.mkdirSync(path_1.default.join(__dirname, 'data'));
-    /* If no data, set the data */
-    if (!store_1.electronStore.get('manager')) {
-        fs_1.default.readFile(path_1.default.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
-            if (err)
-                throw err;
-            store_1.electronStore.set('manager', JSON.parse(data));
-        }));
-    }
+    // !fs.existsSync('configs') && fs.mkdirSync(path.join(__dirname, 'data'))
+    //
+    // /* If no data, set the data */
+    // if (!electronStore.get('manager')) {
+    //   fs.readFile(path.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
+    //     if (err) throw err
+    //     electronStore.set('manager', JSON.parse(data))
+    //   }))
+    // }
     createMainWindow();
     createTray();
     electron_1.ipcMain.emit('sync-manager', store_1.electronStore.get('manager'));

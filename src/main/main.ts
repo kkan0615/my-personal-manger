@@ -1,9 +1,9 @@
 import path from 'path'
 import { app, BrowserWindow, Tray, Menu, ipcMain } from 'electron'
-import fs from 'fs'
 import { electronStore } from './store'
+import isDev from 'electron-is-dev'
 
-const isDev = true
+// const isDev = false
 
 /* Main */
 let mainWindow: BrowserWindow
@@ -19,12 +19,14 @@ const createMainWindow = () => {
     transparent: true,
     webPreferences: {
       // preload: path.join(__dirname, 'preload.ts'),
+      webSecurity: false,
       nodeIntegration: true,
       contextIsolation: false,
     }
   })
 
-  mainWindow.loadURL('http://localhost:3000')
+  // mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html')}`)
+  mainWindow.loadURL(isDev ? 'http://localhost:3000' : './dist/index/html')
   if (isDev) {
     mainWindow.webContents.openDevTools()
   }
@@ -37,12 +39,14 @@ const createManagerWindow = () => {
       frame: false,
       alwaysOnTop: true,
       webPreferences: {
+        webSecurity: false,
         nodeIntegration: true,
         contextIsolation: false,
       }
     })
 
-    managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : 'dist/index.html')
+    // managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html')}`)
+    managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : './dist/index/html')
     if (isDev) {
       managerWindow.webContents.openDevTools()
     }
@@ -80,15 +84,15 @@ const createTray = () => {
 app.whenReady()
   .then(() => {
     /* Check config file and remove */
-    !fs.existsSync('configs') && fs.mkdirSync(path.join(__dirname, 'data'))
-
-    /* If no data, set the data */
-    if (!electronStore.get('manager')) {
-      fs.readFile(path.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
-        if (err) throw err
-        electronStore.set('manager', JSON.parse(data))
-      }))
-    }
+    // !fs.existsSync('configs') && fs.mkdirSync(path.join(__dirname, 'data'))
+    //
+    // /* If no data, set the data */
+    // if (!electronStore.get('manager')) {
+    //   fs.readFile(path.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
+    //     if (err) throw err
+    //     electronStore.set('manager', JSON.parse(data))
+    //   }))
+    // }
 
     createMainWindow()
     createTray()
