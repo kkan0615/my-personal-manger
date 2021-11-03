@@ -27,7 +27,7 @@ const createMainWindow = () => {
         }
     });
     // mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html')}`)
-    mainWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000' : '../dist/index/html');
+    mainWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000' : `file://${__dirname}/../dist/index.html`);
     if (electron_is_dev_1.default) {
         mainWindow.webContents.openDevTools();
     }
@@ -44,8 +44,8 @@ const createManagerWindow = () => {
                 contextIsolation: false,
             }
         });
-        // managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html')}`)
-        managerWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000/overlay/manger/' : '../dist/index/html');
+        // managerWindow.loadURL(isDev ? 'http://localhost:3000/manger' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html#manager')}`)
+        managerWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000/manger' : `file://${__dirname}/../dist/index.html#manager`);
         if (electron_is_dev_1.default) {
             managerWindow.webContents.openDevTools();
         }

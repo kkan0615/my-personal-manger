@@ -4,12 +4,12 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: './',
+  base: './main/renderer',
   plugins: [vue()],
   resolve: {
     alias: [
       { find: '@', replacement: path.resolve(__dirname, 'src/renderer') },
-      { find: '@main', replacement: path.resolve(__dirname, 'src/main') }
+      { find: '@main', replacement: path.resolve(__dirname, 'src/main') },
     ],
   },
 })

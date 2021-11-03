@@ -7,7 +7,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Home/index.vue'),
   },
   {
-    path: '/overlay/manger',
+    path: '/manger',
     name: 'OverlayManager',
     component: () => import('@/views/overlays/Manager/index.vue'),
   },

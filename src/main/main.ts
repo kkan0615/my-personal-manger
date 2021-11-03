@@ -26,7 +26,7 @@ const createMainWindow = () => {
   })
 
   // mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html')}`)
-  mainWindow.loadURL(isDev ? 'http://localhost:3000' : './dist/index/html')
+  mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${__dirname}/dist/index.html`)
   if (isDev) {
     mainWindow.webContents.openDevTools()
   }
@@ -45,8 +45,8 @@ const createManagerWindow = () => {
       }
     })
 
-    // managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html')}`)
-    managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : './dist/index/html')
+    // managerWindow.loadURL(isDev ? 'http://localhost:3000/manger' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html#manager')}`)
+    managerWindow.loadURL(isDev ? 'http://localhost:3000/manger' : `file://${__dirname}/dist/index.html#manager`)
     if (isDev) {
       managerWindow.webContents.openDevTools()
     }
