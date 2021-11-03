@@ -12,12 +12,28 @@
   </div>
 </template>
 <script setup lang="ts">
-const electron = window.require('electron')
-// import { ipcRenderer } from 'electron'
+import { onMounted } from 'vue'
+import useStore from '@/store'
+import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 
-electron.ipcRenderer.on('sync-manager', (event, args) => {
+const electron = window.require('electron')
+
+const store = useStore()
+
+// import { ipcRenderer } from 'electron'
+electron.ipcRenderer.on('sync-manager', async (event, args) => {
   console.log('event', event)
   console.log('args', args)
+  try {
+    await store.dispatch(ManagerActionTypes.SET_MANAGER, args)
+    await store.dispatch(ManagerActionTypes.HELLO_MANAGER)
+  } catch (e) {
+    console.error(e)
+  }
+})
+
+onMounted(async () => {
+  electron.ipcRenderer.send('sync-manager')
 })
 </script>
 <style>

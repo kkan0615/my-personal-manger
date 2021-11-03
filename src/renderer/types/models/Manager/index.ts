@@ -1,5 +1,4 @@
-export interface Character {
-  id: string
+export interface Manager {
   name: string
   img: string
   circleImg: string

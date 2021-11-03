@@ -12,12 +12,13 @@
       >
     </div>
     <div
+      v-if="message"
       class="speech-bubble-container"
     >
       <div
         class="speech-bubble"
       >
-        {{ test }}
+        {{ message }}
       </div>
     </div>
   </div>
@@ -30,15 +31,10 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { computed, onBeforeMount } from 'vue'
-import { PrototypeActionTypes } from '@/store/modules/systems/prototype/actions'
+import { computed } from 'vue'
 import { store } from '@/store'
 
-const test = computed(() => store.state.prototype.test)
-
-onBeforeMount(async () => {
-  await store.dispatch(PrototypeActionTypes.ADD_TEST, 'Manager is sharing same thing!')
-})
+const message = computed(() => store.state.manager.message)
 </script>
 <style
   scoped
@@ -51,11 +47,11 @@ onBeforeMount(async () => {
 
   .speech-bubble-container {
     @apply
-      tw-relative
+      tw-absolute
+      tw-top-3/4
       tw-w-96
       tw-text-center
       tw-bg-white
-
       tw-rounded
       tw-shadow-xl
       tw-px-2

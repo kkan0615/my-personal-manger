@@ -43,9 +43,10 @@ const createManagerWindow = () => {
     })
 
     managerWindow.loadURL(isDev ? 'http://localhost:3000/overlay/manger/' : 'dist/index.html')
+    if (isDev) {
+      managerWindow.webContents.openDevTools()
+    }
     console.log(electronStore.get('manager'))
-    ipcMain.emit('sync-manager', electronStore.get('manager'))
-    mainWindow.webContents.emit('sync-manager')
   }
 }
 
@@ -81,13 +82,6 @@ app.whenReady()
     /* Check config file and remove */
     !fs.existsSync('configs') && fs.mkdirSync(path.join(__dirname, 'data'))
 
-    // if (!fs.existsSync(path.join(__dirname, 'data/defaultManager.json'))) {
-    //   fs.writeFile(path.join(__dirname, 'data/defaultManager.json'), JSON.stringify({ 'test' : 'test!' }), (err) => {
-    //     if (err) {
-    //       throw err
-    //     }
-    //   })
-    // }
     /* If no data, set the data */
     if (!electronStore.get('manager')) {
       fs.readFile(path.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
@@ -108,8 +102,13 @@ app.whenReady()
 
 app.on('ready', () => {
   /* Open manager */
-  ipcMain.on('open-manager', () => {
+  ipcMain.on('open-manager', (event) => {
     createManagerWindow()
+    // event.sender.send('sync-manager')
+  })
+
+  ipcMain.on('sync-manager', (event, args) => {
+    event.sender.send('sync-manager', electronStore.get('manager'))
   })
 })
 
