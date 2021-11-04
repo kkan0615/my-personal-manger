@@ -21,13 +21,14 @@ const createMainWindow = () => {
         transparent: true,
         webPreferences: {
             // preload: path.join(__dirname, 'preload.ts'),
-            webSecurity: false,
             nodeIntegration: true,
             contextIsolation: false,
         }
     });
-    // mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html')}`)
-    mainWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000' : `file://${__dirname}/../dist/index.html`);
+    // mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '.', 'index.html')}`)
+    // mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${__dirname}/dist/index.html`)
+    // mainWindow.loadURL(`file://${__dirname}/dist/index.html`)
+    mainWindow.loadURL('./index.html');
     if (electron_is_dev_1.default) {
         mainWindow.webContents.openDevTools();
     }
@@ -39,13 +40,14 @@ const createManagerWindow = () => {
             frame: false,
             alwaysOnTop: true,
             webPreferences: {
-                webSecurity: false,
                 nodeIntegration: true,
                 contextIsolation: false,
             }
         });
-        // managerWindow.loadURL(isDev ? 'http://localhost:3000/manger' : `file://${path.join(__dirname, '..', '..', 'dist', 'index.html#manager')}`)
-        managerWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000/manger' : `file://${__dirname}/../dist/index.html#manager`);
+        // managerWindow.loadURL(isDev ? 'http://localhost:3000/manger' : `file://${path.join(__dirname, './dist/index.html#manager')}`)
+        // managerWindow.loadURL(isDev ? 'http://localhost:3000/manger' : `file://${__dirname}/dist/index.html#manager`)
+        // managerWindow.loadURL(`file://${__dirname}/dist/index.html#manager`)
+        managerWindow.loadURL('./index.html#manager');
         if (electron_is_dev_1.default) {
             managerWindow.webContents.openDevTools();
         }
