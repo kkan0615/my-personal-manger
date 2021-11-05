@@ -20,15 +20,12 @@ const createMainWindow = () => {
         height: 720,
         transparent: true,
         webPreferences: {
-            // preload: path.join(__dirname, 'preload.ts'),
+            preload: path_1.default.join(__dirname, 'preload.js'),
             nodeIntegration: true,
             contextIsolation: false,
         }
     });
-    // mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '.', 'index.html')}`)
-    // mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${__dirname}/dist/index.html`)
-    // mainWindow.loadURL(`file://${__dirname}/dist/index.html`)
-    mainWindow.loadURL('./index.html');
+    mainWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000' : `file://${path_1.default.join(__dirname, '../../dist/index.html')}`);
     if (electron_is_dev_1.default) {
         mainWindow.webContents.openDevTools();
     }
@@ -40,14 +37,15 @@ const createManagerWindow = () => {
             frame: false,
             alwaysOnTop: true,
             webPreferences: {
+                preload: path_1.default.join(__dirname, 'preload.js'),
                 nodeIntegration: true,
                 contextIsolation: false,
             }
         });
-        // managerWindow.loadURL(isDev ? 'http://localhost:3000/manger' : `file://${path.join(__dirname, './dist/index.html#manager')}`)
-        // managerWindow.loadURL(isDev ? 'http://localhost:3000/manger' : `file://${__dirname}/dist/index.html#manager`)
-        // managerWindow.loadURL(`file://${__dirname}/dist/index.html#manager`)
-        managerWindow.loadURL('./index.html#manager');
+        managerWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000/manger' : `file://${path_1.default.join(__dirname, '../../dist/index.html#manager')}`);
+        managerWindow.webContents.on('did-finish-load', () => {
+            managerWindow.webContents.send('move-manager');
+        });
         if (electron_is_dev_1.default) {
             managerWindow.webContents.openDevTools();
         }
@@ -92,6 +90,8 @@ electron_1.app.whenReady()
     //   }))
     // }
     createMainWindow();
+    // test
+    // createManagerWindow()
     createTray();
     electron_1.ipcMain.emit('sync-manager', store_1.electronStore.get('manager'));
     electron_1.app.on('activate', () => {

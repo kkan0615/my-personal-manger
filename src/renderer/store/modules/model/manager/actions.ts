@@ -7,6 +7,7 @@ import { Manager } from '@/types/models/Manager'
 export enum ManagerActionTypes {
   SET_MANAGER = 'manager/SET_MANAGER',
   RESET_MANAGER = 'manager/RESET_MANAGER',
+  SET_MESSAGE = 'manger/SET_MESSAGE',
   HELLO_MANAGER = 'manger/HELLO_MANAGER',
 }
 
@@ -25,6 +26,10 @@ export interface ManagerActions {
   [ManagerActionTypes.RESET_MANAGER](
     { commit }: AugmentedActionContext,
   ): void
+  [ManagerActionTypes.SET_MESSAGE](
+    { commit }: AugmentedActionContext,
+    payload: string
+  ): void
   [ManagerActionTypes.HELLO_MANAGER](
     { commit }: AugmentedActionContext,
   ): void
@@ -36,6 +41,14 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
   },
   [ManagerActionTypes.RESET_MANAGER] ({ commit }) {
     commit(ManagerMutationTypes.SET_MANAGER, {} as Manager)
+  },
+  [ManagerActionTypes.SET_MESSAGE] ({ commit }, payload) {
+    // @TODO: 여러 곳에서 써야하기때문에 Action 혹은 Mutations 화 시켜두기
+    commit(ManagerMutationTypes.SET_MESSAGE_TIMER, setTimeout(() => {
+      commit(ManagerMutationTypes.SET_MESSAGE, '')
+      commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
+    }, 2500))
+    commit(ManagerMutationTypes.SET_MESSAGE, payload)
   },
   [ManagerActionTypes.HELLO_MANAGER] ({ commit }) {
     // @TODO: 여러 곳에서 써야하기때문에 Action 혹은 Mutations 화 시켜두기

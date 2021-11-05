@@ -31,10 +31,17 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { computed } from 'vue'
-import { store } from '@/store'
+import { computed, onMounted } from 'vue'
+import useStore from '@/store'
+import { useRoute } from 'vue-router'
+import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 
+const store = useStore()
+const route = useRoute()
 const message = computed(() => store.state.manager.message)
+onMounted(async () => {
+  await store.dispatch(ManagerActionTypes.SET_MESSAGE, route.fullPath)
+})
 </script>
 <style
   scoped

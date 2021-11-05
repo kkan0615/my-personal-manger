@@ -2,7 +2,6 @@ import path from 'path'
 import { app, BrowserWindow, Tray, Menu, ipcMain } from 'electron'
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
-import { main } from '@popperjs/core'
 
 // const isDev = false
 
@@ -19,16 +18,13 @@ const createMainWindow = () => {
     height: 720,
     transparent: true,
     webPreferences: {
-      // preload: path.join(__dirname, 'preload.ts'),
+      preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
       contextIsolation: false,
     }
   })
 
-  // mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '.', 'index.html')}`)
-  // mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${__dirname}/dist/index.html`)
-  // mainWindow.loadURL(`file://${__dirname}/dist/index.html`)
-  mainWindow.loadURL('./index.html')
+  mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../../dist/index.html')}`)
   if (isDev) {
     mainWindow.webContents.openDevTools()
   }
@@ -41,15 +37,16 @@ const createManagerWindow = () => {
       frame: false,
       alwaysOnTop: true,
       webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
         nodeIntegration: true,
         contextIsolation: false,
       }
     })
 
-    // managerWindow.loadURL(isDev ? 'http://localhost:3000/manger' : `file://${path.join(__dirname, './dist/index.html#manager')}`)
-    // managerWindow.loadURL(isDev ? 'http://localhost:3000/manger' : `file://${__dirname}/dist/index.html#manager`)
-    // managerWindow.loadURL(`file://${__dirname}/dist/index.html#manager`)
-    managerWindow.loadURL('./index.html#manager')
+    managerWindow.loadURL(isDev ? 'http://localhost:3000/manger' : `file://${path.join(__dirname, '../../dist/index.html#manager')}`)
+    managerWindow.webContents.on('did-finish-load', () => {
+      managerWindow.webContents.send('move-manager')
+    })
     if (isDev) {
       managerWindow.webContents.openDevTools()
     }
@@ -98,6 +95,8 @@ app.whenReady()
     // }
 
     createMainWindow()
+    // test
+    // createManagerWindow()
     createTray()
     ipcMain.emit('sync-manager', electronStore.get('manager'))
     app.on('activate', () => {

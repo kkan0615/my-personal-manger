@@ -22,6 +22,13 @@
     >
       change test data
     </button>
+    <button
+      class="btn btn-primary"
+      type="button"
+      @click="onClickToOverlayManagerBtn"
+    >
+      move to overlay manager
+    </button>
   </div>
 </template>
 <script
@@ -36,8 +43,10 @@ import { openManagerWindow } from '@/utils/electrons/ipc'
 import useStore from '@/store'
 import { computed, onBeforeMount } from 'vue'
 import { PrototypeActionTypes } from '@/store/modules/systems/prototype/actions'
+import { useRouter } from 'vue-router'
 
 const store = useStore()
+const router = useRouter()
 
 const test = computed(() => store.state.prototype.test)
 
@@ -51,7 +60,10 @@ const onClickOpenMangerBtn = () => {
 
 const onClickTryToChangeBtn = async () => {
   await store.dispatch(PrototypeActionTypes.ADD_TEST, 'changed from home')
+}
 
+const onClickToOverlayManagerBtn = async () => {
+  await router.push({ name: 'OverlayManager' })
 }
 
 </script>
