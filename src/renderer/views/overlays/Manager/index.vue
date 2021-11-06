@@ -1,16 +1,8 @@
 <template>
   <div
-    class="draggable tw-relative"
+    class="tw-relative"
   >
-    <div
-      class="tw-mb-4 manager-container tw-flex tw-flex-col tw-items-center"
-    >
-      <img
-        class="tw-max-w-full tw-h-full"
-        alt="manager"
-        src="@main/assets/manager.png"
-      >
-    </div>
+    <manager-overlay-manager />
     <div
       v-if="message"
       class="speech-bubble-container"
@@ -18,7 +10,12 @@
       <div
         class="speech-bubble"
       >
-        {{ message }}
+        <span
+          v-for="i in 3"
+          :key="i"
+        >
+          {{ message }}
+        </span>
       </div>
     </div>
   </div>
@@ -27,7 +24,7 @@
   lang="ts"
 >
 export default {
-  name: 'PrototypeWithOutScriptSetup',
+  name: 'ManagerOverlay',
 }
 </script>
 <script setup lang="ts">
@@ -35,13 +32,16 @@ import { computed, onMounted } from 'vue'
 import useStore from '@/store'
 import { useRoute } from 'vue-router'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
+import ManagerOverlayManager from '@/views/overlays/Manager/components/Manager.vue'
 
 const store = useStore()
 const route = useRoute()
 const message = computed(() => store.state.manager.message)
 onMounted(async () => {
+  document.body.classList.add('tw-w-72')
   await store.dispatch(ManagerActionTypes.SET_MESSAGE, route.fullPath)
 })
+
 </script>
 <style
   scoped
@@ -49,20 +49,19 @@ onMounted(async () => {
 >
   .manager-container {
     height: 300px;
-    width: 300px;
+    width: auto;
   }
 
   .speech-bubble-container {
     @apply
       tw-absolute
       tw-top-3/4
-      tw-w-96
+      tw-w-full
       tw-text-center
       tw-bg-white
       tw-rounded
       tw-shadow-xl
-      tw-px-2
-      tw-py-1;
+      tw-p-1
   }
 
   .speech-bubble {

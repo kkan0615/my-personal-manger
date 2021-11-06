@@ -1,13 +1,7 @@
 <template>
-  <div>
-    <!--    <div>-->
-    <!--      test-->
-    <!--    </div>-->
-    <router-view />
-  </div>
+  <router-view />
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import useStore from '@/store'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { useRouter } from 'vue-router'
@@ -19,8 +13,7 @@ const router = useRouter()
 
 // import { ipcRenderer } from 'electron'
 electron.ipcRenderer.on('sync-manager', async (event, args) => {
-  console.log('event', event)
-  console.log('args', args)
+
   try {
     await store.dispatch(ManagerActionTypes.SET_MANAGER, args)
     // await store.dispatch(ManagerActionTypes.HELLO_MANAGER)
@@ -31,7 +24,7 @@ electron.ipcRenderer.on('sync-manager', async (event, args) => {
 
 electron.ipcRenderer.on('move-manager', async () => {
   try {
-    await router.push({ name: 'OverlayManager' })
+    await router.replace({ name: 'OverlayManager' })
   } catch (e) {
     console.error(e)
   }
@@ -41,7 +34,12 @@ electron.ipcRenderer.on('move-manager', async () => {
 //   electron.ipcRenderer.send('sync-manager')
 // })
 </script>
-<style>
+<style
+  lang="scss"
+>
+div {
+  background-color: transparent;
+}
 /*#app {*/
 /*  !*font-family: Avenir, Helvetica, Arial, sans-serif;*!*/
 /*  !*-webkit-font-smoothing: antialiased;*!*/

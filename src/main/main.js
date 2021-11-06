@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
 const electron_1 = require("electron");
 const store_1 = require("./store");
 const electron_is_dev_1 = __importDefault(require("electron-is-dev"));
@@ -32,24 +33,40 @@ const createMainWindow = () => {
 };
 const createManagerWindow = () => {
     if (!managerWindow || managerWindow.isDestroyed()) {
+        const primaryDisplay = electron_1.screen.getPrimaryDisplay();
+        const width = 300;
+        const height = 350;
         managerWindow = new electron_1.BrowserWindow({
-            transparent: true,
+            width,
+            height,
             frame: false,
             alwaysOnTop: true,
+            transparent: true,
+            backgroundColor: undefined,
+            hasShadow: true,
             webPreferences: {
                 preload: path_1.default.join(__dirname, 'preload.js'),
                 nodeIntegration: true,
                 contextIsolation: false,
             }
         });
-        managerWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000/manger' : `file://${path_1.default.join(__dirname, '../../dist/index.html#manager')}`);
+        // managerWindow.setIgnoreMouseEvents(true, { forward: true })
+        managerWindow.setPosition(primaryDisplay.size.width - width, primaryDisplay.size.height - height);
+        managerWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000' : `file://${path_1.default.join(__dirname, '../../dist/index.html')}`);
         managerWindow.webContents.on('did-finish-load', () => {
             managerWindow.webContents.send('move-manager');
+        });
+        const moveMangerScreen = (event, args) => {
+            const cursorScreenPoint = electron_1.screen.getCursorScreenPoint();
+            managerWindow.setPosition(cursorScreenPoint.x - args.x, cursorScreenPoint.y - args.y);
+        };
+        electron_1.ipcMain.on('manager-move-screen', moveMangerScreen);
+        managerWindow.on('closed', () => {
+            electron_1.ipcMain.removeListener('manager-move-screen', moveMangerScreen);
         });
         if (electron_is_dev_1.default) {
             managerWindow.webContents.openDevTools();
         }
-        console.log(store_1.electronStore.get('manager'));
     }
 };
 const createTray = () => {
@@ -82,16 +99,15 @@ electron_1.app.whenReady()
     /* Check config file and remove */
     // !fs.existsSync('configs') && fs.mkdirSync(path.join(__dirname, 'data'))
     //
-    // /* If no data, set the data */
-    // if (!electronStore.get('manager')) {
-    //   fs.readFile(path.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
-    //     if (err) throw err
-    //     electronStore.set('manager', JSON.parse(data))
-    //   }))
-    // }
+    /* If no data, set the data */
+    if (!store_1.electronStore.get('manager')) {
+        fs_1.default.readFile(path_1.default.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
+            if (err)
+                throw err;
+            store_1.electronStore.set('manager', JSON.parse(data));
+        }));
+    }
     createMainWindow();
-    // test
-    // createManagerWindow()
     createTray();
     electron_1.ipcMain.emit('sync-manager', store_1.electronStore.get('manager'));
     electron_1.app.on('activate', () => {
@@ -106,10 +122,11 @@ electron_1.app.on('ready', () => {
         createManagerWindow();
         // event.sender.send('sync-manager')
     });
-    electron_1.ipcMain.on('sync-manager', (event, args) => {
+    electron_1.ipcMain.on('sync-manager', (event) => {
         event.sender.send('sync-manager', store_1.electronStore.get('manager'));
     });
 });
+/* When all windows are closed */
 electron_1.app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         electron_1.app.quit();
