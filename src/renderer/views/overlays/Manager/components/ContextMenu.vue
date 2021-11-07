@@ -1,18 +1,26 @@
 <template>
-  <ul
+  <c-list
     class="manager-contextmenu"
     :style="{
-      top,
-      left,
+      top: `${top}px`,
+      left: `${left}px`,
     }"
     @click.stop.prevent="emits('close')"
   >
-    <li
+    <c-list-title>
+      Menus
+    </c-list-title>
+    <c-list-item
       class="manager-contextmenu-item"
     >
       test
-    </li>
-  </ul>
+    </c-list-item>
+    <c-list-item
+      class="manager-contextmenu-item"
+    >
+      {{ top }} . {{ left }}
+    </c-list-item>
+  </c-list>
 </template>
 <script
     lang="ts"
@@ -24,7 +32,10 @@ export default {
 <script setup lang="ts">
 import useStore from '@/store'
 import { useRoute } from 'vue-router'
-import { defineEmits, defineProps } from 'vue'
+import { computed, defineEmits, defineProps } from 'vue'
+import CList from '@/components/commons/List/index.vue'
+import CListItem from '@/components/commons/List/components/Item.vue'
+import CListTitle from '@/components/commons/List/components/Title.vue'
 
 const props = defineProps({
   top: {
@@ -50,7 +61,7 @@ const route = useRoute()
   lang="scss"
 >
 .manager-contextmenu {
-  @apply tw-absolute tw-bg-white tw-rounded tw-px-2 tw-py-1 tw-z-10;
+  @apply tw-absolute tw-bg-white tw-z-10 tw-w-40;
 }
 
 .manager-contextmenu-item {

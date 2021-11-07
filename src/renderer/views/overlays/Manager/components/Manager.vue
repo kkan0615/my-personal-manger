@@ -14,8 +14,8 @@
     >
     <manager-overlay-context-menu
       v-if="displayContextMenu"
-      :top="contextmenuX"
-      :left="contextmenuY"
+      :top="contextmenuY"
+      :left="contextmenuX"
       @close="displayContextMenu = false"
     />
   </div>
@@ -30,22 +30,17 @@ export default {
 <script setup lang="ts">
 import useStore from '@/store'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import ManagerOverlayContextMenu from '@/views/overlays/Manager/components/ContextMenu.vue'
 const electron = window.require('electron')
 
-const imgRef = ref<HTMLImageElement>(undefined)
 const store = useStore()
 const x = ref(0)
 const y = ref(0)
-const animationId = ref<number>(undefined)
+const animationId = ref<number | undefined>(undefined)
 const contextmenuX = ref(0)
 const contextmenuY = ref(0)
 const displayContextMenu = ref(false)
-
-onMounted(() => {
-  imgRef.value.classList.remove('draggable')
-})
 
 const onClickManager = async () => {
   try {
@@ -74,7 +69,8 @@ const moveWindow = () => {
   animationId.value = requestAnimationFrame(moveWindow)
 }
 
-const onClickContextMenu = (event: PointerEvent) => {
+const onClickContextMenu = (event: MouseEvent) => {
+  console.log(event)
   if (!displayContextMenu.value) {
     contextmenuX.value = event.clientX
     contextmenuY.value = event.clientY

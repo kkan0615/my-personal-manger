@@ -2,7 +2,7 @@
   "name": "my-personal-manager",
   "author": "Youngjin Kwak",
   "description": "Test",
-  "version": "0.0.3c",
+  "version": "0.0.3d",
   "main": "src/main/main.js",
   "scripts": {
     "dev": "vite",
