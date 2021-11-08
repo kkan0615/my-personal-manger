@@ -30,6 +30,9 @@ const createMainWindow = () => {
     if (electron_is_dev_1.default) {
         mainWindow.webContents.openDevTools();
     }
+    mainWindow.on('closed', () => {
+        mainWindow = undefined;
+    });
 };
 const createManagerWindow = () => {
     if (!managerWindow || managerWindow.isDestroyed()) {
@@ -51,14 +54,18 @@ const createManagerWindow = () => {
             }
         });
         // managerWindow.setIgnoreMouseEvents(true, { forward: true })
-        managerWindow.setPosition(primaryDisplay.size.width - width, primaryDisplay.size.height - height);
+        managerWindow.setPosition(primaryDisplay.size.width - width, primaryDisplay.size.height - height - 50);
         managerWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000' : `file://${path_1.default.join(__dirname, '../../dist/index.html')}`);
         managerWindow.webContents.on('did-finish-load', () => {
-            managerWindow.webContents.send('move-manager');
+            if (managerWindow) {
+                managerWindow.webContents.send('move-manager');
+            }
         });
         const moveMangerScreen = (event, args) => {
             const cursorScreenPoint = electron_1.screen.getCursorScreenPoint();
-            managerWindow.setPosition(cursorScreenPoint.x - args.x, cursorScreenPoint.y - args.y);
+            if (managerWindow) {
+                managerWindow.setPosition(cursorScreenPoint.x - args.x, cursorScreenPoint.y - args.y);
+            }
         };
         electron_1.ipcMain.on('manager-move-screen', moveMangerScreen);
         managerWindow.on('closed', () => {
@@ -66,6 +73,11 @@ const createManagerWindow = () => {
         });
         if (electron_is_dev_1.default) {
             managerWindow.webContents.openDevTools();
+        }
+        if (managerWindow) {
+            managerWindow.on('closed', () => {
+                managerWindow = undefined;
+            });
         }
     }
 };
@@ -75,13 +87,20 @@ const createTray = () => {
     const contextMenuList = electron_1.Menu.buildFromTemplate([{
             label: 'Open main',
             click: () => {
-                mainWindow.show();
+                if (mainWindow)
+                    mainWindow.show();
+                else {
+                    createMainWindow();
+                }
             },
         }, {
             label: 'Open Manager',
             click: () => {
                 if (managerWindow)
                     managerWindow.show();
+                else {
+                    createManagerWindow();
+                }
             },
         }, {
             label: 'Exit',
@@ -120,7 +139,6 @@ electron_1.app.on('ready', () => {
     /* Open manager */
     electron_1.ipcMain.on('open-manager', (event) => {
         createManagerWindow();
-        // event.sender.send('sync-manager')
     });
     electron_1.ipcMain.on('sync-manager', (event) => {
         event.sender.send('sync-manager', store_1.electronStore.get('manager'));

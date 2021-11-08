@@ -7,9 +7,9 @@ import isDev from 'electron-is-dev'
 // const isDev = false
 
 /* Main */
-let mainWindow: BrowserWindow
+let mainWindow: BrowserWindow | undefined
 /* Manager */
-let managerWindow: BrowserWindow
+let managerWindow: BrowserWindow | undefined
 /* Tray */
 let tray: Tray
 
@@ -29,6 +29,10 @@ const createMainWindow = () => {
   if (isDev) {
     mainWindow.webContents.openDevTools()
   }
+
+  mainWindow.on('closed', () => {
+    mainWindow = undefined
+  })
 }
 
 const createManagerWindow = () => {
@@ -52,16 +56,20 @@ const createManagerWindow = () => {
       }
     })
     // managerWindow.setIgnoreMouseEvents(true, { forward: true })
-    managerWindow.setPosition(primaryDisplay.size.width - width, primaryDisplay.size.height - height)
+    managerWindow.setPosition(primaryDisplay.size.width - width, primaryDisplay.size.height - height - 50)
 
     managerWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../../dist/index.html')}`)
     managerWindow.webContents.on('did-finish-load', () => {
-      managerWindow.webContents.send('move-manager')
+      if (managerWindow) {
+        managerWindow.webContents.send('move-manager')
+      }
     })
 
     const moveMangerScreen = (event: IpcMainEvent, args: { x: number; y: number }) => {
       const cursorScreenPoint = screen.getCursorScreenPoint()
-      managerWindow.setPosition(cursorScreenPoint.x - args.x, cursorScreenPoint.y - args.y)
+      if (managerWindow) {
+        managerWindow.setPosition(cursorScreenPoint.x - args.x, cursorScreenPoint.y - args.y)
+      }
     }
     ipcMain.on('manager-move-screen', moveMangerScreen)
 
@@ -71,6 +79,12 @@ const createManagerWindow = () => {
 
     if (isDev) {
       managerWindow.webContents.openDevTools()
+    }
+
+    if (managerWindow) {
+      managerWindow.on('closed', () => {
+        managerWindow = undefined
+      })
     }
   }
 }
@@ -82,13 +96,20 @@ const createTray = () => {
   const contextMenuList = Menu.buildFromTemplate([{
     label: 'Open main',
     click: () => {
-      mainWindow.show()
+      if (mainWindow)
+        mainWindow.show()
+      else {
+        createMainWindow()
+      }
     },
   }, {
     label: 'Open Manager',
     click: () => {
       if (managerWindow)
         managerWindow.show()
+      else {
+        createManagerWindow()
+      }
     },
   }, {
     label: 'Exit',
@@ -129,7 +150,6 @@ app.on('ready', () => {
   /* Open manager */
   ipcMain.on('open-manager', (event) => {
     createManagerWindow()
-    // event.sender.send('sync-manager')
   })
 
   ipcMain.on('sync-manager', (event) => {

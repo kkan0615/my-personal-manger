@@ -3,13 +3,29 @@ import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } 
 export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
-    component: () => import('@/views/Home/index.vue'),
+    name: 'BaseGeneralLayout',
+    component: () => import('@/layouts/generals/Base/index.vue'),
+    redirect: { name: 'Home' },
+    children: [
+      {
+        path: '',
+        name: 'Home',
+        component: () => import('@/views/Home/index.vue'),
+      },
+    ]
   },
   {
     path: '/manger',
-    name: 'OverlayManager',
-    component: () => import('@/views/overlays/Manager/index.vue'),
+    name: 'MangerBaseLayout',
+    component: () => import('@/layouts/managers/Base/index.vue'),
+    redirect: { name: 'OverlayManager' },
+    children: [
+      {
+        path: '',
+        name: 'OverlayManager',
+        component: () => import('@/views/overlays/Manager/index.vue'),
+      },
+    ]
   },
 ]
 

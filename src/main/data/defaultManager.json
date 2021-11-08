@@ -3,23 +3,47 @@
   "img": "manager.png",
   "circle": "manager-circle.jpg",
   "morningMessages": [
-    "test 1",
-    "test 2",
-    "test 3"
+    {
+      "message": "test 1"
+    },
+    {
+      "message": "test 2"
+    },
+    {
+      "message": "test 3"
+    }
   ],
   "lunchMessages":[
-    "test 1",
-    "test 2",
-    "test 3"
+    {
+      "message": "test 1"
+    },
+    {
+      "message": "test 2"
+    },
+    {
+      "message": "test 3"
+    }
   ],
   "eveningsMessages": [
-    "test 1",
-    "test 2",
-    "test 3"
+    {
+      "message": "test 1"
+    },
+    {
+      "message": "test 2"
+    },
+    {
+      "message": "test 3"
+    }
   ],
   "randClickMessages":[
-    "test 1",
-    "test 2",
-    "test 3"
+    {
+      "message": "test 1"
+    },
+    {
+      "message": "test 2"
+    },
+    {
+      "message": "test 3"
+    }
   ]
 }
