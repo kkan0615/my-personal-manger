@@ -5,10 +5,10 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'BaseGeneralLayout',
     component: () => import('@/layouts/generals/Base/index.vue'),
-    redirect: { name: 'Home' },
+    // redirect: { name: 'Home' },
     children: [
       {
-        path: '',
+        path: 'home',
         name: 'Home',
         component: () => import('@/views/Home/index.vue'),
       },
@@ -29,8 +29,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
 ]
 
-console.log(process.env.IS_DEV === 'true')
 export const router = createRouter({
-  history: process.env.IS_DEV === 'true' ? createWebHistory() : createWebHashHistory(),
+  history: process.env.IS_DEV === 'true' ? createWebHistory('/') : createWebHashHistory('/'),
   routes,
 })

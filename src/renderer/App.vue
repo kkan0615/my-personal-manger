@@ -11,17 +11,25 @@ const electron = window.require('electron')
 const store = useStore()
 const router = useRouter()
 
-// import { ipcRenderer } from 'electron'
 electron.ipcRenderer.on('sync-manager', async (event, args) => {
-
   try {
     await store.dispatch(ManagerActionTypes.SET_MANAGER, args)
-    // await store.dispatch(ManagerActionTypes.HELLO_MANAGER)
+    await store.dispatch(ManagerActionTypes.HELLO_MANAGER)
   } catch (e) {
     console.error(e)
   }
 })
 
+/* Move to home */
+electron.ipcRenderer.on('move-home', async () => {
+  try {
+    await router.push({ name: 'Home' })
+  } catch (e) {
+    console.error(e)
+  }
+})
+
+/* Move to manager */
 electron.ipcRenderer.on('move-manager', async () => {
   try {
     await router.replace({ name: 'OverlayManager' })
@@ -30,9 +38,6 @@ electron.ipcRenderer.on('move-manager', async () => {
   }
 })
 
-// onMounted(async () => {
-//   electron.ipcRenderer.send('sync-manager')
-// })
 </script>
 <style
   lang="scss"

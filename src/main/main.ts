@@ -3,6 +3,7 @@ import fs from 'fs'
 import { app, BrowserWindow, Tray, Menu, ipcMain, IpcMainEvent, screen } from 'electron'
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
+import { StoreKeyEnum } from './types/store'
 
 // const isDev = false
 
@@ -18,6 +19,7 @@ const createMainWindow = () => {
     width: 1280,
     height: 720,
     transparent: true,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -26,6 +28,13 @@ const createMainWindow = () => {
   })
 
   mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../../dist/index.html')}`)
+
+  mainWindow.webContents.on('did-frame-finish-load', () => {
+    if (mainWindow) {
+      mainWindow.webContents.send('move-home')
+    }
+  })
+
   if (isDev) {
     mainWindow.webContents.openDevTools()
   }
@@ -38,7 +47,7 @@ const createMainWindow = () => {
 const createManagerWindow = () => {
   if (!managerWindow || managerWindow.isDestroyed()) {
     const primaryDisplay = screen.getPrimaryDisplay()
-    const width = 300
+    const width = 400
     const height = 350
 
     managerWindow = new BrowserWindow({
@@ -55,16 +64,17 @@ const createManagerWindow = () => {
         contextIsolation: false,
       }
     })
-    // managerWindow.setIgnoreMouseEvents(true, { forward: true })
+    managerWindow.setIgnoreMouseEvents(true, { forward: true })
     managerWindow.setPosition(primaryDisplay.size.width - width, primaryDisplay.size.height - height - 50)
 
     managerWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../../dist/index.html')}`)
-    managerWindow.webContents.on('did-finish-load', () => {
+    managerWindow.webContents.on('did-frame-finish-load', () => {
       if (managerWindow) {
         managerWindow.webContents.send('move-manager')
       }
     })
 
+    /* Control moving */
     const moveMangerScreen = (event: IpcMainEvent, args: { x: number; y: number }) => {
       const cursorScreenPoint = screen.getCursorScreenPoint()
       if (managerWindow) {
@@ -73,17 +83,38 @@ const createManagerWindow = () => {
     }
     ipcMain.on('manager-move-screen', moveMangerScreen)
 
-    managerWindow.on('closed', () => {
-      ipcMain.removeListener('manager-move-screen', moveMangerScreen)
+    ipcMain.on('manager-through-on', () => {
+      if (managerWindow) {
+        managerWindow.setIgnoreMouseEvents(true, { forward: true })
+      }
+    })
+
+    ipcMain.on('manager-through-off', () => {
+      if (managerWindow) {
+        managerWindow.setIgnoreMouseEvents(false, { forward: false })
+      }
+    })
+
+    ipcMain.on('close-manager-window', () => {
+      if (managerWindow && managerWindow.closable) {
+        managerWindow.close()
+      }
     })
 
     if (isDev) {
+      managerWindow.setIgnoreMouseEvents(false, { forward: false })
       managerWindow.webContents.openDevTools()
     }
 
+    /* When manager window is closed */
     if (managerWindow) {
       managerWindow.on('closed', () => {
         managerWindow = undefined
+        /* Remove all listener */
+        ipcMain.removeListener('manager-move-screen', moveMangerScreen)
+        ipcMain.removeListener('close-manager-window', moveMangerScreen)
+        ipcMain.removeListener('manager-through-on', moveMangerScreen)
+        ipcMain.removeListener('manager-through-off', moveMangerScreen)
       })
     }
   }
@@ -127,16 +158,25 @@ app.whenReady()
   .then(() => {
     /* Check config file and remove */
     // !fs.existsSync('configs') && fs.mkdirSync(path.join(__dirname, 'data'))
-    //
+
     /* If no data, set the data */
-    if (!electronStore.get('manager')) {
+    if (!electronStore.get(StoreKeyEnum.MANAGER)) {
       fs.readFile(path.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
         if (err) throw err
         electronStore.set('manager', JSON.parse(data))
       }))
     }
 
+    if (!electronStore.get(StoreKeyEnum.MANAGER_CONFIG)) {
+      fs.readFile(path.join(__dirname, 'data/defaultManagerConfig.json'), 'utf-8', ((err, data) => {
+        if (err) throw err
+        electronStore.set('manager', JSON.parse(data))
+      }))
+    }
+
+    /* Open Main window */
     createMainWindow()
+    /* Open tray */
     createTray()
     ipcMain.emit('sync-manager', electronStore.get('manager'))
     app.on('activate', () => {
@@ -146,9 +186,10 @@ app.whenReady()
     })
   })
 
+/* When app is ready to open */
 app.on('ready', () => {
   /* Open manager */
-  ipcMain.on('open-manager', (event) => {
+  ipcMain.on('open-manager-window', () => {
     createManagerWindow()
   })
 

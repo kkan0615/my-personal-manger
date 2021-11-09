@@ -5,12 +5,14 @@
   >
     <img
       ref="imgRef"
-      class="tw-w-auto tw-h-full tw-cursor-pointer"
+      class="tw-w-auto tw-h-full tw-cursor-pointer tw-bg-transparent"
       alt="manager"
       src="@main/assets/manager.png"
       draggable="false"
       @mousedown="onMouseDown"
       @contextmenu.prevent="onClickContextMenu"
+      @mouseenter="onMouseEnter"
+      @mouseleave="onMouseLeave"
     >
     <manager-overlay-context-menu
       v-if="displayContextMenu"
@@ -32,6 +34,7 @@ import useStore from '@/store'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { nextTick, ref } from 'vue'
 import ManagerOverlayContextMenu from '@/views/overlays/Manager/components/ContextMenu.vue'
+import { offMangerThrough, onMangerThrough } from '@/utils/electrons/ipc'
 const electron = window.require('electron')
 
 const store = useStore()
@@ -70,7 +73,6 @@ const moveWindow = () => {
 }
 
 const onClickContextMenu = (event: MouseEvent) => {
-  console.log(event)
   if (!displayContextMenu.value) {
     contextmenuX.value = event.clientX
     contextmenuY.value = event.clientY
@@ -79,6 +81,14 @@ const onClickContextMenu = (event: MouseEvent) => {
   nextTick(() => {
     displayContextMenu.value = !displayContextMenu.value
   })
+}
+
+const onMouseEnter = () => {
+  offMangerThrough()
+}
+
+const onMouseLeave = () => {
+  onMangerThrough()
 }
 
 </script>
