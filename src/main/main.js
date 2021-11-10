@@ -9,6 +9,7 @@ const electron_1 = require("electron");
 const store_1 = require("./store");
 const electron_is_dev_1 = __importDefault(require("electron-is-dev"));
 const store_2 = require("./types/store");
+const manager_1 = require("./services/manager");
 // const isDev = false
 /* Main */
 let mainWindow;
@@ -178,6 +179,10 @@ electron_1.app.on('ready', () => {
     });
     electron_1.ipcMain.on('sync-manager', (event) => {
         event.sender.send('sync-manager', store_1.electronStore.get('manager'));
+    });
+    /* Open manager */
+    electron_1.ipcMain.on('create-manager', (event, args) => {
+        (0, manager_1.createManager)(args);
     });
 });
 /* When all windows are closed */

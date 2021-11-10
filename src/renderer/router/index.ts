@@ -1,32 +1,10 @@
 import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { generalRoutes } from '@/router/modules/generals'
+import { managerRoutes } from '@/router/modules/managers'
 
 export const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'BaseGeneralLayout',
-    component: () => import('@/layouts/generals/Base/index.vue'),
-    // redirect: { name: 'Home' },
-    children: [
-      {
-        path: 'home',
-        name: 'Home',
-        component: () => import('@/views/Home/index.vue'),
-      },
-    ]
-  },
-  {
-    path: '/manger',
-    name: 'MangerBaseLayout',
-    component: () => import('@/layouts/managers/Base/index.vue'),
-    redirect: { name: 'OverlayManager' },
-    children: [
-      {
-        path: '',
-        name: 'OverlayManager',
-        component: () => import('@/views/overlays/Manager/index.vue'),
-      },
-    ]
-  },
+  ...generalRoutes,
+  ...managerRoutes,
 ]
 
 export const router = createRouter({

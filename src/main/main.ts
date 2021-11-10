@@ -4,6 +4,9 @@ import { app, BrowserWindow, Tray, Menu, ipcMain, IpcMainEvent, screen } from 'e
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
 import { StoreKeyEnum } from './types/store'
+import { createManager } from './services/manager'
+import { Manager } from './types/models/Manager'
+import { ManagerConfig } from './types/models/Manager/config'
 
 // const isDev = false
 
@@ -195,6 +198,11 @@ app.on('ready', () => {
 
   ipcMain.on('sync-manager', (event) => {
     event.sender.send('sync-manager', electronStore.get('manager'))
+  })
+
+  /* Open manager */
+  ipcMain.on('create-manager', (event, args) => {
+    createManager(args)
   })
 })
 

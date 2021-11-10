@@ -1,4 +1,4 @@
-import { ManagerConfig } from '@/types/models/Manager/config'
+import { ManagerConfig } from './config'
 
 export interface ManagerMessage {
   sound?: string
@@ -19,3 +19,5 @@ export interface ManagerWithConfig {
   manager: Manager
   config: ManagerConfig
 }
+
+export const MANAGER_FILE_PREFIX = '_slot'

@@ -8,12 +8,28 @@
     <div>
       store data: [ {{ test }} ]
     </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="button"
+        @click="onClickTestBtn"
+      >
+        test
+      </button>
+    </div>
     <button
       class="btn btn-primary"
       type="button"
       @click="onClickOpenMangerBtn"
     >
       open the manager
+    </button>
+    <button
+      class="btn btn-primary"
+      type="button"
+      @click="onClickCloseManagerBtn"
+    >
+      close the manger
     </button>
     <button
       class="btn btn-primary"
@@ -39,11 +55,14 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { openManagerWindow } from '@/utils/electrons/ipc'
+import { closeManagerWindow, openManagerWindow } from '@/utils/electrons/ipc'
 import useStore from '@/store'
 import { computed, onBeforeMount } from 'vue'
 import { PrototypeActionTypes } from '@/store/modules/systems/prototype/actions'
 import { useRouter } from 'vue-router'
+import { Manager } from '@main/types/models/Manager'
+import { ManagerConfig } from '@main/types/models/Manager/config'
+const electron = window.require('electron')
 
 const store = useStore()
 const router = useRouter()
@@ -54,8 +73,19 @@ onBeforeMount(async () => {
   await store.dispatch(PrototypeActionTypes.ADD_TEST, 'Arrived at home')
 })
 
+const onClickTestBtn = () => {
+  electron.ipcRenderer.send('create-manager', {
+    manager: {} as Manager,
+    config: {} as ManagerConfig,
+  })
+}
+
 const onClickOpenMangerBtn = () => {
   openManagerWindow()
+}
+
+const onClickCloseManagerBtn = () => {
+  closeManagerWindow()
 }
 
 const onClickTryToChangeBtn = async () => {

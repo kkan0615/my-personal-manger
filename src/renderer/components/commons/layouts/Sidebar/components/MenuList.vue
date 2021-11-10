@@ -1,5 +1,6 @@
 <template>
   <ul
+    class="c-sidebar-layout-menu-list"
     :class="{
       [`tw-text-${textSize}`]: textSize,
     }"
@@ -25,3 +26,12 @@ const props = defineProps({
   }
 })
 </script>
+<style
+  lang="scss"
+>
+.c-sidebar-layout-menu-list {
+  a {
+    @apply tw-flex tw-items-center;
+  }
+}
+</style>

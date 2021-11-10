@@ -33,7 +33,6 @@ const props = defineProps({
 })
 </script>
 <style
-  scoped
   lang="scss"
 >
 .c-sidebar-layout-menu-item {
