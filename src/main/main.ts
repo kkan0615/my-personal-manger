@@ -5,8 +5,7 @@ import { electronStore } from './store'
 import isDev from 'electron-is-dev'
 import { StoreKeyEnum } from './types/store'
 import { createManager } from './services/manager'
-import { Manager } from './types/models/Manager'
-import { ManagerConfig } from './types/models/Manager/config'
+import { ManagerWithConfig } from './types/models/Manager'
 
 // const isDev = false
 
@@ -164,14 +163,14 @@ app.whenReady()
 
     /* If no data, set the data */
     if (!electronStore.get(StoreKeyEnum.MANAGER)) {
-      fs.readFile(path.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
+      fs.readFile(path.join(__dirname, 'default/defaultManager.json'), 'utf-8', ((err, data) => {
         if (err) throw err
         electronStore.set('manager', JSON.parse(data))
       }))
     }
 
     if (!electronStore.get(StoreKeyEnum.MANAGER_CONFIG)) {
-      fs.readFile(path.join(__dirname, 'data/defaultManagerConfig.json'), 'utf-8', ((err, data) => {
+      fs.readFile(path.join(__dirname, 'default/defaultManagerConfig.json'), 'utf-8', ((err, data) => {
         if (err) throw err
         electronStore.set('manager', JSON.parse(data))
       }))
@@ -200,8 +199,8 @@ app.on('ready', () => {
     event.sender.send('sync-manager', electronStore.get('manager'))
   })
 
-  /* Open manager */
-  ipcMain.on('create-manager', (event, args) => {
+  /* Create manager slot */
+  ipcMain.on('create-manager', (event, args: ManagerWithConfig) => {
     createManager(args)
   })
 })
