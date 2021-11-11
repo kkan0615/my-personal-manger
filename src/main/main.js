@@ -110,7 +110,8 @@ const createManagerWindow = () => {
     }
 };
 const createTray = () => {
-    tray = new electron_1.Tray(path_1.default.join(__dirname, '/assets/tray.jpg'));
+    const trayImgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, '/default/tray.jpg') : path_1.default.join(process.resourcesPath, 'default', 'tray.jpg');
+    tray = new electron_1.Tray(trayImgPath);
     tray.setToolTip('My Personal Manager');
     const contextMenuList = electron_1.Menu.buildFromTemplate([{
             label: 'Open main',
@@ -147,14 +148,16 @@ electron_1.app.whenReady()
     // !fs.existsSync('configs') && fs.mkdirSync(path.join(__dirname, 'data'))
     /* If no data, set the data */
     if (!store_1.electronStore.get(store_2.StoreKeyEnum.MANAGER)) {
-        fs_1.default.readFile(path_1.default.join(__dirname, 'data/defaultManager.json'), 'utf-8', ((err, data) => {
+        const defaultManagerPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'default/defaultManager.json') : path_1.default.join(process.resourcesPath, 'default', 'defaultManager.json');
+        fs_1.default.readFile(defaultManagerPath, 'utf-8', ((err, data) => {
             if (err)
                 throw err;
             store_1.electronStore.set('manager', JSON.parse(data));
         }));
     }
     if (!store_1.electronStore.get(store_2.StoreKeyEnum.MANAGER_CONFIG)) {
-        fs_1.default.readFile(path_1.default.join(__dirname, 'data/defaultManagerConfig.json'), 'utf-8', ((err, data) => {
+        const defaultManagerConfigPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'default/defaultManagerConfig.json') : path_1.default.join(process.resourcesPath, 'default', 'defaultManagerConfig.json');
+        fs_1.default.readFile(defaultManagerConfigPath, 'utf-8', ((err, data) => {
             if (err)
                 throw err;
             store_1.electronStore.set('manager', JSON.parse(data));
@@ -180,7 +183,7 @@ electron_1.app.on('ready', () => {
     electron_1.ipcMain.on('sync-manager', (event) => {
         event.sender.send('sync-manager', store_1.electronStore.get('manager'));
     });
-    /* Open manager */
+    /* Create manager slot */
     electron_1.ipcMain.on('create-manager', (event, args) => {
         (0, manager_1.createManager)(args);
     });

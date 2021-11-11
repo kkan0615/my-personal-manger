@@ -7,7 +7,7 @@
       ref="imgRef"
       class="tw-w-auto tw-h-full tw-cursor-pointer tw-bg-transparent"
       alt="manager"
-      src="@main/assets/manager.png"
+      src="@main/default/manager.png"
       draggable="false"
       @mousedown="onMouseDown"
       @contextmenu.prevent="onClickContextMenu"

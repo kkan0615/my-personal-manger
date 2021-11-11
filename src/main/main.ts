@@ -123,7 +123,8 @@ const createManagerWindow = () => {
 }
 
 const createTray = () => {
-  tray = new Tray(path.join(__dirname, '/assets/tray.jpg'))
+  const trayImgPath = isDev ? path.join(__dirname, '/default/tray.jpg') : path.join(process.resourcesPath, 'default', 'tray.jpg')
+  tray = new Tray(trayImgPath)
   tray.setToolTip('My Personal Manager')
 
   const contextMenuList = Menu.buildFromTemplate([{
@@ -163,14 +164,16 @@ app.whenReady()
 
     /* If no data, set the data */
     if (!electronStore.get(StoreKeyEnum.MANAGER)) {
-      fs.readFile(path.join(__dirname, 'default/defaultManager.json'), 'utf-8', ((err, data) => {
+      const defaultManagerPath = isDev ? path.join(__dirname, 'default/defaultManager.json') : path.join(process.resourcesPath, 'default', 'defaultManager.json')
+      fs.readFile(defaultManagerPath, 'utf-8', ((err, data) => {
         if (err) throw err
         electronStore.set('manager', JSON.parse(data))
       }))
     }
 
     if (!electronStore.get(StoreKeyEnum.MANAGER_CONFIG)) {
-      fs.readFile(path.join(__dirname, 'default/defaultManagerConfig.json'), 'utf-8', ((err, data) => {
+      const defaultManagerConfigPath = isDev ? path.join(__dirname, 'default/defaultManagerConfig.json') : path.join(process.resourcesPath, 'default', 'defaultManagerConfig.json')
+      fs.readFile(defaultManagerConfigPath, 'utf-8', ((err, data) => {
         if (err) throw err
         electronStore.set('manager', JSON.parse(data))
       }))
