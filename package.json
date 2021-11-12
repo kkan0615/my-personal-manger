@@ -1,8 +1,8 @@
 {
   "name": "my-personal-manager",
   "author": "Youngjin Kwak",
-  "description": "Test",
-  "version": "0.0.4c",
+  "description": "Create your personal manager",
+  "version": "0.0.4d",
   "main": "src/main/main.js",
   "scripts": {
     "dev": "vite",
@@ -13,17 +13,29 @@
     "electron:build": "tsc -p src/main/tsconfig.json",
     "electron:dev": "yarn electron:build && concurrently -k \"cross-env BROWSER=none yarn dev\" \"yarn electron\"",
     "electron:builder": "electron-builder",
+    "electron:builder-publish": "electron-builder --win -p always",
     "build:for:electron": "vue-tsc --noEmit && cross-env ELECTRON=true vite build",
-    "app:build": "yarn electron:build && yarn build:for:electron && yarn electron:builder"
+    "app:build": "yarn electron:build && yarn build:for:electron && yarn electron:builder",
+    "app:publish": "yarn electron:build && yarn build:for:electron && yarn electron:builder-publish"
   },
   "build": {
     "appId": "com.my-website.my-personal-manager",
     "productName": "My Personal Manager",
     "copyright": "Copyright © 2021 ${author}",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "kkan0615",
+        "repo": "my-personal-manger"
+      }
+    ],
     "mac": {
       "category": "public.app-category.utilities"
     },
     "win": {
+      "publish": [
+        "github"
+      ],
       "target": [
         "zip",
         "nsis"

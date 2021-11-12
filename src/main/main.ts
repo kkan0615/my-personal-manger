@@ -4,8 +4,8 @@ import { app, BrowserWindow, Tray, Menu, ipcMain, IpcMainEvent, screen } from 'e
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
 import { StoreKeyEnum } from './types/store'
-import { createManager } from './services/manager'
-import { ManagerWithConfig } from './types/models/Manager'
+import { createManager, createManagerMainImage } from './services/manager'
+import { ManagerCreateForm, ManagerWithConfig } from './types/models/Manager'
 
 // const isDev = false
 
@@ -203,8 +203,19 @@ app.on('ready', () => {
   })
 
   /* Create manager slot */
-  ipcMain.on('create-manager', (event, args: ManagerWithConfig) => {
-    createManager(args)
+  ipcMain.on('create-manager', async (event, args: ManagerCreateForm) => {
+    const mangerId = await createManager(args)
+    event.sender.send('success-create-manger', mangerId)
+  })
+
+  /* Create manager main image */
+  ipcMain.on('create-manager-main-image', async (event, args: { id: string; file: File }) => {
+    try {
+      await createManagerMainImage(args.id, args.file)
+    } catch (e) {
+      console.error(e)
+      event.sender.send('error-create', { code: 403 })
+    }
   })
 })
 

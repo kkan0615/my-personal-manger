@@ -6,6 +6,7 @@ export interface ManagerMessage {
 }
 
 export interface Manager {
+  id: string
   name: string
   img: string
   circleImg: string
@@ -20,4 +21,9 @@ export interface ManagerWithConfig {
   config: ManagerConfig
 }
 
-export const MANAGER_FILE_PREFIX = '_slot'
+export interface ManagerCreateForm {
+  manager: Manager
+  config: ManagerConfig
+  mainImg: File
+  circleImg: File
+}

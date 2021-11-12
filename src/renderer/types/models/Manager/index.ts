@@ -15,6 +15,20 @@ export interface Manager {
   randClickMessages: Array<ManagerMessage>
 }
 
+export interface ManagerCreateForm {
+  manager: Manager
+  config: ManagerConfig
+  mainImg: File
+  circleImg: File
+}
+
+export interface ManagerUpdateForm {
+  manager: Manager
+  config: ManagerConfig
+  mainImg: File
+  circleImg: File
+}
+
 export interface ManagerWithConfig {
   manager: Manager
   config: ManagerConfig

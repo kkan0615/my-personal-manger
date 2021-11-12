@@ -184,8 +184,18 @@ electron_1.app.on('ready', () => {
         event.sender.send('sync-manager', store_1.electronStore.get('manager'));
     });
     /* Create manager slot */
-    electron_1.ipcMain.on('create-manager', (event, args) => {
-        (0, manager_1.createManager)(args);
+    electron_1.ipcMain.on('create-manager', async (event, args) => {
+        await (0, manager_1.createManager)(args);
+    });
+    /* Create manager main image */
+    electron_1.ipcMain.on('create-manager-main-image', async (event, args) => {
+        try {
+            await (0, manager_1.createManagerMainImage)(args.id, args.file);
+        }
+        catch (e) {
+            console.error(e);
+            event.sender.send('error-create', { code: 403 });
+        }
     });
 });
 /* When all windows are closed */
