@@ -5,7 +5,7 @@ import { electronStore } from './store'
 import isDev from 'electron-is-dev'
 import { StoreKeyEnum } from './types/store'
 import { createManager, createManagerMainImage } from './services/manager'
-import { ManagerCreateForm } from './types/models/Manager'
+import { Manager, ManagerCreateForm } from './types/models/Manager'
 
 // const isDev = false
 
@@ -238,6 +238,16 @@ app.on('ready', () => {
   ipcMain.handle('get-manager-list', () => {
     const dataDirPath = isDev ? path.join(__dirname, 'data') : path.join(process.resourcesPath, 'data')
     return fs.readdirSync(dataDirPath)
+  })
+
+  ipcMain.handle('get-manager-image', (event, args: Manager) => {
+    if (args && args.id) {
+      const imgPath = isDev ? path.join(__dirname, 'data', args.id, args.img) : path.join(process.resourcesPath, 'data', args.id, args.img)
+      return fs.readFileSync(imgPath)
+    } else {
+      const imgPath = isDev ? path.join(__dirname, 'default', 'manager.png') : path.join(process.resourcesPath, 'default', 'manager.png')
+      return fs.readFileSync(imgPath)
+    }
   })
 
   /* Create manager slot */

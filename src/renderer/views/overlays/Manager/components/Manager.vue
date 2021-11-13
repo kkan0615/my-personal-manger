@@ -7,8 +7,9 @@
       ref="imgRef"
       class="tw-w-auto tw-h-full tw-cursor-pointer tw-bg-transparent"
       alt="manager"
-      :src="managerImgSrc"
+      :src="imgSrc"
       draggable="false"
+      loading="lazy"
       @mousedown="onMouseDown"
       @contextmenu.prevent="onClickContextMenu"
       @mouseenter="onMouseEnter"
@@ -32,11 +33,11 @@ export default {
 <script setup lang="ts">
 import useStore from '@/store'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
-import { computed, nextTick, ref } from 'vue'
-// import isDev from 'electron-is-dev'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { offMangerThrough, onMangerThrough } from '@/utils/electrons/ipc'
 import useElectron from '@/mixins/useElectron'
 import ManagerOverlayContextMenu from '@/views/overlays/Manager/components/ContextMenu.vue'
+import { Manager } from '@/types/models/Manager'
 
 const store = useStore()
 const { ipcRenderer } = useElectron()
@@ -47,24 +48,23 @@ const animationId = ref<number | undefined>(undefined)
 const contextmenuX = ref(0)
 const contextmenuY = ref(0)
 const displayContextMenu = ref(false)
+const imgSrc = ref()
 
 const manager = computed(() => store.state.manager.manager)
-const managerImgSrc = computed(() => {
-  // @TODO: ../../ 길게 되어 있는거 수정
-  if (process.env.IS_DEV) {
-    if (manager.value.id) {
-      return new URL(`../../../../../main/data/${manager.value.id}/${manager.value.img}`, import.meta.url).href
-    } else {
-      return new URL('../../../../../main/default/manager.png', import.meta.url).href
-    }
-  } else {
-    if (manager.value.id) {
-      return new URL(`${process.resourcesPath}/data/${manager.value.id}/${manager.value.img}`, import.meta.url).href
-    } else {
-      return new URL(`${process.resourcesPath}/default/manager.png`, import.meta.url).href
-    }
-  }
+
+onMounted(async () => {
+  imgSrc.value = await getImageFile()
 })
+
+const getImageFile = async () => {
+  const imageBuffer: Buffer = await ipcRenderer.invoke('get-manager-image', {
+    id: manager.value.id,
+    img: manager.value.img,
+    circleImg: manager.value.circleImg
+  } as Manager)
+  const imgData = new Blob([imageBuffer], { type: 'image/png' })
+  return URL.createObjectURL(imgData)
+}
 
 const onClickManager = async () => {
   try {

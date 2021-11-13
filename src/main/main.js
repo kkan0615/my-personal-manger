@@ -216,6 +216,16 @@ electron_1.app.on('ready', () => {
         const dataDirPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data') : path_1.default.join(process.resourcesPath, 'data');
         return fs_1.default.readdirSync(dataDirPath);
     });
+    electron_1.ipcMain.handle('get-manager-image', (event, args) => {
+        if (args && args.id) {
+            const imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data', args.id, args.img) : path_1.default.join(process.resourcesPath, 'data', args.id, args.img);
+            return fs_1.default.readFileSync(imgPath);
+        }
+        else {
+            const imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'default', 'manager.png') : path_1.default.join(process.resourcesPath, 'default', 'manager.png');
+            return fs_1.default.readFileSync(imgPath);
+        }
+    });
     /* Create manager slot */
     electron_1.ipcMain.on('create-manager', async (event, args) => {
         const mangerId = await (0, manager_1.createManager)(args);
