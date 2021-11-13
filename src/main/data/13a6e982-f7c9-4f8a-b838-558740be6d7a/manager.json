@@ -1,0 +1,50 @@
+{
+  "id": "13a6e982-f7c9-4f8a-b838-558740be6d7a",
+  "name": "nozomi tojo",
+  "img": "manager.png",
+  "circle": "manager-circle.jpg",
+  "morningMessages": [
+    {
+      "message": "test 1"
+    },
+    {
+      "message": "test 2"
+    },
+    {
+      "message": "test 3"
+    }
+  ],
+  "lunchMessages":[
+    {
+      "message": "test 1"
+    },
+    {
+      "message": "test 2"
+    },
+    {
+      "message": "test 3"
+    }
+  ],
+  "eveningsMessages": [
+    {
+      "message": "test 1"
+    },
+    {
+      "message": "test 2"
+    },
+    {
+      "message": "test 3"
+    }
+  ],
+  "randClickMessages":[
+    {
+      "message": "test 1"
+    },
+    {
+      "message": "test 2"
+    },
+    {
+      "message": "test 3"
+    }
+  ]
+}

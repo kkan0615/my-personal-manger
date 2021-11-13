@@ -5,23 +5,25 @@
 import useStore from '@/store'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { useRouter } from 'vue-router'
+import useElectron from '@/mixins/useElectron'
+import { onMounted } from 'vue'
 
-const electron = window.require('electron')
+const { ipcRenderer } = useElectron()
 
 const store = useStore()
 const router = useRouter()
 
-electron.ipcRenderer.on('sync-manager', async (event, args) => {
-  try {
-    await store.dispatch(ManagerActionTypes.SET_MANAGER, args)
-    await store.dispatch(ManagerActionTypes.HELLO_MANAGER)
-  } catch (e) {
-    console.error(e)
-  }
+onMounted(async () => {
+  const manager = await ipcRenderer.invoke('sync-manager')
+  await store.dispatch(ManagerActionTypes.SET_MANAGER, manager)
+
+  const managerConfig = await ipcRenderer.invoke('sync-manager-config')
+  await store.dispatch(ManagerActionTypes.SET_MANAGER_CONFIG, managerConfig)
 })
 
+
 /* Move to home */
-electron.ipcRenderer.on('move-home', async () => {
+ipcRenderer.on('move-home', async () => {
   try {
     await router.push({ name: 'Home' })
   } catch (e) {
@@ -30,7 +32,7 @@ electron.ipcRenderer.on('move-home', async () => {
 })
 
 /* Move to manager */
-electron.ipcRenderer.on('move-manager', async () => {
+ipcRenderer.on('move-manager', async () => {
   try {
     await router.replace({ name: 'OverlayManager' })
   } catch (e) {

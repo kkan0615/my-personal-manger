@@ -6,6 +6,7 @@ export interface ManagerMessage {
 }
 
 export interface Manager {
+  id?: string
   name: string
   img: string
   circleImg: string

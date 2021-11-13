@@ -176,16 +176,50 @@ electron_1.app.whenReady()
 });
 /* When app is ready to open */
 electron_1.app.on('ready', () => {
+    // @TODO: For test
+    store_1.electronStore.set(store_2.StoreKeyEnum.MANAGER_ID, '13a6e982-f7c9-4f8a-b838-558740be6d7a');
     /* Open manager */
     electron_1.ipcMain.on('open-manager-window', () => {
         createManagerWindow();
     });
-    electron_1.ipcMain.on('sync-manager', (event) => {
-        event.sender.send('sync-manager', store_1.electronStore.get('manager'));
+    /* Handle */
+    electron_1.ipcMain.handle('sync-manager', () => {
+        const managerId = store_1.electronStore.get(store_2.StoreKeyEnum.MANAGER_ID);
+        if (managerId) {
+            const managerPath = electron_is_dev_1.default ? path_1.default.join(__dirname, `data/${managerId}/manager.json`) : path_1.default.join(process.resourcesPath, `data/${managerId}/manager.json`);
+            const fileData = fs_1.default.readFileSync(managerPath, 'utf-8');
+            return JSON.parse(fileData);
+        }
+        else {
+            const defaultManagerPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'default', 'defaultManager.json') : path_1.default.join(process.resourcesPath, 'default', 'defaultManager.json');
+            const fileData = fs_1.default.readFileSync(defaultManagerPath, 'utf-8');
+            return JSON.parse(fileData);
+        }
+    });
+    electron_1.ipcMain.handle('sync-manager-config', () => {
+        const managerId = store_1.electronStore.get(store_2.StoreKeyEnum.MANAGER_ID);
+        if (managerId) {
+            const managerConfigPath = electron_is_dev_1.default ? path_1.default.join(__dirname, `data/${managerId}/managerConfig.json`) : path_1.default.join(process.resourcesPath, `data/${managerId}/managerConfig.json`);
+            const fileData = fs_1.default.readFileSync(managerConfigPath, 'utf-8');
+            return JSON.parse(fileData);
+        }
+        else {
+            const defaultManagerConfigPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'default', 'defaultManagerConfig.json') : path_1.default.join(process.resourcesPath, 'default', 'defaultManagerConfig.json');
+            const fileData = fs_1.default.readFileSync(defaultManagerConfigPath, 'utf-8');
+            return JSON.parse(fileData);
+        }
+    });
+    electron_1.ipcMain.on('clear-managerId', (event) => {
+        store_1.electronStore.delete(store_2.StoreKeyEnum.MANAGER_ID);
+    });
+    electron_1.ipcMain.handle('get-manager-list', () => {
+        const dataDirPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data') : path_1.default.join(process.resourcesPath, 'data');
+        return fs_1.default.readdirSync(dataDirPath);
     });
     /* Create manager slot */
     electron_1.ipcMain.on('create-manager', async (event, args) => {
-        await (0, manager_1.createManager)(args);
+        const mangerId = await (0, manager_1.createManager)(args);
+        event.sender.send('success-create-manger', mangerId);
     });
     /* Create manager main image */
     electron_1.ipcMain.on('create-manager-main-image', async (event, args) => {

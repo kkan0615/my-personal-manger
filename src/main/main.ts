@@ -1,11 +1,11 @@
 import path from 'path'
 import fs from 'fs'
-import { app, BrowserWindow, Tray, Menu, ipcMain, IpcMainEvent, screen } from 'electron'
+import { app, BrowserWindow, ipcMain, IpcMainEvent, Menu, screen, Tray } from 'electron'
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
 import { StoreKeyEnum } from './types/store'
 import { createManager, createManagerMainImage } from './services/manager'
-import { ManagerCreateForm, ManagerWithConfig } from './types/models/Manager'
+import { ManagerCreateForm } from './types/models/Manager'
 
 // const isDev = false
 
@@ -193,13 +193,51 @@ app.whenReady()
 
 /* When app is ready to open */
 app.on('ready', () => {
+  // @TODO: For test
+  electronStore.set(StoreKeyEnum.MANAGER_ID, '13a6e982-f7c9-4f8a-b838-558740be6d7a')
   /* Open manager */
   ipcMain.on('open-manager-window', () => {
     createManagerWindow()
   })
 
-  ipcMain.on('sync-manager', (event) => {
-    event.sender.send('sync-manager', electronStore.get('manager'))
+  /* Handle */
+  ipcMain.handle('sync-manager', () => {
+    const managerId = electronStore.get(StoreKeyEnum.MANAGER_ID)
+    if (managerId) {
+      const managerPath = isDev ? path.join(__dirname, `data/${managerId}/manager.json`) : path.join(process.resourcesPath, `data/${managerId}/manager.json`)
+      const fileData = fs.readFileSync(managerPath, 'utf-8')
+
+      return JSON.parse(fileData)
+    } else {
+      const defaultManagerPath = isDev ? path.join(__dirname, 'default', 'defaultManager.json') : path.join(process.resourcesPath, 'default', 'defaultManager.json')
+      const fileData = fs.readFileSync(defaultManagerPath, 'utf-8')
+
+      return JSON.parse(fileData)
+    }
+  })
+
+  ipcMain.handle('sync-manager-config', () => {
+    const managerId = electronStore.get(StoreKeyEnum.MANAGER_ID)
+    if (managerId) {
+      const managerConfigPath = isDev ? path.join(__dirname, `data/${managerId}/managerConfig.json`) : path.join(process.resourcesPath, `data/${managerId}/managerConfig.json`)
+      const fileData = fs.readFileSync(managerConfigPath, 'utf-8')
+
+      return JSON.parse(fileData)
+    } else {
+      const defaultManagerConfigPath = isDev ? path.join(__dirname, 'default', 'defaultManagerConfig.json') : path.join(process.resourcesPath, 'default', 'defaultManagerConfig.json')
+      const fileData = fs.readFileSync(defaultManagerConfigPath, 'utf-8')
+
+      return JSON.parse(fileData)
+    }
+  })
+
+  ipcMain.on('clear-managerId', (event) => {
+    electronStore.delete(StoreKeyEnum.MANAGER_ID)
+  })
+
+  ipcMain.handle('get-manager-list', () => {
+    const dataDirPath = isDev ? path.join(__dirname, 'data') : path.join(process.resourcesPath, 'data')
+    return fs.readdirSync(dataDirPath)
   })
 
   /* Create manager slot */

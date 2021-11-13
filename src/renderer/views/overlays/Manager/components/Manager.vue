@@ -7,7 +7,7 @@
       ref="imgRef"
       class="tw-w-auto tw-h-full tw-cursor-pointer tw-bg-transparent"
       alt="manager"
-      src="@main/default/manager.png"
+      :src="managerImgSrc"
       draggable="false"
       @mousedown="onMouseDown"
       @contextmenu.prevent="onClickContextMenu"
@@ -32,18 +32,39 @@ export default {
 <script setup lang="ts">
 import useStore from '@/store'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
-import { nextTick, ref } from 'vue'
-import ManagerOverlayContextMenu from '@/views/overlays/Manager/components/ContextMenu.vue'
+import { computed, nextTick, ref } from 'vue'
+// import isDev from 'electron-is-dev'
 import { offMangerThrough, onMangerThrough } from '@/utils/electrons/ipc'
-const electron = window.require('electron')
+import useElectron from '@/mixins/useElectron'
+import ManagerOverlayContextMenu from '@/views/overlays/Manager/components/ContextMenu.vue'
 
 const store = useStore()
+const { ipcRenderer } = useElectron()
+
 const x = ref(0)
 const y = ref(0)
 const animationId = ref<number | undefined>(undefined)
 const contextmenuX = ref(0)
 const contextmenuY = ref(0)
 const displayContextMenu = ref(false)
+
+const manager = computed(() => store.state.manager.manager)
+const managerImgSrc = computed(() => {
+  // @TODO: ../../ 길게 되어 있는거 수정
+  if (process.env.IS_DEV) {
+    if (manager.value.id) {
+      return new URL(`../../../../../main/data/${manager.value.id}/${manager.value.img}`, import.meta.url).href
+    } else {
+      return new URL('../../../../../main/default/manager.png', import.meta.url).href
+    }
+  } else {
+    if (manager.value.id) {
+      return new URL(`${process.resourcesPath}/data/${manager.value.id}/${manager.value.img}`, import.meta.url).href
+    } else {
+      return new URL(`${process.resourcesPath}/default/manager.png`, import.meta.url).href
+    }
+  }
+})
 
 const onClickManager = async () => {
   try {
@@ -68,7 +89,7 @@ const onMouseDown = (event: MouseEvent) => {
 }
 
 const moveWindow = () => {
-  electron.ipcRenderer.send('manager-move-screen', { x: x.value, y: y.value })
+  ipcRenderer.send('manager-move-screen', { x: x.value, y: y.value })
   animationId.value = requestAnimationFrame(moveWindow)
 }
 
