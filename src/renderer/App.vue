@@ -14,13 +14,12 @@ const store = useStore()
 const router = useRouter()
 
 onMounted(async () => {
-  const manager = await ipcRenderer.invoke('sync-manager')
-  await store.dispatch(ManagerActionTypes.SET_MANAGER, manager)
-
   const managerConfig = await ipcRenderer.invoke('sync-manager-config')
   await store.dispatch(ManagerActionTypes.SET_MANAGER_CONFIG, managerConfig)
-})
 
+  const manager = await ipcRenderer.invoke('sync-manager')
+  await store.dispatch(ManagerActionTypes.SET_MANAGER, manager)
+})
 
 /* Move to home */
 ipcRenderer.on('move-home', async () => {
@@ -34,7 +33,7 @@ ipcRenderer.on('move-home', async () => {
 /* Move to manager */
 ipcRenderer.on('move-manager', async () => {
   try {
-    await router.replace({ name: 'OverlayManager' })
+    await router.replace({ name: 'MangerBaseLayout' })
   } catch (e) {
     console.error(e)
   }

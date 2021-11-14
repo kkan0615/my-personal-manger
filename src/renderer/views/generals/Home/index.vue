@@ -93,7 +93,7 @@ const onClickTryToChangeBtn = async () => {
 }
 
 const onClickToOverlayManagerBtn = async () => {
-  await router.push({ name: 'OverlayManager' })
+  await router.push({ name: 'FullManager' })
 }
 
 </script>

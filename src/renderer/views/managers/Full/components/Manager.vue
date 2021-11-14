@@ -15,7 +15,7 @@
       @mouseenter="onMouseEnter"
       @mouseleave="onMouseLeave"
     >
-    <manager-overlay-context-menu
+    <full-manager-manager-context-menu
       v-if="displayContextMenu"
       :top="contextmenuY"
       :left="contextmenuX"
@@ -27,7 +27,7 @@
     lang="ts"
 >
 export default {
-  name: 'ManagerOverlayManager',
+  name: 'FullManagerManager',
 }
 </script>
 <script setup lang="ts">
@@ -36,8 +36,8 @@ import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { offMangerThrough, onMangerThrough } from '@/utils/electrons/ipc'
 import useElectron from '@/mixins/useElectron'
-import ManagerOverlayContextMenu from '@/views/overlays/Manager/components/ContextMenu.vue'
 import { Manager } from '@/types/models/Manager'
+import FullManagerManagerContextMenu from '@/views/managers/Full/components/ContextMenu.vue'
 
 const store = useStore()
 const { ipcRenderer } = useElectron()

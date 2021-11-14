@@ -2,7 +2,7 @@
   "id": "13a6e982-f7c9-4f8a-b838-558740be6d7a",
   "name": "nozomi tojo",
   "img": "manager.png",
-  "circle": "manager-circle.jpg",
+  "circleImg": "manager-circle.png",
   "morningMessages": [
     {
       "message": "test 1"

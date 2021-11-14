@@ -1,7 +1,7 @@
 {
   "name": "Koizumi hanayo",
   "img": "manager.png",
-  "circle": "manager-circle.jpg",
+  "circleImg": "manager-circle.jpg",
   "morningMessages": [
     {
       "message": "test 1"

@@ -26,13 +26,13 @@
     lang="ts"
 >
 export default {
-  name: 'ManagerOverlayContextMenu',
+  name: 'FullManagerManagerContextMenu',
 }
 </script>
 <script setup lang="ts">
 import useStore from '@/store'
 import { useRoute } from 'vue-router'
-import { computed, defineEmits, defineProps } from 'vue'
+import { defineEmits, defineProps } from 'vue'
 import CList from '@/components/commons/List/index.vue'
 import CListItem from '@/components/commons/List/components/Item.vue'
 import CListTitle from '@/components/commons/List/components/Title.vue'

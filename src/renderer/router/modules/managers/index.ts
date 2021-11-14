@@ -6,12 +6,16 @@ export const managerRoutes: Array<RouteRecordRaw> = [
     path: '/manger',
     name: 'MangerBaseLayout',
     component: ManagerBaseLayout,
-    redirect: { name: 'OverlayManager' },
     children: [
       {
-        path: '',
-        name: 'OverlayManager',
-        component: () => import('@/views/overlays/Manager/index.vue'),
+        path: '/full',
+        name: 'FullManager',
+        component: () => import('@/views/managers/Full/index.vue'),
+      },
+      {
+        path: '/circle',
+        name: 'CircleManager',
+        component: () => import('@/views/managers/Circle/index.vue'),
       },
     ]
   },

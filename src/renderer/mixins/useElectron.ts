@@ -6,6 +6,6 @@ export default function () {
   const ipcRenderer: IpcRenderer = electron.ipcRenderer
 
   return {
-    ipcRenderer
+    ipcRenderer,
   }
 }

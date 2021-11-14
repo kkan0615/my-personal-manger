@@ -80,10 +80,29 @@ const createManagerWindow = () => {
     const moveMangerScreen = (event: IpcMainEvent, args: { x: number; y: number }) => {
       const cursorScreenPoint = screen.getCursorScreenPoint()
       if (managerWindow) {
-        managerWindow.setPosition(cursorScreenPoint.x - args.x, cursorScreenPoint.y - args.y)
+        const newX = cursorScreenPoint.x - args.x
+        const newY = cursorScreenPoint.y - args.y
+        event.sender.send('manger-window-position-changing', {
+          x: newX,
+          y: newY,
+        })
+        managerWindow.setPosition(newX, newY)
+      }
+    }
+    const stopMoveMangerScreen = (event: IpcMainEvent, args: { x: number; y: number }) => {
+      const cursorScreenPoint = screen.getCursorScreenPoint()
+      if (managerWindow) {
+        const newX = cursorScreenPoint.x - args.x
+        const newY = cursorScreenPoint.y - args.y
+        event.sender.send('manger-window-position-changed', {
+          x: newX,
+          y: newY,
+        })
+        managerWindow.setPosition(newX, newY)
       }
     }
     ipcMain.on('manager-move-screen', moveMangerScreen)
+    ipcMain.on('manager-stop-move-screen', stopMoveMangerScreen)
 
     ipcMain.on('manager-through-on', () => {
       if (managerWindow) {
@@ -240,14 +259,30 @@ app.on('ready', () => {
     return fs.readdirSync(dataDirPath)
   })
 
+  /**
+   * Get full size image
+   */
   ipcMain.handle('get-manager-image', (event, args: Manager) => {
+    let imgPath: string
     if (args && args.id) {
-      const imgPath = isDev ? path.join(__dirname, 'data', args.id, args.img) : path.join(process.resourcesPath, 'data', args.id, args.img)
-      return fs.readFileSync(imgPath)
+      imgPath = isDev ? path.join(__dirname, 'data', args.id, args.img) : path.join(process.resourcesPath, 'data', args.id, args.img)
     } else {
-      const imgPath = isDev ? path.join(__dirname, 'default', 'manager.png') : path.join(process.resourcesPath, 'default', 'manager.png')
-      return fs.readFileSync(imgPath)
+      imgPath = isDev ? path.join(__dirname, 'default', 'manager.png') : path.join(process.resourcesPath, 'default', 'manager.png')
     }
+    return fs.readFileSync(imgPath)
+
+  })
+
+  /*  Get circle size image */
+  ipcMain.handle('get-manager-circle-image', (event, args: Manager) => {
+    let imgPath: string
+    if (args && args.id) {
+      imgPath = isDev ? path.join(__dirname, 'data', args.id, args.circleImg) : path.join(process.resourcesPath, 'data', args.id, args.circleImg)
+    } else {
+      imgPath = isDev ? path.join(__dirname, 'default', 'manager-circle.png') : path.join(process.resourcesPath, 'default', 'manager-circle.png')
+    }
+
+    return fs.readFileSync(imgPath)
   })
 
   /* Create manager slot */

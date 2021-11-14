@@ -2,7 +2,7 @@
   <div
     class="tw-relative"
   >
-    <manager-overlay-manager />
+    <full-manager-manager />
     <div
       v-if="message"
       class="speech-bubble-container"
@@ -24,7 +24,7 @@
   lang="ts"
 >
 export default {
-  name: 'ManagerOverlay',
+  name: 'FullManager',
 }
 </script>
 <script setup lang="ts">
@@ -32,11 +32,12 @@ import { computed, onMounted } from 'vue'
 import useStore from '@/store'
 import { useRoute } from 'vue-router'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
-import ManagerOverlayManager from '@/views/overlays/Manager/components/Manager.vue'
+import FullManagerManager from '@/views/managers/Full/components/Manager.vue'
 
 const store = useStore()
 const route = useRoute()
 const message = computed(() => store.state.manager.message)
+
 onMounted(async () => {
   document.body.classList.add('tw-w-72')
   await store.dispatch(ManagerActionTypes.SET_MESSAGE, route.fullPath)
@@ -47,11 +48,6 @@ onMounted(async () => {
   scoped
   lang="scss"
 >
-  .manager-container {
-    height: 300px;
-    width: auto;
-  }
-
   .speech-bubble-container {
     @apply
       tw-absolute

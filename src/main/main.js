@@ -73,10 +73,29 @@ const createManagerWindow = () => {
         const moveMangerScreen = (event, args) => {
             const cursorScreenPoint = electron_1.screen.getCursorScreenPoint();
             if (managerWindow) {
-                managerWindow.setPosition(cursorScreenPoint.x - args.x, cursorScreenPoint.y - args.y);
+                const newX = cursorScreenPoint.x - args.x;
+                const newY = cursorScreenPoint.y - args.y;
+                event.sender.send('manger-window-position-changing', {
+                    x: newX,
+                    y: newY,
+                });
+                managerWindow.setPosition(newX, newY);
+            }
+        };
+        const stopMoveMangerScreen = (event, args) => {
+            const cursorScreenPoint = electron_1.screen.getCursorScreenPoint();
+            if (managerWindow) {
+                const newX = cursorScreenPoint.x - args.x;
+                const newY = cursorScreenPoint.y - args.y;
+                event.sender.send('manger-window-position-changed', {
+                    x: newX,
+                    y: newY,
+                });
+                managerWindow.setPosition(newX, newY);
             }
         };
         electron_1.ipcMain.on('manager-move-screen', moveMangerScreen);
+        electron_1.ipcMain.on('manager-stop-move-screen', stopMoveMangerScreen);
         electron_1.ipcMain.on('manager-through-on', () => {
             if (managerWindow) {
                 managerWindow.setIgnoreMouseEvents(true, { forward: true });
@@ -216,15 +235,29 @@ electron_1.app.on('ready', () => {
         const dataDirPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data') : path_1.default.join(process.resourcesPath, 'data');
         return fs_1.default.readdirSync(dataDirPath);
     });
+    /**
+     * Get full size image
+     */
     electron_1.ipcMain.handle('get-manager-image', (event, args) => {
+        let imgPath;
         if (args && args.id) {
-            const imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data', args.id, args.img) : path_1.default.join(process.resourcesPath, 'data', args.id, args.img);
-            return fs_1.default.readFileSync(imgPath);
+            imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data', args.id, args.img) : path_1.default.join(process.resourcesPath, 'data', args.id, args.img);
         }
         else {
-            const imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'default', 'manager.png') : path_1.default.join(process.resourcesPath, 'default', 'manager.png');
-            return fs_1.default.readFileSync(imgPath);
+            imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'default', 'manager.png') : path_1.default.join(process.resourcesPath, 'default', 'manager.png');
         }
+        return fs_1.default.readFileSync(imgPath);
+    });
+    /*  Get circle size image */
+    electron_1.ipcMain.handle('get-manager-circle-image', (event, args) => {
+        let imgPath;
+        if (args && args.id) {
+            imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data', args.id, args.circleImg) : path_1.default.join(process.resourcesPath, 'data', args.id, args.circleImg);
+        }
+        else {
+            imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'default', 'manager-circle.png') : path_1.default.join(process.resourcesPath, 'default', 'manager-circle.png');
+        }
+        return fs_1.default.readFileSync(imgPath);
     });
     /* Create manager slot */
     electron_1.ipcMain.on('create-manager', async (event, args) => {
