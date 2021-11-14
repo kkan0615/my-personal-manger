@@ -5,13 +5,19 @@ import { ManagerState } from './state'
 import { Manager } from '@/types/models/Manager'
 import { ManagerConfig } from '@/types/models/Manager/config'
 
+const electron = window.require('electron')
+
 export enum ManagerActionTypes {
+  LOAD_MANAGER = 'manager/LOAD_MANAGER',
   SET_MANAGER = 'manager/SET_MANAGER',
   RESET_MANAGER = 'manager/RESET_MANAGER',
+  LOAD_MANAGER_CONFIG = 'manager/LOAD_MANAGER_CONFIG',
   SET_MANAGER_CONFIG = 'manager/SET_MANAGER_CONFIG',
   RESET_MANAGER_CONFIG = 'manager/RESET_MANAGER_CONFIG',
   SET_MESSAGE = 'manger/SET_MESSAGE',
   HELLO_MANAGER = 'manger/HELLO_MANAGER',
+  HAPPY_BIRTHDAY = 'manager/HAPPY_BIRTHDAY',
+  ON_MASSAGE_TIMER = 'manger/ON_MASSAGE_TIMER',
 }
 
 export type AugmentedActionContext = {
@@ -22,6 +28,9 @@ export type AugmentedActionContext = {
 } & Omit<ActionContext<ManagerState, RootState>, 'commit'>
 
 export interface ManagerActions {
+  [ManagerActionTypes.LOAD_MANAGER](
+    { commit }: AugmentedActionContext,
+  ): Promise<void>
   [ManagerActionTypes.SET_MANAGER](
     { commit }: AugmentedActionContext,
     payload: Manager
@@ -29,6 +38,9 @@ export interface ManagerActions {
   [ManagerActionTypes.RESET_MANAGER](
     { commit }: AugmentedActionContext,
   ): void
+  [ManagerActionTypes.LOAD_MANAGER_CONFIG](
+    { commit }: AugmentedActionContext,
+  ): Promise<void>
   [ManagerActionTypes.SET_MANAGER_CONFIG](
     { commit }: AugmentedActionContext,
     payload: ManagerConfig
@@ -43,14 +55,28 @@ export interface ManagerActions {
   [ManagerActionTypes.HELLO_MANAGER](
     { commit }: AugmentedActionContext,
   ): void
+  [ManagerActionTypes.HAPPY_BIRTHDAY](
+    { commit }: AugmentedActionContext,
+  ): void
+  [ManagerActionTypes.ON_MASSAGE_TIMER](
+    { commit }: AugmentedActionContext,
+  ): void
 }
 
 export const managerActions: ActionTree<ManagerState, RootState> & ManagerActions = {
+  async [ManagerActionTypes.LOAD_MANAGER] ({ commit }) {
+    const manager = await electron.ipcRenderer.invoke('sync-manager')
+    commit(ManagerMutationTypes.SET_MANAGER, manager)
+  },
   [ManagerActionTypes.SET_MANAGER] ({ commit }, payload) {
     commit(ManagerMutationTypes.SET_MANAGER, payload)
   },
   [ManagerActionTypes.RESET_MANAGER] ({ commit }) {
     commit(ManagerMutationTypes.SET_MANAGER, {} as Manager)
+  },
+  async [ManagerActionTypes.LOAD_MANAGER_CONFIG] ({ commit }) {
+    const managerConfig = await electron.ipcRenderer.invoke('sync-manager-config')
+    commit(ManagerMutationTypes.SET_MANAGER_CONFIG, managerConfig)
   },
   [ManagerActionTypes.SET_MANAGER_CONFIG] ({ commit }, payload) {
     commit(ManagerMutationTypes.SET_MANAGER_CONFIG, payload)
@@ -66,12 +92,19 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
     }, 2500))
     commit(ManagerMutationTypes.SET_MESSAGE, payload)
   },
-  [ManagerActionTypes.HELLO_MANAGER] ({ commit, state }) {
-    // @TODO: 여러 곳에서 써야하기때문에 Action 혹은 Mutations 화 시켜두기
-    commit(ManagerMutationTypes.SET_MESSAGE_TIMER, setTimeout(() => {
-      commit(ManagerMutationTypes.SET_MESSAGE, '')
-      commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
-    }, 2500))
+  [ManagerActionTypes.HELLO_MANAGER] ({ commit, state, dispatch }) {
     commit(ManagerMutationTypes.SET_MESSAGE, `I am ${state.manager.name} Hello {{ name }} master!`)
+    dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
+  },
+  [ManagerActionTypes.HAPPY_BIRTHDAY] ({ commit, state, dispatch }) {
+    commit(ManagerMutationTypes.SET_MESSAGE, `I am ${state.manager.name} Hello {{ name }} master!`)
+    dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
+  },
+  [ManagerActionTypes.ON_MASSAGE_TIMER] ({ commit }) {
+    commit(ManagerMutationTypes.SET_MESSAGE_TIMER,
+      setTimeout(() => {
+        commit(ManagerMutationTypes.SET_MESSAGE, '')
+        commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
+      }, 2500))
   },
 }

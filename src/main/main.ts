@@ -6,6 +6,9 @@ import isDev from 'electron-is-dev'
 import { StoreKeyEnum } from './types/store'
 import { createManager, createManagerMainImage } from './services/manager'
 import { Manager, ManagerCreateForm } from './types/models/Manager'
+import { User } from '../renderer/types/models/User'
+import { v4 } from 'uuid'
+import dayjs from 'dayjs'
 
 // const isDev = false
 
@@ -33,7 +36,10 @@ const createMainWindow = () => {
 
   mainWindow.webContents.on('did-frame-finish-load', () => {
     if (mainWindow) {
-      mainWindow.webContents.send('move-home')
+      if (electronStore.get(StoreKeyEnum.USER))
+        mainWindow.webContents.send('move-home')
+      else
+        mainWindow.webContents.send('move-register')
     }
   })
 
@@ -214,6 +220,12 @@ app.whenReady()
 app.on('ready', () => {
   // @TODO: For test
   electronStore.set(StoreKeyEnum.MANAGER_ID, '13a6e982-f7c9-4f8a-b838-558740be6d7a')
+  // electronStore.set(StoreKeyEnum.USER, {
+  //   id: v4(),
+  //   name: 'Youngjin',
+  //   birthday: dayjs().year(1998).month(6).day(15)
+  // } as User)
+  // electronStore.delete(StoreKeyEnum.USER)
   /* Open manager */
   ipcMain.on('open-manager-window', () => {
     createManagerWindow()
@@ -252,6 +264,10 @@ app.on('ready', () => {
 
   ipcMain.on('clear-managerId', (event) => {
     electronStore.delete(StoreKeyEnum.MANAGER_ID)
+  })
+
+  ipcMain.handle('get-user', () => {
+    return electronStore.get(StoreKeyEnum.USER)
   })
 
   ipcMain.handle('get-manager-list', () => {

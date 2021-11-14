@@ -10,10 +10,7 @@
       <div
         class="speech-bubble"
       >
-        <span
-          v-for="i in 3"
-          :key="i"
-        >
+        <span>
           {{ message }}
         </span>
       </div>

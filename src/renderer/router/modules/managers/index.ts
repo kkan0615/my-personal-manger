@@ -8,12 +8,12 @@ export const managerRoutes: Array<RouteRecordRaw> = [
     component: ManagerBaseLayout,
     children: [
       {
-        path: '/full',
+        path: 'full',
         name: 'FullManager',
         component: () => import('@/views/managers/Full/index.vue'),
       },
       {
-        path: '/circle',
+        path: 'circle',
         name: 'CircleManager',
         component: () => import('@/views/managers/Circle/index.vue'),
       },

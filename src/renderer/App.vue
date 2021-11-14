@@ -7,6 +7,7 @@ import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { useRouter } from 'vue-router'
 import useElectron from '@/mixins/useElectron'
 import { onMounted } from 'vue'
+import { CurrentActionTypes } from '@/store/modules/systems/current/actions'
 
 const { ipcRenderer } = useElectron()
 
@@ -14,11 +15,21 @@ const store = useStore()
 const router = useRouter()
 
 onMounted(async () => {
-  const managerConfig = await ipcRenderer.invoke('sync-manager-config')
-  await store.dispatch(ManagerActionTypes.SET_MANAGER_CONFIG, managerConfig)
+  /* Load user data */
+  await store.dispatch(CurrentActionTypes.LOAD_USER)
+  /* Load manager config */
+  await store.dispatch(ManagerActionTypes.LOAD_MANAGER_CONFIG)
+  /* Load Manager */
+  await store.dispatch(ManagerActionTypes.LOAD_MANAGER)
+})
 
-  const manager = await ipcRenderer.invoke('sync-manager')
-  await store.dispatch(ManagerActionTypes.SET_MANAGER, manager)
+/* Move to home */
+ipcRenderer.on('move-register', async () => {
+  try {
+    await router.push({ name: 'RegisterAuth' })
+  } catch (e) {
+    console.error(e)
+  }
 })
 
 /* Move to home */

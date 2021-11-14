@@ -1,6 +1,6 @@
 {
   "display": "ALWAYS",
   "isAlwaysTop": true,
-  "displayStyle": "CIRCLE",
+  "displayStyle": "FULL",
   "isOnSound": false
 }

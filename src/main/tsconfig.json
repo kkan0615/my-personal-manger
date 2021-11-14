@@ -12,9 +12,12 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "@main-electron/*": [
-        "/*"
-      ]
+      "@/*": [
+        "src/renderer/*"
+      ],
+      "@main/*": [
+        "src/main/*"
+      ],
     }
   },
   "exclude": ["node_modules"],

@@ -32,7 +32,10 @@ const createMainWindow = () => {
     mainWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000' : `file://${path_1.default.join(__dirname, '../../dist/index.html')}`);
     mainWindow.webContents.on('did-frame-finish-load', () => {
         if (mainWindow) {
-            mainWindow.webContents.send('move-home');
+            if (store_1.electronStore.get(store_2.StoreKeyEnum.USER))
+                mainWindow.webContents.send('move-home');
+            else
+                mainWindow.webContents.send('move-register');
         }
     });
     if (electron_is_dev_1.default) {
@@ -197,6 +200,12 @@ electron_1.app.whenReady()
 electron_1.app.on('ready', () => {
     // @TODO: For test
     store_1.electronStore.set(store_2.StoreKeyEnum.MANAGER_ID, '13a6e982-f7c9-4f8a-b838-558740be6d7a');
+    // electronStore.set(StoreKeyEnum.USER, {
+    //   id: v4(),
+    //   name: 'Youngjin',
+    //   birthday: dayjs().year(1998).month(6).day(15)
+    // } as User)
+    store_1.electronStore.delete(store_2.StoreKeyEnum.USER);
     /* Open manager */
     electron_1.ipcMain.on('open-manager-window', () => {
         createManagerWindow();
@@ -230,6 +239,9 @@ electron_1.app.on('ready', () => {
     });
     electron_1.ipcMain.on('clear-managerId', (event) => {
         store_1.electronStore.delete(store_2.StoreKeyEnum.MANAGER_ID);
+    });
+    electron_1.ipcMain.handle('get-user', () => {
+        return store_1.electronStore.get(store_2.StoreKeyEnum.USER);
     });
     electron_1.ipcMain.handle('get-manager-list', () => {
         const dataDirPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data') : path_1.default.join(process.resourcesPath, 'data');
