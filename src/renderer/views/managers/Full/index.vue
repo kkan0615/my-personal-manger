@@ -37,7 +37,7 @@ const message = computed(() => store.state.manager.message)
 
 onMounted(async () => {
   document.body.classList.add('tw-w-72')
-  await store.dispatch(ManagerActionTypes.SET_MESSAGE, route.fullPath)
+  await store.dispatch(ManagerActionTypes.HELLO_MANAGER)
 })
 
 </script>

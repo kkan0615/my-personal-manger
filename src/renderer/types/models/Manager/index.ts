@@ -13,6 +13,7 @@ export interface Manager {
   morningMessages: Array<ManagerMessage>
   lunchMessages: Array<ManagerMessage>
   eveningsMessages: Array<ManagerMessage>
+  nightMessages: Array<ManagerMessage>
   randClickMessages: Array<ManagerMessage>
 }
 

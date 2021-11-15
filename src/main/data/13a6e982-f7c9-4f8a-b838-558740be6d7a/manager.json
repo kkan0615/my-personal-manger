@@ -5,35 +5,46 @@
   "circleImg": "manager-circle.png",
   "morningMessages": [
     {
-      "message": "test 1"
+      "message": "Morning test 1"
     },
     {
-      "message": "test 2"
+      "message": "Morning test 2"
     },
     {
-      "message": "test 3"
+      "message": "Morning test 3"
     }
   ],
   "lunchMessages":[
     {
-      "message": "test 1"
+      "message": "Lunch test 1"
     },
     {
-      "message": "test 2"
+      "message": "Lunch test 2"
     },
     {
-      "message": "test 3"
+      "message": "Lunch test 3"
     }
   ],
   "eveningsMessages": [
     {
-      "message": "test 1"
+      "message": "Evening test 1"
     },
     {
-      "message": "test 2"
+      "message": "Evening test 2"
     },
     {
-      "message": "test 3"
+      "message": "Evening test 3"
+    }
+  ],
+  "nightMessages": [
+    {
+      "message": "Night test 1"
+    },
+    {
+      "message": "Night test 2"
+    },
+    {
+      "message": "Night test 3"
     }
   ],
   "randClickMessages":[

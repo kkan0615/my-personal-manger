@@ -2,8 +2,10 @@ import { ActionContext, ActionTree } from 'vuex'
 import { RootState } from '@/store'
 import { ManagerMutations, ManagerMutationTypes } from './mutations'
 import { ManagerState } from './state'
-import { Manager } from '@/types/models/Manager'
+import { Manager, ManagerMessage } from '@/types/models/Manager'
 import { ManagerConfig } from '@/types/models/Manager/config'
+import { getRandomInArr, getRandomInt } from '@/utils/random'
+import { getCurrentTimesInDay } from '@/utils/time'
 
 const electron = window.require('electron')
 
@@ -16,8 +18,10 @@ export enum ManagerActionTypes {
   RESET_MANAGER_CONFIG = 'manager/RESET_MANAGER_CONFIG',
   SET_MESSAGE = 'manger/SET_MESSAGE',
   HELLO_MANAGER = 'manger/HELLO_MANAGER',
+  CLICK_MANAGER = 'manger/CLICK_MANAGER',
   HAPPY_BIRTHDAY = 'manager/HAPPY_BIRTHDAY',
   ON_MASSAGE_TIMER = 'manger/ON_MASSAGE_TIMER',
+  OFF_MESSAGE_TIMER = 'manager/OFF_MESSAGE_TIMER'
 }
 
 export type AugmentedActionContext = {
@@ -55,10 +59,16 @@ export interface ManagerActions {
   [ManagerActionTypes.HELLO_MANAGER](
     { commit }: AugmentedActionContext,
   ): void
+  [ManagerActionTypes.CLICK_MANAGER](
+    { commit }: AugmentedActionContext,
+  ): void
   [ManagerActionTypes.HAPPY_BIRTHDAY](
     { commit }: AugmentedActionContext,
   ): void
   [ManagerActionTypes.ON_MASSAGE_TIMER](
+    { commit }: AugmentedActionContext,
+  ): void
+  [ManagerActionTypes.OFF_MESSAGE_TIMER](
     { commit }: AugmentedActionContext,
   ): void
 }
@@ -92,9 +102,39 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
     }, 2500))
     commit(ManagerMutationTypes.SET_MESSAGE, payload)
   },
-  [ManagerActionTypes.HELLO_MANAGER] ({ commit, state, dispatch }) {
-    commit(ManagerMutationTypes.SET_MESSAGE, `I am ${state.manager.name} Hello {{ name }} master!`)
+  [ManagerActionTypes.HELLO_MANAGER] ({ commit, state, rootState, dispatch }) {
+    commit(ManagerMutationTypes.SET_MESSAGE, `I am ${state.manager.name} Hello ${rootState.current.user.name}  master!`)
     dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
+  },
+  [ManagerActionTypes.CLICK_MANAGER] ({ commit, state, rootState, dispatch }) {
+    if (state.messageTimer) {
+      commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
+    }
+
+    let clickMessage: ManagerMessage | null = null
+    if (getRandomInt() === 1) {
+      const currentTimesInDay = getCurrentTimesInDay()
+      switch (currentTimesInDay) {
+        case 'MORNING':
+          clickMessage = getRandomInArr(state.manager.morningMessages)
+          break
+        case 'AFTERNOON':
+          clickMessage = getRandomInArr(state.manager.lunchMessages)
+          break
+        case 'EVENING':
+          clickMessage = getRandomInArr(state.manager.eveningsMessages)
+          break
+        case 'NIGHT':
+          clickMessage = getRandomInArr(state.manager.nightMessages)
+          break
+      }
+    } else {
+      clickMessage = getRandomInArr(state.manager.randClickMessages)
+    }
+    if (clickMessage) {
+      commit(ManagerMutationTypes.SET_MESSAGE, clickMessage.message)
+      dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
+    }
   },
   [ManagerActionTypes.HAPPY_BIRTHDAY] ({ commit, state, dispatch }) {
     commit(ManagerMutationTypes.SET_MESSAGE, `I am ${state.manager.name} Hello {{ name }} master!`)
@@ -106,5 +146,8 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
         commit(ManagerMutationTypes.SET_MESSAGE, '')
         commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
       }, 2500))
+  },
+  [ManagerActionTypes.OFF_MESSAGE_TIMER] ({ commit }) {
+    commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
   },
 }

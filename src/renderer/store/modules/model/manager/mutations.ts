@@ -27,6 +27,9 @@ export const managerMutations: MutationTree<ManagerState> & ManagerMutations = {
     state.message = payload
   },
   [ManagerMutationTypes.SET_MESSAGE_TIMER] (state, payload) {
+    if (!payload && state.messageTimer) {
+      clearTimeout(state.messageTimer)
+    }
     state.messageTimer = payload
   },
 }

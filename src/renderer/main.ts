@@ -10,9 +10,12 @@ import 'bootstrap'
 /* Tailwind */
 import '@/styles/tailwind.scss'
 import '@/styles/index.scss'
+// Vue calendar
+import VCalendar from 'v-calendar'
 
 const app = createApp(App)
 app
+  .use(VCalendar)
   .use(router)
   .use(store)
   .mount('#app')

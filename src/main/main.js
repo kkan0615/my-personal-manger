@@ -10,6 +10,7 @@ const store_1 = require("./store");
 const electron_is_dev_1 = __importDefault(require("electron-is-dev"));
 const store_2 = require("./types/store");
 const manager_1 = require("./services/manager");
+const auth_1 = require("./windows/auth");
 // const isDev = false
 /* Main */
 let mainWindow;
@@ -23,6 +24,8 @@ const createMainWindow = () => {
         height: 720,
         transparent: true,
         autoHideMenuBar: true,
+        maximizable: true,
+        resizable: true,
         webPreferences: {
             preload: path_1.default.join(__dirname, 'preload.js'),
             nodeIntegration: true,
@@ -32,10 +35,7 @@ const createMainWindow = () => {
     mainWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000' : `file://${path_1.default.join(__dirname, '../../dist/index.html')}`);
     mainWindow.webContents.on('did-frame-finish-load', () => {
         if (mainWindow) {
-            if (store_1.electronStore.get(store_2.StoreKeyEnum.USER))
-                mainWindow.webContents.send('move-home');
-            else
-                mainWindow.webContents.send('move-register');
+            mainWindow.webContents.send('move-home');
         }
     });
     if (electron_is_dev_1.default) {
@@ -186,7 +186,12 @@ electron_1.app.whenReady()
         }));
     }
     /* Open Main window */
-    createMainWindow();
+    if (store_1.electronStore.get(store_2.StoreKeyEnum.USER)) {
+        createMainWindow();
+    }
+    else {
+        (0, auth_1.createAuthWindow)();
+    }
     /* Open tray */
     createTray();
     electron_1.ipcMain.emit('sync-manager', store_1.electronStore.get('manager'));
@@ -242,6 +247,16 @@ electron_1.app.on('ready', () => {
     });
     electron_1.ipcMain.handle('get-user', () => {
         return store_1.electronStore.get(store_2.StoreKeyEnum.USER);
+    });
+    electron_1.ipcMain.on('register-user', (event, args) => {
+        store_1.electronStore.set(store_2.StoreKeyEnum.USER, args);
+        createMainWindow();
+        if (auth_1.authWindow) {
+            auth_1.authWindow.destroy();
+        }
+    });
+    electron_1.ipcMain.on('set-user', (event, args) => {
+        store_1.electronStore.set(store_2.StoreKeyEnum.USER, args);
     });
     electron_1.ipcMain.handle('get-manager-list', () => {
         const dataDirPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data') : path_1.default.join(process.resourcesPath, 'data');

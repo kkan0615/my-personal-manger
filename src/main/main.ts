@@ -9,6 +9,7 @@ import { Manager, ManagerCreateForm } from './types/models/Manager'
 import { User } from '../renderer/types/models/User'
 import { v4 } from 'uuid'
 import dayjs from 'dayjs'
+import { authWindow, createAuthWindow } from './windows/auth'
 
 // const isDev = false
 
@@ -25,6 +26,8 @@ const createMainWindow = () => {
     height: 720,
     transparent: true,
     autoHideMenuBar: true,
+    maximizable: true,
+    resizable: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -36,10 +39,7 @@ const createMainWindow = () => {
 
   mainWindow.webContents.on('did-frame-finish-load', () => {
     if (mainWindow) {
-      if (electronStore.get(StoreKeyEnum.USER))
-        mainWindow.webContents.send('move-home')
-      else
-        mainWindow.webContents.send('move-register')
+      mainWindow.webContents.send('move-home')
     }
   })
 
@@ -205,7 +205,11 @@ app.whenReady()
     }
 
     /* Open Main window */
-    createMainWindow()
+    if (electronStore.get(StoreKeyEnum.USER)) {
+      createMainWindow()
+    } else {
+      createAuthWindow()
+    }
     /* Open tray */
     createTray()
     ipcMain.emit('sync-manager', electronStore.get('manager'))
@@ -225,7 +229,7 @@ app.on('ready', () => {
   //   name: 'Youngjin',
   //   birthday: dayjs().year(1998).month(6).day(15)
   // } as User)
-  // electronStore.delete(StoreKeyEnum.USER)
+  electronStore.delete(StoreKeyEnum.USER)
   /* Open manager */
   ipcMain.on('open-manager-window', () => {
     createManagerWindow()
@@ -268,6 +272,18 @@ app.on('ready', () => {
 
   ipcMain.handle('get-user', () => {
     return electronStore.get(StoreKeyEnum.USER)
+  })
+
+  ipcMain.on('register-user', (event, args) => {
+    electronStore.set(StoreKeyEnum.USER, args)
+    createMainWindow()
+    if (authWindow) {
+      authWindow.destroy()
+    }
+  })
+
+  ipcMain.on('set-user', (event, args: User) => {
+    electronStore.set(StoreKeyEnum.USER, args)
   })
 
   ipcMain.handle('get-manager-list', () => {

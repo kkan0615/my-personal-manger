@@ -68,7 +68,7 @@ const getImageFile = async () => {
 
 const onClickManager = async () => {
   try {
-    await store.dispatch(ManagerActionTypes.HELLO_MANAGER)
+    await store.dispatch(ManagerActionTypes.CLICK_MANAGER)
   } catch (e) {
     console.error(e)
   }

@@ -45,6 +45,9 @@
     >
       move to overlay manager
     </button>
+    <div>
+      {{ user }}
+    </div>
   </div>
 </template>
 <script
@@ -68,6 +71,7 @@ const store = useStore()
 const router = useRouter()
 
 const test = computed(() => store.state.prototype.test)
+const user = computed(() => store.state.current.user)
 
 onBeforeMount(async () => {
   await store.dispatch(PrototypeActionTypes.ADD_TEST, 'Arrived at home')
