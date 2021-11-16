@@ -145,12 +145,26 @@ const createTray = () => {
                 }
             },
         }, {
+            label: 'Close main',
+            click: () => {
+                if (mainWindow && mainWindow.closable) {
+                    mainWindow.close();
+                }
+            },
+        }, {
             label: 'Open Manager',
             click: () => {
                 if (managerWindow)
                     managerWindow.show();
                 else {
                     createManagerWindow();
+                }
+            },
+        }, {
+            label: 'Close Manager',
+            click: () => {
+                if (managerWindow && managerWindow.closable) {
+                    managerWindow.close();
                 }
             },
         }, {

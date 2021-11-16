@@ -3,7 +3,7 @@
     class="tw-flex"
   >
     <div
-      class="tw-font-bold"
+      class="tw-font-semibold tw-text-lg"
     >
       {{ title }}
     </div>

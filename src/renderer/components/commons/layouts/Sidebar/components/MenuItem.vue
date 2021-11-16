@@ -4,6 +4,7 @@
     :class="{
       'c-sidebar-layout-menu-item--active': active && !isInMenuGroup,
       'c-sidebar-layout-menu-item-menugroup--active': active && isInMenuGroup,
+      'c-sidebar-layout-menu-item--mini': isMini,
     }"
   >
     <slot />
@@ -17,7 +18,8 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, getCurrentInstance, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+import { CSidebarProvideKey } from '@/components/commons/layouts/Sidebar/types'
 
 const props = defineProps({
   active: {
@@ -31,6 +33,28 @@ const props = defineProps({
     default: false,
   },
 })
+
+const isMini = ref(false)
+
+const cSidebar = inject(CSidebarProvideKey)
+
+onMounted(() => {
+  const instance = getCurrentInstance()
+  if (instance && cSidebar)
+    cSidebar.register({ setMini, uid: instance.uid } as InstanceType<any>)
+})
+
+onBeforeUnmount(() => {
+  const instance = getCurrentInstance()
+  if (instance && cSidebar) {
+    cSidebar.unregister(instance.uid)
+  }
+})
+
+const setMini = (bool: boolean) => {
+  isMini.value = bool
+}
+
 </script>
 <style
   lang="scss"
@@ -44,6 +68,24 @@ const props = defineProps({
 
   &-menugroup--active {
     @apply tw-p-1 tw-text-current;
+  }
+
+  .material-icons {
+    @apply tw-mr-2;
+  }
+}
+
+.c-sidebar-layout-menu-item--mini  {
+  a {
+    @apply tw-text-center;
+  }
+
+  .material-icons {
+    @apply tw-mr-0;
+  }
+
+  .c-sidebar-menu-item--title {
+    @apply tw-hidden;
   }
 }
 </style>

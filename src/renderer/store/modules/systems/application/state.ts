@@ -1,7 +1,7 @@
 export interface ApplicationState {
-  test: any
+  isGeneralSidebarOpen: boolean
 }
 
 export const applicationState: ApplicationState = {
-  test: {},
+  isGeneralSidebarOpen: true,
 }

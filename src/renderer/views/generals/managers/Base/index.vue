@@ -13,6 +13,5 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref } from 'vue'
 import CHeaderLayout from '@/components/commons/layouts/Header/index.vue'
 </script>

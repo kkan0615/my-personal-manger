@@ -4,8 +4,8 @@ import { ApplicationMutations, ApplicationMutationTypes } from './mutations'
 import { ApplicationState } from './state'
 
 export enum ApplicationActionTypes {
-  ADD_TEST = 'application/ADD_TOAST',
-  REMOVE_TEST = 'application/REMOVE_TOAST',
+  OPEN_IS_GENERAL_SIDEBAR_OPEN = 'application/OPEN_IS_GENERAL_SIDEBAR_OPEN',
+  CLOSE_IS_GENERAL_SIDEBAR_OPEN = 'application/CLOSE_IS_GENERAL_SIDEBAR_OPEN',
 }
 
 export type AugmentedActionContext = {
@@ -16,21 +16,19 @@ export type AugmentedActionContext = {
 } & Omit<ActionContext<ApplicationState, RootState>, 'commit'>
 
 export interface ApplicationActions {
-  [ApplicationActionTypes.ADD_TEST](
+  [ApplicationActionTypes.OPEN_IS_GENERAL_SIDEBAR_OPEN](
     { commit }: AugmentedActionContext,
-    payload: any
   ): void
-  [ApplicationActionTypes.REMOVE_TEST](
+  [ApplicationActionTypes.CLOSE_IS_GENERAL_SIDEBAR_OPEN](
     { commit }: AugmentedActionContext,
-    payload: any
   ): void
 }
 
 export const applicationActions: ActionTree<ApplicationState, RootState> & ApplicationActions = {
-  [ApplicationActionTypes.ADD_TEST] ({ commit }, payload) {
-    commit(ApplicationMutationTypes.SET_TEST, payload)
+  [ApplicationActionTypes.OPEN_IS_GENERAL_SIDEBAR_OPEN] ({ commit }) {
+    commit(ApplicationMutationTypes.SET_IS_GENERAL_SIDEBAR_OPEN, false)
   },
-  [ApplicationActionTypes.REMOVE_TEST] ({ commit }, payload) {
-    commit(ApplicationMutationTypes.SET_TEST, {})
+  [ApplicationActionTypes.CLOSE_IS_GENERAL_SIDEBAR_OPEN] ({ commit }) {
+    commit(ApplicationMutationTypes.SET_IS_GENERAL_SIDEBAR_OPEN, false)
   },
 }

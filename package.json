@@ -2,8 +2,9 @@
   "name": "my-personal-manager",
   "author": "Youngjin Kwak",
   "description": "Create your personal manager",
-  "version": "0.0.5",
+  "version": "0.0.5a",
   "main": "src/main/main.js",
+  "private": "true",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",

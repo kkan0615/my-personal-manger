@@ -11,6 +11,7 @@
         My Personal Manager
       </div>
       <c-form
+        ref="formRef"
         class="tw-text-left tw-space-y-3 "
       >
         <div>
@@ -82,17 +83,23 @@ import useStore from '@/store'
 import { User } from '@/types/models/User'
 
 const store = useStore()
+
+const formRef = ref<HTMLFormElement>()
+
 const userName = ref('')
 const birthday = ref(dayjs().toDate())
 
 const onClickLoginBtn = async () => {
-  try {
-    await store.dispatch(CurrentActionTypes.REGISTER_USER, {
-      name: userName.value,
-      birthday: birthday.value
-    } as User)
-  } catch (e) {
-    console.error(e)
+  if (formRef.value) {
+    formRef.value.checkValidation()
+    try {
+      await store.dispatch(CurrentActionTypes.REGISTER_USER, {
+        name: userName.value,
+        birthday: birthday.value
+      } as User)
+    } catch (e) {
+      console.error(e)
+    }
   }
 }
 </script>
