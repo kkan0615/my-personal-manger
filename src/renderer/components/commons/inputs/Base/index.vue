@@ -117,7 +117,8 @@ onBeforeUnmount(() => {
     form.unregister(instance.uid)
 })
 
-const onInput = (event: InputEvent) => {
+// @TODO: Event 변경
+const onInput = (event: any) => {
   if (event.target) {
     const elemet = event.target as HTMLInputElement
     inputValidate(elemet.value)
