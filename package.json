@@ -13,7 +13,7 @@
     "electron:build": "tsc -p src/main/tsconfig.json",
     "electron:dev": "yarn electron:build && concurrently -k \"cross-env BROWSER=none yarn dev\" \"yarn electron\"",
     "electron:builder": "electron-builder",
-    "electron:builder-publish": "electron-builder --win -p always",
+    "electron:builder-publish": "electron-builder --publish=always",
     "build:for:electron": "vue-tsc --noEmit && cross-env ELECTRON=true vite build",
     "app:build": "yarn electron:build && yarn build:for:electron && yarn electron:builder",
     "app:publish": "yarn electron:build && yarn build:for:electron && yarn electron:builder-publish"
