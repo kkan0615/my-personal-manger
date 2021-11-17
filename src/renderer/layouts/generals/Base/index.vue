@@ -14,8 +14,12 @@
           <router-link
             :to="{ name: 'Home' }"
           >
-            <c-sidebar-layout-menu-item>
-              <c-material-icon>
+            <c-sidebar-layout-menu-item
+              class="tw-text-2xl"
+            >
+              <c-material-icon
+                class="tw-text-2xl"
+              >
                 home
               </c-material-icon>
               <span
@@ -29,8 +33,12 @@
           <router-link
             :to="{ name: 'BaseManager' }"
           >
-            <c-sidebar-layout-menu-item>
-              <c-material-icon>
+            <c-sidebar-layout-menu-item
+              class="tw-text-2xl"
+            >
+              <c-material-icon
+                class="tw-text-2xl"
+              >
                 support_agent
               </c-material-icon>
               <span

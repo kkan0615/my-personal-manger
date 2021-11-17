@@ -1,6 +1,6 @@
 <template>
   <span
-    class="tw-select-none material-icons"
+    class="tw-select-none material-icons "
     :class="{
       [`material-icons-${type}`]: type,
       [`tw-text-${size}`]: true,

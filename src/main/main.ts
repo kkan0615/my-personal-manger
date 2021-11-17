@@ -10,6 +10,7 @@ import { User } from '../renderer/types/models/User'
 import { v4 } from 'uuid'
 import dayjs from 'dayjs'
 import { authWindow, createAuthWindow } from './windows/auth'
+import { ManagerConfig } from './types/models/Manager/config'
 
 // const isDev = false
 
@@ -346,6 +347,19 @@ app.on('ready', () => {
       event.sender.send('error-create', { code: 403 })
     }
   })
+})
+
+ipcMain.on('update-manager-config-by-id', async (event, args: { id: string; config: ManagerConfig }) => {
+  if (args.id) {
+    const managerConfigPath = isDev ? path.join(__dirname, `data/${args.id}/managerConfig.json`) : path.join(process.resourcesPath, `data/${args.id}/managerConfig.json`)
+    const fileData = fs.readFileSync(managerConfigPath, 'utf-8')
+    if (fileData) {
+      fs.writeFileSync(managerConfigPath, JSON.stringify(args.config))
+      if (managerWindow) {
+        managerWindow.setAlwaysOnTop(args.config.isAlwaysTop)
+      }
+    }
+  }
 })
 
 /* When all windows are closed */

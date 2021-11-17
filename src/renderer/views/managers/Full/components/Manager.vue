@@ -2,7 +2,15 @@
   <div
     class="tw-mb-4 manager-container"
     @click.stop.prevent="onClickManager"
+    @mouseenter="onMouseEnterWrapper"
+    @mouseleave="onMouseLeaveWrapper"
   >
+    <full-manager-dropdown-menu
+      v-if="displayDropdown"
+      class="tw-absolute tw-right-0"
+      @mouseenter="onMouseEnter"
+      @mouseleave="onMouseLeave"
+    />
     <img
       ref="imgRef"
       class="tw-w-auto tw-h-full tw-cursor-pointer tw-bg-transparent"
@@ -38,10 +46,12 @@ import { offMangerThrough, onMangerThrough } from '@/utils/electrons/ipc'
 import useElectron from '@/mixins/useElectron'
 import { Manager } from '@/types/models/Manager'
 import FullManagerManagerContextMenu from '@/views/managers/Full/components/ContextMenu.vue'
+import FullManagerDropdownMenu from '@/views/managers/Full/components/DropdownMenu.vue'
 
 const store = useStore()
 const { ipcRenderer } = useElectron()
 
+const displayDropdown = ref(false)
 const x = ref(0)
 const y = ref(0)
 const animationId = ref<number | undefined>(undefined)
@@ -110,6 +120,14 @@ const onMouseEnter = () => {
 
 const onMouseLeave = () => {
   onMangerThrough()
+}
+
+const onMouseEnterWrapper = () => {
+  displayDropdown.value = true
+}
+
+const onMouseLeaveWrapper = () => {
+  displayDropdown.value = false
 }
 
 </script>
