@@ -4,7 +4,7 @@
   >
     <c-header-layout
       class="tw-flex-grow-0 tw-flex-shrink"
-      :title="$t(`router.${$route.name}`)"
+      :title="$t('router.BaseManager')"
       :breadcrumbs="breadcrumbs"
     />
     <div
@@ -68,7 +68,7 @@ const breadcrumbs: Array<CBreadcrumb> = [
     path: { name: 'Home' },
   },
   {
-    title: i18n.t(`router.${route.name}`),
+    title: i18n.t('router.BaseManager'),
     disabled: true,
   },
 ]
