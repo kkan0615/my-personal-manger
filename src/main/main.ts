@@ -25,8 +25,9 @@ const createMainWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 720,
-    transparent: true,
     autoHideMenuBar: true,
+    minWidth: 1024,
+    minHeight: 576,
     maximizable: true,
     resizable: true,
     webPreferences: {
@@ -281,7 +282,7 @@ app.on('ready', () => {
     }
   })
 
-  ipcMain.on('clear-managerId', (event) => {
+  ipcMain.on('clear-managerId', () => {
     electronStore.delete(StoreKeyEnum.MANAGER_ID)
   })
 

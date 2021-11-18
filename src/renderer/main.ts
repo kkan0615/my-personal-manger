@@ -10,11 +10,14 @@ import 'bootstrap'
 /* Tailwind */
 import '@/styles/tailwind.scss'
 import '@/styles/index.scss'
-// Vue calendar
+/* Vue calendar */
 import VCalendar from 'v-calendar'
+/* I18n localization */
+import i18n from '@/locales'
 
 const app = createApp(App)
 app
+  .use(i18n)
   .use(VCalendar)
   .use(router)
   .use(store)

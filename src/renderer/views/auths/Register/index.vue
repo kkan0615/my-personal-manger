@@ -86,7 +86,7 @@ const store = useStore()
 
 const formRef = ref<HTMLFormElement>()
 
-const userName = ref('')
+const userName = ref(process.env.IS_DEV ? 'TEST' : '')
 const birthday = ref(dayjs().toDate())
 
 const onClickLoginBtn = async () => {

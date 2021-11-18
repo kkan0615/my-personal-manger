@@ -3,7 +3,7 @@
     <div
       class="tw-text-2xl"
     >
-      Home
+      Home {{ $t('message.hello') }}
     </div>
     <div>
       store data: [ {{ test }} ]

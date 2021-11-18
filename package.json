@@ -2,7 +2,7 @@
   "name": "my-personal-manager",
   "author": "Youngjin Kwak",
   "description": "Create your personal manager",
-  "version": "0.0.5b",
+  "version": "0.0.5c",
   "main": "src/main/main.js",
   "private": "true",
   "scripts": {
@@ -91,6 +91,7 @@
     "uuid": "^8.3.2",
     "v-calendar": "^3.0.0-alpha.6",
     "vue": "^3.2.16",
+    "vue-i18n": "^9.2.0-beta.20",
     "vue-router": "4",
     "vuex": "^4.0.2"
   }

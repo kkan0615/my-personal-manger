@@ -1,0 +1,12 @@
+.manager-container {
+  @apply tw-flex tw-justify-center tw-bg-transparent;
+  height: 300px;
+  width: auto;
+}
+
+
+.circle-manager-container {
+  @apply tw-flex tw-justify-center tw-bg-transparent;
+  height: 50px;
+  width: 50px;
+}

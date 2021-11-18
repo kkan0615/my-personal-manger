@@ -1,4 +1,4 @@
-import { InputRuleType } from '@/types/libs/bootstraps/form'
+import { InputRuleType } from '@/types/libs/components/form'
 
 /**
  * Check validation by rules

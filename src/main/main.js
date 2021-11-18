@@ -22,8 +22,9 @@ const createMainWindow = () => {
     mainWindow = new electron_1.BrowserWindow({
         width: 1280,
         height: 720,
-        transparent: true,
         autoHideMenuBar: true,
+        minWidth: 1024,
+        minHeight: 576,
         maximizable: true,
         resizable: true,
         webPreferences: {
@@ -256,7 +257,7 @@ electron_1.app.on('ready', () => {
             return JSON.parse(fileData);
         }
     });
-    electron_1.ipcMain.on('clear-managerId', (event) => {
+    electron_1.ipcMain.on('clear-managerId', () => {
         store_1.electronStore.delete(store_2.StoreKeyEnum.MANAGER_ID);
     });
     electron_1.ipcMain.handle('get-user', () => {
@@ -317,7 +318,6 @@ electron_1.app.on('ready', () => {
     });
 });
 electron_1.ipcMain.on('update-manager-config-by-id', async (event, args) => {
-    console.log('args', args);
     if (args.id) {
         const managerConfigPath = electron_is_dev_1.default ? path_1.default.join(__dirname, `data/${args.id}/managerConfig.json`) : path_1.default.join(process.resourcesPath, `data/${args.id}/managerConfig.json`);
         const fileData = fs_1.default.readFileSync(managerConfigPath, 'utf-8');

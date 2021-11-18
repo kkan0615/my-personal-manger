@@ -3,26 +3,31 @@
     class="tw-flex"
   >
     <div
-      class="tw-font-semibold tw-text-lg"
+      class="tw-font-semibold"
     >
       {{ title }}
     </div>
     <nav
-      class="tw-ml-auto"
+      class="tw-ml-auto tw-text-sm"
       aria-label="breadcrumb"
     >
       <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <a href="#">Home</a>
-        </li>
-        <li class="breadcrumb-item">
-          <a href="#">Library</a>
-        </li>
         <li
-          class="breadcrumb-item active"
-          aria-current="page"
+          v-for="(breadcrumb, i) in breadcrumbs"
+          :key="`breadcrumb-${i}`"
+          class="breadcrumb-item"
         >
-          Data
+          <router-link
+            v-if="!breadcrumb.disabled"
+            :to="breadcrumb.path"
+          >
+            {{ breadcrumb.title }}
+          </router-link>
+          <span
+            v-else
+          >
+            {{ breadcrumb.title }}
+          </span>
         </li>
       </ol>
     </nav>
@@ -37,6 +42,8 @@ export default {
 </script>
 <script setup lang="ts">
 import { defineProps } from 'vue'
+import type { PropType } from 'vue'
+import type { CBreadcrumb } from '@/types/libs/components/breadcrumb'
 
 const props = defineProps({
   title: {
@@ -44,5 +51,10 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  breadcrumbs: {
+    type: Array as PropType<Array<CBreadcrumb>>,
+    required: false,
+    default: () => []
+  }
 })
 </script>

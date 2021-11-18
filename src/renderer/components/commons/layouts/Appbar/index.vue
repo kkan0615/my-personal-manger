@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tw-flex tw-items-center rounded tw-p-1 tw-px-2 tw-w-full"
+    class="tw-flex tw-items-center rounded tw-p-1 tw-px-2 tw-w-full "
     :class="wrapperClasses"
   >
     <slot />
