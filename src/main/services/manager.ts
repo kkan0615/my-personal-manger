@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import isDev from 'electron-is-dev'
+import { IpcMainInvokeEvent } from 'electron'
 import { ManagerCreateForm, ManagerWithConfig } from '../types/models/Manager'
 import { v4 } from 'uuid'
 
@@ -32,11 +33,8 @@ export const createManager = async (payload: ManagerCreateForm) => {
 
   /* Create file */
   fs.mkdirSync(`${dataFolder}/${managerId}`)
-  const mangerData: ManagerWithConfig = {
-    manager: payload.manager,
-    config: payload.config,
-  }
-  fs.writeFileSync(`${dataFolder}/${managerId}/manager.json`, JSON.stringify(mangerData))
+  fs.writeFileSync(`${dataFolder}/${managerId}/manager.json`, JSON.stringify(payload.manager))
+  fs.writeFileSync(`${dataFolder}/${managerId}/managerConfig.json`, JSON.stringify(payload.config))
 
   return managerId
 }
@@ -53,5 +51,37 @@ export const createManagerMainImage = async (id: string, file: File) => {
   } catch (e) {
     console.error(e)
     throw new Error('error')
+  }
+}
+
+export const getManagerList = async (event: IpcMainInvokeEvent) => {
+  try {
+    const result: Array<ManagerWithConfig> = []
+    const folderNameList = fs.readdirSync(dataFolder)
+    console.log(folderNameList)
+    for (let i = 0; i < folderNameList.length; i++) {
+      const folderName = folderNameList[i]
+      const manager = fs.readFileSync(`${dataFolder}/${folderName}/manager.json`)
+      const config = fs.readFileSync(`${dataFolder}/${folderName}/managerConfig.json`)
+      result.push({
+        manager: JSON.parse(manager as any),
+        config: JSON.parse(config as any),
+      })
+    }
+    return result
+  } catch (e) {
+    console.error(e)
+    throw { code: 400, message: e }
+  }
+}
+
+export const getManagerById = async (event: IpcMainInvokeEvent, args: string) => {
+  try {
+    const folderNameList = fs.readdirSync(dataFolder)
+    console.log(folderNameList)
+    return {}
+  } catch (e) {
+    console.error(e)
+    throw { code: 400, message: e }
   }
 }

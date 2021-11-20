@@ -200,15 +200,15 @@ electron_1.app.whenReady()
             store_1.electronStore.set('manager', JSON.parse(data));
         }));
     }
-    /* Open Main window */
     if (store_1.electronStore.get(store_2.StoreKeyEnum.USER)) {
+        /* Open Main window */
         createMainWindow();
+        /* Open tray */
+        createTray();
     }
     else {
         (0, auth_1.createAuthWindow)();
     }
-    /* Open tray */
-    createTray();
     electron_1.ipcMain.emit('sync-manager', store_1.electronStore.get('manager'));
     electron_1.app.on('activate', () => {
         if (!electron_1.BrowserWindow.getAllWindows().length) {
@@ -273,10 +273,6 @@ electron_1.app.on('ready', () => {
     electron_1.ipcMain.on('set-user', (event, args) => {
         store_1.electronStore.set(store_2.StoreKeyEnum.USER, args);
     });
-    electron_1.ipcMain.handle('get-manager-list', () => {
-        const dataDirPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data') : path_1.default.join(process.resourcesPath, 'data');
-        return fs_1.default.readdirSync(dataDirPath);
-    });
     /**
      * Get full size image
      */
@@ -317,6 +313,7 @@ electron_1.app.on('ready', () => {
         }
     });
 });
+electron_1.ipcMain.handle('get-manager-list', manager_1.getManagerList);
 electron_1.ipcMain.on('update-manager-config-by-id', async (event, args) => {
     if (args.id) {
         const managerConfigPath = electron_is_dev_1.default ? path_1.default.join(__dirname, `data/${args.id}/managerConfig.json`) : path_1.default.join(process.resourcesPath, `data/${args.id}/managerConfig.json`);

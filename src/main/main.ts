@@ -4,7 +4,7 @@ import { app, BrowserWindow, ipcMain, IpcMainEvent, Menu, screen, Tray } from 'e
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
 import { StoreKeyEnum } from './types/store'
-import { createManager, createManagerMainImage } from './services/manager'
+import { createManager, createManagerMainImage, getManagerList } from './services/manager'
 import { Manager, ManagerCreateForm } from './types/models/Manager'
 import { User } from '../renderer/types/models/User'
 import { v4 } from 'uuid'
@@ -220,14 +220,14 @@ app.whenReady()
       }))
     }
 
-    /* Open Main window */
     if (electronStore.get(StoreKeyEnum.USER)) {
+      /* Open Main window */
       createMainWindow()
+      /* Open tray */
+      createTray()
     } else {
       createAuthWindow()
     }
-    /* Open tray */
-    createTray()
     ipcMain.emit('sync-manager', electronStore.get('manager'))
     app.on('activate', () => {
       if (!BrowserWindow.getAllWindows().length) {
@@ -302,11 +302,6 @@ app.on('ready', () => {
     electronStore.set(StoreKeyEnum.USER, args)
   })
 
-  ipcMain.handle('get-manager-list', () => {
-    const dataDirPath = isDev ? path.join(__dirname, 'data') : path.join(process.resourcesPath, 'data')
-    return fs.readdirSync(dataDirPath)
-  })
-
   /**
    * Get full size image
    */
@@ -349,6 +344,8 @@ app.on('ready', () => {
     }
   })
 })
+
+ipcMain.handle('get-manager-list', getManagerList)
 
 ipcMain.on('update-manager-config-by-id', async (event, args: { id: string; config: ManagerConfig }) => {
   if (args.id) {

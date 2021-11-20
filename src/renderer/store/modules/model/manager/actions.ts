@@ -10,6 +10,8 @@ import { getCurrentTimesInDay } from '@/utils/time'
 const electron = window.require('electron')
 
 export enum ManagerActionTypes {
+  LOAD_MANAGER_LIST = 'manager/LOAD_MANAGER_LIST',
+  RESET_MANAGER_LIST = 'manager/RESET_MANAGER_LIST',
   LOAD_MANAGER = 'manager/LOAD_MANAGER',
   SET_MANAGER = 'manager/SET_MANAGER',
   RESET_MANAGER = 'manager/RESET_MANAGER',
@@ -32,6 +34,12 @@ export type AugmentedActionContext = {
 } & Omit<ActionContext<ManagerState, RootState>, 'commit'>
 
 export interface ManagerActions {
+  [ManagerActionTypes.LOAD_MANAGER_LIST](
+    { commit }: AugmentedActionContext,
+  ): Promise<void>
+  [ManagerActionTypes.RESET_MANAGER_LIST](
+    { commit }: AugmentedActionContext,
+  ): void
   [ManagerActionTypes.LOAD_MANAGER](
     { commit }: AugmentedActionContext,
   ): Promise<void>
@@ -74,6 +82,18 @@ export interface ManagerActions {
 }
 
 export const managerActions: ActionTree<ManagerState, RootState> & ManagerActions = {
+  async [ManagerActionTypes.LOAD_MANAGER_LIST] ({ commit }) {
+    try {
+      const managerListRes = await electron.ipcRenderer.invoke('get-manager-list')
+      commit(ManagerMutationTypes.SET_MANAGER_LIST, managerListRes)
+    } catch (e) {
+      console.error(e)
+      throw { code: 400, message: e }
+    }
+  },
+  [ManagerActionTypes.RESET_MANAGER_LIST] ({ commit }) {
+    commit(ManagerMutationTypes.SET_MANAGER_LIST, [])
+  },
   async [ManagerActionTypes.LOAD_MANAGER] ({ commit }) {
     const manager = await electron.ipcRenderer.invoke('sync-manager')
     commit(ManagerMutationTypes.SET_MANAGER, manager)

@@ -65,8 +65,9 @@ import { PrototypeActionTypes } from '@/store/modules/systems/prototype/actions'
 import { useRouter } from 'vue-router'
 import { Manager } from '@main/types/models/Manager'
 import { ManagerConfig } from '@main/types/models/Manager/config'
-const electron = window.require('electron')
+import useElectron from '@/mixins/useElectron'
 
+const { ipcRenderer } = useElectron()
 const store = useStore()
 const router = useRouter()
 
@@ -77,11 +78,9 @@ onBeforeMount(async () => {
   await store.dispatch(PrototypeActionTypes.ADD_TEST, 'Arrived at home')
 })
 
-const onClickTestBtn = () => {
-  electron.ipcRenderer.send('create-manager', {
-    manager: {} as Manager,
-    config: {} as ManagerConfig,
-  })
+const onClickTestBtn = async () => {
+  const test = await ipcRenderer.invoke('get-manager-list')
+  console.log(test)
 }
 
 const onClickOpenMangerBtn = () => {

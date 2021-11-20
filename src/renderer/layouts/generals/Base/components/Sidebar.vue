@@ -1,7 +1,7 @@
 <template>
   <c-sidebar-layout
     mini
-    class="tw-absolute tw-z-50 tw-left-0 tw-top-0"
+    class="tw-fixed tw-z-50 tw-left-0 tw-top-0"
   >
     <c-sidebar-layout-content>
       <c-sidebar-layout-menu-title>

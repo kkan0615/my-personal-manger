@@ -11,7 +11,7 @@
       class="tw-flex tw-flex-grow tw-flex-shrink-0"
     >
       <c-card
-        class="tw-bg-white tw-p-2"
+        class="tw-bg-white tw-p-2 tw-flex-grow-0 tw-flex-shrink tw-mr-2"
       >
         <!-- full manager -->
         <div
@@ -40,6 +40,19 @@
           </div>
         </div>
       </c-card>
+      <div
+        class="tw-flex-grow tw-flex-shrink-0"
+      >
+        <div
+          class="tw-grid tw-grid-cols-6"
+        >
+          <base-manger-manager-card
+            v-for="manager in managerList"
+            :key="manager.manager.id"
+            :manager="manager"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -47,7 +60,7 @@
     lang="ts"
 >
 export default {
-  name: 'BaseMangerGeneral',
+  name: 'BaseManger',
 }
 </script>
 <script setup lang="ts">
@@ -58,9 +71,14 @@ import BaseMangerFullManager from '@/views/generals/managers/Base/components/Ful
 import BaseMangerCircleManager from '@/views/generals/managers/Base/components/CircleManager.vue'
 import CCard from '@/components/commons/Card/index.vue'
 import { useRoute } from 'vue-router'
+import useStore from '@/store'
+import { computed } from 'vue'
+import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
+import BaseMangerManagerCard from '@/views/generals/managers/Base/components/ManagerCard.vue'
 
 const i18n = useI18n()
 const route = useRoute()
+const store = useStore()
 
 const breadcrumbs: Array<CBreadcrumb> = [
   {
@@ -72,4 +90,9 @@ const breadcrumbs: Array<CBreadcrumb> = [
     disabled: true,
   },
 ]
+
+const managerList = computed(() => store.state.manager.managerList)
+
+store.dispatch(ManagerActionTypes.LOAD_MANAGER_LIST)
+// Created
 </script>
