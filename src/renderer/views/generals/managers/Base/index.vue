@@ -11,32 +11,47 @@
       class="tw-flex tw-flex-grow tw-flex-shrink-0"
     >
       <c-card
-        class="tw-bg-white tw-p-2 tw-flex-grow-0 tw-flex-shrink tw-mr-2"
+        class="tw-bg-white tw-flex-grow-0 tw-flex-shrink tw-mr-2"
       >
-        <!-- full manager -->
         <div
-          class="tw-mb-4"
+          class="tw-p-2 tw-text-lg tw-font-semibold tw-flex tw-items-center"
         >
           <div
-            class="tw-mb-2 tw-text-lg tw-font-semibold"
+            class="tw-mr-auto"
           >
-            Full Manager
+            Current Manager
           </div>
-          <div
-            class="tw-flex"
-          >
-            <base-manger-full-manager />
-          </div>
+          <base-manger-setting-dropdown />
         </div>
-        <!-- Circle manager -->
-        <div>
+        <hr>
+        <div
+          class="tw-p-2"
+        >
+          <!-- full manager -->
           <div
-            class="tw-mb-2 tw-text-lg tw-font-semibold"
+            class="tw-mb-4"
           >
-            Circle Manager
+            <div
+              class="tw-mb-2 tw-font-semibold"
+            >
+              Full Manager
+            </div>
+            <div
+              class="tw-flex"
+            >
+              <base-manger-full-manager />
+            </div>
           </div>
+          <!-- Circle manager -->
           <div>
-            <base-manger-circle-manager />
+            <div
+              class="tw-mb-2 tw-font-semibold"
+            >
+              Circle Manager
+            </div>
+            <div>
+              <base-manger-circle-manager />
+            </div>
           </div>
         </div>
       </c-card>
@@ -44,13 +59,14 @@
         class="tw-flex-grow tw-flex-shrink-0"
       >
         <div
-          class="tw-grid tw-grid-cols-6"
+          class="tw-grid tw-grid-cols-6 tw-gap-4"
         >
           <base-manger-manager-card
             v-for="manager in managerList"
             :key="manager.manager.id"
             :manager="manager"
           />
+          <base-manger-new-card />
         </div>
       </div>
     </div>
@@ -75,6 +91,8 @@ import useStore from '@/store'
 import { computed } from 'vue'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import BaseMangerManagerCard from '@/views/generals/managers/Base/components/ManagerCard.vue'
+import BaseMangerNewCard from '@/views/generals/managers/Base/components/NewCard.vue'
+import BaseMangerSettingDropdown from '@/views/generals/managers/Base/components/SettingDropdown.vue'
 
 const i18n = useI18n()
 const route = useRoute()

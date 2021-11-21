@@ -12,6 +12,11 @@ export const generalManagerRoutes: Array<RouteRecordRaw> = [
         name: 'BaseManager',
         component: () => import('@/views/generals/managers/Base/index.vue'),
       },
+      {
+        path: 'form',
+        name: 'FormManager',
+        component: () => import('@/views/generals/managers/Form/index.vue'),
+      },
     ]
   },
 ]

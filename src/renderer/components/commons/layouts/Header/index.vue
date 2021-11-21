@@ -19,6 +19,7 @@
         >
           <router-link
             v-if="!breadcrumb.disabled"
+            class="tw-text-bs-primary"
             :to="breadcrumb.path"
           >
             {{ breadcrumb.title }}

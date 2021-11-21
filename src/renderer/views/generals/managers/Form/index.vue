@@ -1,15 +1,11 @@
 <template>
-  <div
-    class="tw-border tw-rounded tw-shadow"
-  >
-    <slot />
+  <div>
+    FormManger
   </div>
 </template>
-<script
-    lang="ts"
->
+<script lang="ts">
 export default {
-  name: 'CCard',
+  name: 'FormManger',
 }
 </script>
 <script setup lang="ts">

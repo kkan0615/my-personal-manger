@@ -50,7 +50,7 @@
   </c-sidebar-layout>
 </template>
 <script
-    lang="ts"
+  lang="ts"
 >
 export default {
   name: 'BaseGeneralLayoutSidebar',

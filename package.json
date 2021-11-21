@@ -2,7 +2,7 @@
   "name": "my-personal-manager",
   "author": "Youngjin Kwak",
   "description": "Create your personal manager",
-  "version": "0.0.5d",
+  "version": "0.0.5eg",
   "main": "src/main/main.js",
   "private": "true",
   "scripts": {

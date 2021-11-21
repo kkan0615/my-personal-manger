@@ -1,16 +1,27 @@
 <template>
   <c-card
-    class="tw-bg-white"
+    class="tw-bg-white tw-cursor-pointer hover:tw-bg-gray-100"
+    :class="{
+      'tw-ring': isActive,
+    }"
   >
-    <div>
-      <img
-        class="tw-h-32"
-        :src="imgSrc"
-        alt="manager"
+    <div
+      class="tw-p-3"
+    >
+      <div
+        class="tw-h-32 tw-flex tw-justify-center"
       >
-    </div>
-    <div>
-      {{ manager.manager.name }}
+        <img
+          class="tw-w-auto tw-h-full"
+          :src="imgSrc"
+          alt="manager"
+        >
+      </div>
+      <div
+        class="tw-text-lg tw-font-semibold"
+      >
+        {{ manager.manager.name }}
+      </div>
     </div>
   </c-card>
 </template>
@@ -20,10 +31,11 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { defineProps, onMounted, PropType, ref } from 'vue'
+import { computed, defineProps, onMounted, PropType, ref } from 'vue'
 import CCard from '@/components/commons/Card/index.vue'
 import { Manager, ManagerWithConfig } from '@/types/models/Manager'
 import useElectron from '@/mixins/useElectron'
+import useStore from '@/store'
 
 const props = defineProps({
   manager: {
@@ -39,8 +51,10 @@ const props = defineProps({
 })
 
 const { ipcRenderer } = useElectron()
+const store = useStore()
 
 const imgSrc = ref('')
+const isActive = computed(() => store.state.manager.manager.id === props.manager?.manager.id)
 
 onMounted(async () => {
   imgSrc.value = await getImageFile()
