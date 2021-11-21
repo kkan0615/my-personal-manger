@@ -293,6 +293,7 @@ app.on('ready', () => {
   ipcMain.on('register-user', (event, args) => {
     electronStore.set(StoreKeyEnum.USER, args)
     createMainWindow()
+    createTray()
     if (authWindow) {
       authWindow.destroy()
     }
