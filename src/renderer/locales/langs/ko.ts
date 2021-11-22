@@ -4,6 +4,7 @@ export const koreanDictionary = {
   },
   router: {
     Home: 'Home',
-    BaseManager: '매니저'
+    BaseManager: '매니저',
+    FormManager: '매니저',
   }
 }

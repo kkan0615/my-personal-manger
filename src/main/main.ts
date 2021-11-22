@@ -11,13 +11,12 @@ import { v4 } from 'uuid'
 import dayjs from 'dayjs'
 import { authWindow, createAuthWindow } from './windows/auth'
 import { ManagerConfig } from './types/models/Manager/config'
+import { createManagerWindow, managerWindow } from './windows/manager'
 
 // const isDev = false
 
 /* Main */
 let mainWindow: BrowserWindow | undefined
-/* Manager */
-let managerWindow: BrowserWindow | undefined
 /* Tray */
 let tray: Tray
 
@@ -52,101 +51,6 @@ const createMainWindow = () => {
   mainWindow.on('closed', () => {
     mainWindow = undefined
   })
-}
-
-const createManagerWindow = () => {
-  if (!managerWindow || managerWindow.isDestroyed()) {
-    const primaryDisplay = screen.getPrimaryDisplay()
-    const width = 400
-    const height = 350
-
-    managerWindow = new BrowserWindow({
-      width,
-      height,
-      frame: false,
-      alwaysOnTop: true,
-      transparent: true,
-      backgroundColor: undefined,
-      hasShadow: true,
-      webPreferences: {
-        preload: path.join(__dirname, 'preload.js'),
-        nodeIntegration: true,
-        contextIsolation: false,
-      }
-    })
-    managerWindow.setIgnoreMouseEvents(true, { forward: true })
-    managerWindow.setPosition(primaryDisplay.size.width - width, primaryDisplay.size.height - height - 50)
-
-    managerWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../../dist/index.html')}`)
-    managerWindow.webContents.on('did-frame-finish-load', () => {
-      if (managerWindow) {
-        managerWindow.webContents.send('move-manager')
-      }
-    })
-
-    /* Control moving */
-    const moveMangerScreen = (event: IpcMainEvent, args: { x: number; y: number }) => {
-      const cursorScreenPoint = screen.getCursorScreenPoint()
-      if (managerWindow) {
-        const newX = cursorScreenPoint.x - args.x
-        const newY = cursorScreenPoint.y - args.y
-        event.sender.send('manger-window-position-changing', {
-          x: newX,
-          y: newY,
-        })
-        managerWindow.setPosition(newX, newY)
-      }
-    }
-    const stopMoveMangerScreen = (event: IpcMainEvent, args: { x: number; y: number }) => {
-      const cursorScreenPoint = screen.getCursorScreenPoint()
-      if (managerWindow) {
-        const newX = cursorScreenPoint.x - args.x
-        const newY = cursorScreenPoint.y - args.y
-        event.sender.send('manger-window-position-changed', {
-          x: newX,
-          y: newY,
-        })
-        managerWindow.setPosition(newX, newY)
-      }
-    }
-    ipcMain.on('manager-move-screen', moveMangerScreen)
-    ipcMain.on('manager-stop-move-screen', stopMoveMangerScreen)
-
-    ipcMain.on('manager-through-on', () => {
-      if (managerWindow) {
-        managerWindow.setIgnoreMouseEvents(true, { forward: true })
-      }
-    })
-
-    ipcMain.on('manager-through-off', () => {
-      if (managerWindow) {
-        managerWindow.setIgnoreMouseEvents(false, { forward: false })
-      }
-    })
-
-    ipcMain.on('close-manager-window', () => {
-      if (managerWindow && managerWindow.closable) {
-        managerWindow.close()
-      }
-    })
-
-    if (isDev) {
-      managerWindow.setIgnoreMouseEvents(false, { forward: false })
-      managerWindow.webContents.openDevTools()
-    }
-
-    /* When manager window is closed */
-    if (managerWindow) {
-      managerWindow.on('closed', () => {
-        managerWindow = undefined
-        /* Remove all listener */
-        ipcMain.removeListener('manager-move-screen', moveMangerScreen)
-        ipcMain.removeListener('close-manager-window', moveMangerScreen)
-        ipcMain.removeListener('manager-through-on', moveMangerScreen)
-        ipcMain.removeListener('manager-through-off', moveMangerScreen)
-      })
-    }
-  }
 }
 
 const createTray = () => {

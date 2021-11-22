@@ -1,6 +1,6 @@
 <template>
   <c-card
-    class="tw-h-full tw-flex tw-justify-center tw-items-center tw-border-4 tw-border-gray-500 tw-border-dashed tw-shadow-none hover:tw-bg-gray-400 tw-cursor-pointer"
+    class="tw-h-48 tw-flex tw-justify-center tw-items-center tw-border-4 tw-border-gray-500 tw-border-dashed tw-shadow-none hover:tw-bg-gray-400 tw-cursor-pointer"
     @click="onClickNewCard"
   >
     <div

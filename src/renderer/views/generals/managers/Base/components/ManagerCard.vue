@@ -1,6 +1,6 @@
 <template>
   <c-card
-    class="tw-bg-white tw-cursor-pointer hover:tw-bg-gray-100"
+    class="tw-h-48 tw-bg-white tw-cursor-pointer hover:tw-bg-gray-100"
     :class="{
       'tw-ring': isActive,
     }"

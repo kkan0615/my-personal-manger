@@ -11,11 +11,10 @@ const electron_is_dev_1 = __importDefault(require("electron-is-dev"));
 const store_2 = require("./types/store");
 const manager_1 = require("./services/manager");
 const auth_1 = require("./windows/auth");
+const manager_2 = require("./windows/manager");
 // const isDev = false
 /* Main */
 let mainWindow;
-/* Manager */
-let managerWindow;
 /* Tray */
 let tray;
 const createMainWindow = () => {
@@ -46,92 +45,6 @@ const createMainWindow = () => {
         mainWindow = undefined;
     });
 };
-const createManagerWindow = () => {
-    if (!managerWindow || managerWindow.isDestroyed()) {
-        const primaryDisplay = electron_1.screen.getPrimaryDisplay();
-        const width = 400;
-        const height = 350;
-        managerWindow = new electron_1.BrowserWindow({
-            width,
-            height,
-            frame: false,
-            alwaysOnTop: true,
-            transparent: true,
-            backgroundColor: undefined,
-            hasShadow: true,
-            webPreferences: {
-                preload: path_1.default.join(__dirname, 'preload.js'),
-                nodeIntegration: true,
-                contextIsolation: false,
-            }
-        });
-        managerWindow.setIgnoreMouseEvents(true, { forward: true });
-        managerWindow.setPosition(primaryDisplay.size.width - width, primaryDisplay.size.height - height - 50);
-        managerWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000' : `file://${path_1.default.join(__dirname, '../../dist/index.html')}`);
-        managerWindow.webContents.on('did-frame-finish-load', () => {
-            if (managerWindow) {
-                managerWindow.webContents.send('move-manager');
-            }
-        });
-        /* Control moving */
-        const moveMangerScreen = (event, args) => {
-            const cursorScreenPoint = electron_1.screen.getCursorScreenPoint();
-            if (managerWindow) {
-                const newX = cursorScreenPoint.x - args.x;
-                const newY = cursorScreenPoint.y - args.y;
-                event.sender.send('manger-window-position-changing', {
-                    x: newX,
-                    y: newY,
-                });
-                managerWindow.setPosition(newX, newY);
-            }
-        };
-        const stopMoveMangerScreen = (event, args) => {
-            const cursorScreenPoint = electron_1.screen.getCursorScreenPoint();
-            if (managerWindow) {
-                const newX = cursorScreenPoint.x - args.x;
-                const newY = cursorScreenPoint.y - args.y;
-                event.sender.send('manger-window-position-changed', {
-                    x: newX,
-                    y: newY,
-                });
-                managerWindow.setPosition(newX, newY);
-            }
-        };
-        electron_1.ipcMain.on('manager-move-screen', moveMangerScreen);
-        electron_1.ipcMain.on('manager-stop-move-screen', stopMoveMangerScreen);
-        electron_1.ipcMain.on('manager-through-on', () => {
-            if (managerWindow) {
-                managerWindow.setIgnoreMouseEvents(true, { forward: true });
-            }
-        });
-        electron_1.ipcMain.on('manager-through-off', () => {
-            if (managerWindow) {
-                managerWindow.setIgnoreMouseEvents(false, { forward: false });
-            }
-        });
-        electron_1.ipcMain.on('close-manager-window', () => {
-            if (managerWindow && managerWindow.closable) {
-                managerWindow.close();
-            }
-        });
-        if (electron_is_dev_1.default) {
-            managerWindow.setIgnoreMouseEvents(false, { forward: false });
-            managerWindow.webContents.openDevTools();
-        }
-        /* When manager window is closed */
-        if (managerWindow) {
-            managerWindow.on('closed', () => {
-                managerWindow = undefined;
-                /* Remove all listener */
-                electron_1.ipcMain.removeListener('manager-move-screen', moveMangerScreen);
-                electron_1.ipcMain.removeListener('close-manager-window', moveMangerScreen);
-                electron_1.ipcMain.removeListener('manager-through-on', moveMangerScreen);
-                electron_1.ipcMain.removeListener('manager-through-off', moveMangerScreen);
-            });
-        }
-    }
-};
 const createTray = () => {
     const trayImgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, '/default/tray.jpg') : path_1.default.join(process.resourcesPath, 'default', 'tray.jpg');
     tray = new electron_1.Tray(trayImgPath);
@@ -155,17 +68,17 @@ const createTray = () => {
         }, {
             label: 'Open Manager',
             click: () => {
-                if (managerWindow)
-                    managerWindow.show();
+                if (manager_2.managerWindow)
+                    manager_2.managerWindow.show();
                 else {
-                    createManagerWindow();
+                    (0, manager_2.createManagerWindow)();
                 }
             },
         }, {
             label: 'Close Manager',
             click: () => {
-                if (managerWindow && managerWindow.closable) {
-                    managerWindow.close();
+                if (manager_2.managerWindow && manager_2.managerWindow.closable) {
+                    manager_2.managerWindow.close();
                 }
             },
         }, {
@@ -173,8 +86,8 @@ const createTray = () => {
             click: () => {
                 if (mainWindow && mainWindow.closable)
                     mainWindow.close();
-                if (managerWindow && managerWindow.closable)
-                    managerWindow.close();
+                if (manager_2.managerWindow && manager_2.managerWindow.closable)
+                    manager_2.managerWindow.close();
             },
         }]);
     tray.setContextMenu(contextMenuList);
@@ -228,7 +141,7 @@ electron_1.app.on('ready', () => {
     store_1.electronStore.delete(store_2.StoreKeyEnum.USER);
     /* Open manager */
     electron_1.ipcMain.on('open-manager-window', () => {
-        createManagerWindow();
+        (0, manager_2.createManagerWindow)();
     });
     /* Handle */
     electron_1.ipcMain.handle('sync-manager', () => {
@@ -321,8 +234,8 @@ electron_1.ipcMain.on('update-manager-config-by-id', async (event, args) => {
         const fileData = fs_1.default.readFileSync(managerConfigPath, 'utf-8');
         if (fileData) {
             fs_1.default.writeFileSync(managerConfigPath, JSON.stringify(args.config));
-            if (managerWindow) {
-                managerWindow.setAlwaysOnTop(args.config.isAlwaysTop);
+            if (manager_2.managerWindow) {
+                manager_2.managerWindow.setAlwaysOnTop(args.config.isAlwaysTop);
             }
         }
     }

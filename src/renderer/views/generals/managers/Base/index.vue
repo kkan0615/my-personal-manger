@@ -59,6 +59,17 @@
         class="tw-flex-grow tw-flex-shrink-0"
       >
         <div
+          class="tw-flex tw-justify-end"
+        >
+          <c-base-input
+            id="search-input"
+            v-model="searchValue"
+            class="tw-w-56"
+            size="sm"
+            placeholder="search"
+          />
+        </div>
+        <div
           class="tw-grid tw-grid-cols-6 tw-gap-4"
         >
           <base-manger-manager-card
@@ -73,7 +84,7 @@
   </div>
 </template>
 <script
-    lang="ts"
+  lang="ts"
 >
 export default {
   name: 'BaseManger',
@@ -81,21 +92,20 @@ export default {
 </script>
 <script setup lang="ts">
 import CHeaderLayout from '@/components/commons/layouts/Header/index.vue'
-import { CBreadcrumb } from '@/types/libs/components/breadcrumb'
-import { useI18n } from 'vue-i18n'
 import BaseMangerFullManager from '@/views/generals/managers/Base/components/FullManager.vue'
 import BaseMangerCircleManager from '@/views/generals/managers/Base/components/CircleManager.vue'
 import CCard from '@/components/commons/Card/index.vue'
-import { useRoute } from 'vue-router'
-import useStore from '@/store'
-import { computed } from 'vue'
-import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import BaseMangerManagerCard from '@/views/generals/managers/Base/components/ManagerCard.vue'
 import BaseMangerNewCard from '@/views/generals/managers/Base/components/NewCard.vue'
 import BaseMangerSettingDropdown from '@/views/generals/managers/Base/components/SettingDropdown.vue'
+import { CBreadcrumb } from '@/types/libs/components/breadcrumb'
+import { useI18n } from 'vue-i18n'
+import useStore from '@/store'
+import { computed, ref } from 'vue'
+import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
+import CBaseInput from '@/components/commons/inputs/Base/index.vue'
 
 const i18n = useI18n()
-const route = useRoute()
 const store = useStore()
 
 const breadcrumbs: Array<CBreadcrumb> = [
@@ -108,8 +118,15 @@ const breadcrumbs: Array<CBreadcrumb> = [
     disabled: true,
   },
 ]
+const searchValue = ref('')
 
-const managerList = computed(() => store.state.manager.managerList)
+const managerList = computed(() => {
+  let result = store.state.manager.managerList
+  if (searchValue.value) {
+    result = result.filter(manager => manager.manager.name.includes(searchValue.value))
+  }
+  return result
+})
 
 store.dispatch(ManagerActionTypes.LOAD_MANAGER_LIST)
 // Created
