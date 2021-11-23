@@ -11,7 +11,7 @@
       class="tw-flex tw-flex-grow tw-flex-shrink-0"
     >
       <c-card
-        class="tw-bg-white tw-flex-grow-0 tw-flex-shrink tw-mr-2"
+        class="tw-bg-white tw-w-60 tw-flex-grow-0 tw-flex-shrink tw-mr-2"
       >
         <div
           class="tw-p-2 tw-text-lg tw-font-semibold tw-flex tw-items-center"
@@ -74,7 +74,7 @@
         >
           <base-manger-manager-card
             v-for="manager in managerList"
-            :key="manager.manager.id"
+            :key="manager.id"
             :manager="manager"
           />
           <base-manger-new-card />
@@ -123,7 +123,7 @@ const searchValue = ref('')
 const managerList = computed(() => {
   let result = store.state.manager.managerList
   if (searchValue.value) {
-    result = result.filter(manager => manager.manager.name.includes(searchValue.value))
+    result = result.filter(manager => manager.name.includes(searchValue.value))
   }
   return result
 })

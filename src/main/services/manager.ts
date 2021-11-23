@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import isDev from 'electron-is-dev'
 import { IpcMainInvokeEvent } from 'electron'
-import { ManagerCreateForm, ManagerWithConfig } from '../types/models/Manager'
+import { Manager, ManagerCreateForm, ManagerWithConfig } from '../types/models/Manager'
 import { v4 } from 'uuid'
 
 const dataFolder = isDev ? path.join(__dirname, '..', 'data') : path.join(process.resourcesPath, 'data')
@@ -54,19 +54,14 @@ export const createManagerMainImage = async (id: string, file: File) => {
   }
 }
 
-export const getManagerList = async (event: IpcMainInvokeEvent) => {
+export const getManagerList = async () => {
   try {
-    const result: Array<ManagerWithConfig> = []
+    const result: Array<Manager> = []
     const folderNameList = fs.readdirSync(dataFolder)
-    console.log(folderNameList)
     for (let i = 0; i < folderNameList.length; i++) {
       const folderName = folderNameList[i]
       const manager = fs.readFileSync(`${dataFolder}/${folderName}/manager.json`)
-      const config = fs.readFileSync(`${dataFolder}/${folderName}/managerConfig.json`)
-      result.push({
-        manager: JSON.parse(manager as any),
-        config: JSON.parse(config as any),
-      })
+      result.push(JSON.parse(manager as any))
     }
     return result
   } catch (e) {
@@ -84,4 +79,25 @@ export const getManagerById = async (event: IpcMainInvokeEvent, args: string) =>
     console.error(e)
     throw { code: 400, message: e }
   }
+}
+
+export const getManagerImage = (event: IpcMainInvokeEvent, args: Manager) => {
+  let imgPath: string
+  if (args && args.id) {
+    imgPath = isDev ? path.join(__dirname, '../data', args.id, args.img) : path.join(process.resourcesPath, 'data', args.id, args.img)
+  } else {
+    imgPath = isDev ? path.join(__dirname, '../default', args.img) : path.join(process.resourcesPath, 'default', args.img)
+  }
+  return fs.readFileSync(imgPath)
+}
+
+export const getManagerCircleImage = (event: IpcMainInvokeEvent, args: Manager) => {
+  let imgPath: string
+  if (args && args.id) {
+    imgPath = isDev ? path.join(__dirname, '../data', args.id, args.circleImg) : path.join(process.resourcesPath, 'data', args.id, args.circleImg)
+  } else {
+    imgPath = isDev ? path.join(__dirname, '../default', args.circleImg) : path.join(process.resourcesPath, 'default', args.circleImg)
+  }
+
+  return fs.readFileSync(imgPath)
 }

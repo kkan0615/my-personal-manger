@@ -3,6 +3,7 @@
   "name": "nozomi tojo",
   "img": "manager.png",
   "circleImg": "manager-circle.png",
+  "displayStyle": "ALL",
   "morningMessages": [
     {
       "message": "Morning test 1"

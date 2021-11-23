@@ -23,6 +23,7 @@ import useStore from '@/store'
 import { computed, onMounted, ref } from 'vue'
 import useElectron from '@/mixins/useElectron'
 import { Manager } from '@/types/models/Manager'
+import { ManagerMutationTypes } from '@/store/modules/model/manager/mutations'
 
 const store = useStore()
 const { ipcRenderer } = useElectron()
@@ -32,6 +33,12 @@ const imgSrc = ref()
 const manager = computed(() => store.state.manager.manager)
 
 onMounted(async () => {
+  store.subscribe(async mutation => {
+    if (mutation.type === ManagerMutationTypes.SET_MANAGER) {
+      imgSrc.value = await getImageFile()
+    }
+  })
+
   imgSrc.value = await getImageFile()
 })
 

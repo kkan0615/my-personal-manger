@@ -1,6 +1,6 @@
 import { MutationTree } from 'vuex'
 import { ManagerState } from './state'
-import { Manager, ManagerWithConfig } from '@/types/models/Manager'
+import { Manager } from '@/types/models/Manager'
 import { ManagerConfig } from '@/types/models/Manager/config'
 
 export enum ManagerMutationTypes {
@@ -11,7 +11,7 @@ export enum ManagerMutationTypes {
   SET_MESSAGE_TIMER = 'manager/SET_MESSAGE_TIMER',
 }
 export type ManagerMutations<S = ManagerState> = {
-  [ManagerMutationTypes.SET_MANAGER_LIST](state: S, payload: Array<ManagerWithConfig>): void
+  [ManagerMutationTypes.SET_MANAGER_LIST](state: S, payload: Array<Manager>): void
   [ManagerMutationTypes.SET_MANAGER](state: S, payload: Manager): void
   [ManagerMutationTypes.SET_MANAGER_CONFIG](state: S, payload: ManagerConfig): void
   [ManagerMutationTypes.SET_MESSAGE](state: S, payload: string): void

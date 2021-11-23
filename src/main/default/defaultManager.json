@@ -2,6 +2,7 @@
   "name": "Koizumi hanayo",
   "img": "manager.png",
   "circleImg": "manager-circle.jpg",
+  "displayStyle": "ALL",
   "morningMessages": [
     {
       "message": "Morning test 1"

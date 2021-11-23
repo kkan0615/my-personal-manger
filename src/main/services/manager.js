@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getManagerById = exports.getManagerList = exports.createManagerMainImage = exports.createManager = void 0;
+exports.getManagerCircleImage = exports.getManagerImage = exports.getManagerById = exports.getManagerList = exports.createManagerMainImage = exports.createManager = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const electron_is_dev_1 = __importDefault(require("electron-is-dev"));
@@ -53,19 +53,14 @@ const createManagerMainImage = async (id, file) => {
     }
 };
 exports.createManagerMainImage = createManagerMainImage;
-const getManagerList = async (event) => {
+const getManagerList = async () => {
     try {
         const result = [];
         const folderNameList = fs_1.default.readdirSync(dataFolder);
-        console.log(folderNameList);
         for (let i = 0; i < folderNameList.length; i++) {
             const folderName = folderNameList[i];
             const manager = fs_1.default.readFileSync(`${dataFolder}/${folderName}/manager.json`);
-            const config = fs_1.default.readFileSync(`${dataFolder}/${folderName}/managerConfig.json`);
-            result.push({
-                manager: JSON.parse(manager),
-                config: JSON.parse(config),
-            });
+            result.push(JSON.parse(manager));
         }
         return result;
     }
@@ -87,4 +82,26 @@ const getManagerById = async (event, args) => {
     }
 };
 exports.getManagerById = getManagerById;
+const getManagerImage = (event, args) => {
+    let imgPath;
+    if (args && args.id) {
+        imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, '../data', args.id, args.img) : path_1.default.join(process.resourcesPath, 'data', args.id, args.img);
+    }
+    else {
+        imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, '../default', args.img) : path_1.default.join(process.resourcesPath, 'default', args.img);
+    }
+    return fs_1.default.readFileSync(imgPath);
+};
+exports.getManagerImage = getManagerImage;
+const getManagerCircleImage = (event, args) => {
+    let imgPath;
+    if (args && args.id) {
+        imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, '../data', args.id, args.circleImg) : path_1.default.join(process.resourcesPath, 'data', args.id, args.circleImg);
+    }
+    else {
+        imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, '../default', args.circleImg) : path_1.default.join(process.resourcesPath, 'default', args.circleImg);
+    }
+    return fs_1.default.readFileSync(imgPath);
+};
+exports.getManagerCircleImage = getManagerCircleImage;
 //# sourceMappingURL=manager.js.map

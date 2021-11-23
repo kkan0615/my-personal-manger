@@ -5,8 +5,10 @@ export interface ManagerMessage {
   message: string
 }
 
+export type ManagerDisplayStyle = 'FULL' | 'CIRCLE' | 'ALL'
+
 export interface Manager {
-  id?: string
+  id: string
   name: string
   img: string
   circleImg: string
@@ -15,6 +17,7 @@ export interface Manager {
   eveningsMessages: Array<ManagerMessage>
   nightMessages: Array<ManagerMessage>
   randClickMessages: Array<ManagerMessage>
+  displayStyle: ManagerDisplayStyle
 }
 
 export interface ManagerCreateForm {

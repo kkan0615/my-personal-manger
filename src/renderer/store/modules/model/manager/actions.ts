@@ -3,7 +3,7 @@ import { RootState } from '@/store'
 import { ManagerMutations, ManagerMutationTypes } from './mutations'
 import { ManagerState } from './state'
 import { Manager, ManagerMessage } from '@/types/models/Manager'
-import { ManagerConfig } from '@/types/models/Manager/config'
+import { defaultManagerConfig, ManagerConfig } from '@/types/models/Manager/config'
 import { getRandomInArr, getRandomInt } from '@/utils/random'
 import { getCurrentTimesInDay } from '@/utils/time'
 
@@ -15,6 +15,7 @@ export enum ManagerActionTypes {
   LOAD_MANAGER = 'manager/LOAD_MANAGER',
   SET_MANAGER = 'manager/SET_MANAGER',
   RESET_MANAGER = 'manager/RESET_MANAGER',
+  CLEAR_MANAGER_ID = 'manager/CLEAR_MANAGER_ID',
   LOAD_MANAGER_CONFIG = 'manager/LOAD_MANAGER_CONFIG',
   SET_MANAGER_CONFIG = 'manager/SET_MANAGER_CONFIG',
   RESET_MANAGER_CONFIG = 'manager/RESET_MANAGER_CONFIG',
@@ -48,6 +49,9 @@ export interface ManagerActions {
     payload: Manager
   ): void
   [ManagerActionTypes.RESET_MANAGER](
+    { commit }: AugmentedActionContext,
+  ): void
+  [ManagerActionTypes.CLEAR_MANAGER_ID](
     { commit }: AugmentedActionContext,
   ): void
   [ManagerActionTypes.LOAD_MANAGER_CONFIG](
@@ -104,9 +108,15 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
   [ManagerActionTypes.RESET_MANAGER] ({ commit }) {
     commit(ManagerMutationTypes.SET_MANAGER, {} as Manager)
   },
-  async [ManagerActionTypes.LOAD_MANAGER_CONFIG] ({ commit }) {
-    const managerConfig = await electron.ipcRenderer.invoke('sync-manager-config')
-    commit(ManagerMutationTypes.SET_MANAGER_CONFIG, managerConfig)
+  [ManagerActionTypes.CLEAR_MANAGER_ID] () {
+    electron.ipcRenderer.send('clear-manager-id')
+  },
+  async [ManagerActionTypes.LOAD_MANAGER_CONFIG] ({ commit, rootState }) {
+    const managerConfig: ManagerConfig = await electron.ipcRenderer.invoke('sync-manager-config')
+    if (managerConfig && rootState.manager.manager.displayStyle && rootState.manager.manager.displayStyle !== 'ALL') {
+      managerConfig.displayStyle = rootState.manager.manager.displayStyle
+    }
+    commit(ManagerMutationTypes.SET_MANAGER_CONFIG, managerConfig || defaultManagerConfig)
   },
   [ManagerActionTypes.SET_MANAGER_CONFIG] ({ commit }, payload) {
     commit(ManagerMutationTypes.SET_MANAGER_CONFIG, payload)

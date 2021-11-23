@@ -12,39 +12,10 @@ const store_2 = require("./types/store");
 const manager_1 = require("./services/manager");
 const auth_1 = require("./windows/auth");
 const manager_2 = require("./windows/manager");
+const mainWindow_1 = require("./windows/mainWindow");
 // const isDev = false
-/* Main */
-let mainWindow;
 /* Tray */
 let tray;
-const createMainWindow = () => {
-    mainWindow = new electron_1.BrowserWindow({
-        width: 1280,
-        height: 720,
-        autoHideMenuBar: true,
-        minWidth: 1024,
-        minHeight: 576,
-        maximizable: true,
-        resizable: true,
-        webPreferences: {
-            preload: path_1.default.join(__dirname, 'preload.js'),
-            nodeIntegration: true,
-            contextIsolation: false,
-        }
-    });
-    mainWindow.loadURL(electron_is_dev_1.default ? 'http://localhost:3000' : `file://${path_1.default.join(__dirname, '../../dist/index.html')}`);
-    mainWindow.webContents.on('did-frame-finish-load', () => {
-        if (mainWindow) {
-            mainWindow.webContents.send('move-home');
-        }
-    });
-    if (electron_is_dev_1.default) {
-        mainWindow.webContents.openDevTools();
-    }
-    mainWindow.on('closed', () => {
-        mainWindow = undefined;
-    });
-};
 const createTray = () => {
     const trayImgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, '/default/tray.jpg') : path_1.default.join(process.resourcesPath, 'default', 'tray.jpg');
     tray = new electron_1.Tray(trayImgPath);
@@ -52,17 +23,17 @@ const createTray = () => {
     const contextMenuList = electron_1.Menu.buildFromTemplate([{
             label: 'Open main',
             click: () => {
-                if (mainWindow)
-                    mainWindow.show();
+                if (mainWindow_1.mainWindow)
+                    mainWindow_1.mainWindow.show();
                 else {
-                    createMainWindow();
+                    (0, mainWindow_1.createMainWindow)();
                 }
             },
         }, {
             label: 'Close main',
             click: () => {
-                if (mainWindow && mainWindow.closable) {
-                    mainWindow.close();
+                if (mainWindow_1.mainWindow && mainWindow_1.mainWindow.closable) {
+                    mainWindow_1.mainWindow.close();
                 }
             },
         }, {
@@ -84,8 +55,8 @@ const createTray = () => {
         }, {
             label: 'Exit',
             click: () => {
-                if (mainWindow && mainWindow.closable)
-                    mainWindow.close();
+                if (mainWindow_1.mainWindow && mainWindow_1.mainWindow.closable)
+                    mainWindow_1.mainWindow.close();
                 if (manager_2.managerWindow && manager_2.managerWindow.closable)
                     manager_2.managerWindow.close();
             },
@@ -115,7 +86,7 @@ electron_1.app.whenReady()
     }
     if (store_1.electronStore.get(store_2.StoreKeyEnum.USER)) {
         /* Open Main window */
-        createMainWindow();
+        (0, mainWindow_1.createMainWindow)();
         /* Open tray */
         createTray();
     }
@@ -125,7 +96,7 @@ electron_1.app.whenReady()
     electron_1.ipcMain.emit('sync-manager', store_1.electronStore.get('manager'));
     electron_1.app.on('activate', () => {
         if (!electron_1.BrowserWindow.getAllWindows().length) {
-            createMainWindow();
+            (0, mainWindow_1.createMainWindow)();
         }
     });
 });
@@ -158,19 +129,12 @@ electron_1.app.on('ready', () => {
         }
     });
     electron_1.ipcMain.handle('sync-manager-config', () => {
-        const managerId = store_1.electronStore.get(store_2.StoreKeyEnum.MANAGER_ID);
-        if (managerId) {
-            const managerConfigPath = electron_is_dev_1.default ? path_1.default.join(__dirname, `data/${managerId}/managerConfig.json`) : path_1.default.join(process.resourcesPath, `data/${managerId}/managerConfig.json`);
-            const fileData = fs_1.default.readFileSync(managerConfigPath, 'utf-8');
-            return JSON.parse(fileData);
-        }
-        else {
-            const defaultManagerConfigPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'default', 'defaultManagerConfig.json') : path_1.default.join(process.resourcesPath, 'default', 'defaultManagerConfig.json');
-            const fileData = fs_1.default.readFileSync(defaultManagerConfigPath, 'utf-8');
-            return JSON.parse(fileData);
-        }
+        return store_1.electronStore.get(store_2.StoreKeyEnum.MANAGER_CONFIG);
     });
-    electron_1.ipcMain.on('clear-managerId', () => {
+    electron_1.ipcMain.on('set-manger-id', (event, args) => {
+        store_1.electronStore.set(store_2.StoreKeyEnum.MANAGER_ID, args);
+    });
+    electron_1.ipcMain.on('clear-manager-id', () => {
         store_1.electronStore.delete(store_2.StoreKeyEnum.MANAGER_ID);
     });
     electron_1.ipcMain.handle('get-user', () => {
@@ -178,7 +142,7 @@ electron_1.app.on('ready', () => {
     });
     electron_1.ipcMain.on('register-user', (event, args) => {
         store_1.electronStore.set(store_2.StoreKeyEnum.USER, args);
-        createMainWindow();
+        (0, mainWindow_1.createMainWindow)();
         createTray();
         if (auth_1.authWindow) {
             auth_1.authWindow.destroy();
@@ -190,27 +154,9 @@ electron_1.app.on('ready', () => {
     /**
      * Get full size image
      */
-    electron_1.ipcMain.handle('get-manager-image', (event, args) => {
-        let imgPath;
-        if (args && args.id) {
-            imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data', args.id, args.img) : path_1.default.join(process.resourcesPath, 'data', args.id, args.img);
-        }
-        else {
-            imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'default', 'manager.png') : path_1.default.join(process.resourcesPath, 'default', 'manager.png');
-        }
-        return fs_1.default.readFileSync(imgPath);
-    });
+    electron_1.ipcMain.handle('get-manager-image', manager_1.getManagerImage);
     /*  Get circle size image */
-    electron_1.ipcMain.handle('get-manager-circle-image', (event, args) => {
-        let imgPath;
-        if (args && args.id) {
-            imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'data', args.id, args.circleImg) : path_1.default.join(process.resourcesPath, 'data', args.id, args.circleImg);
-        }
-        else {
-            imgPath = electron_is_dev_1.default ? path_1.default.join(__dirname, 'default', 'manager-circle.png') : path_1.default.join(process.resourcesPath, 'default', 'manager-circle.png');
-        }
-        return fs_1.default.readFileSync(imgPath);
-    });
+    electron_1.ipcMain.handle('get-manager-circle-image', manager_1.getManagerCircleImage);
     /* Create manager slot */
     electron_1.ipcMain.on('create-manager', async (event, args) => {
         const mangerId = await (0, manager_1.createManager)(args);

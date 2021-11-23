@@ -19,7 +19,7 @@ const router = useRouter()
 const managerConfig = computed(() => store.state.manager.config)
 
 /* Move to specific place */
-if (managerConfig.value.displayStyle === 'CIRCLE') {
+if (managerConfig.value && managerConfig.value.displayStyle === 'CIRCLE') {
   router.push({ name: 'CircleManager' })
 } else {
   router.push({ name: 'FullManager' })

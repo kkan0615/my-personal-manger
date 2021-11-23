@@ -1,8 +1,8 @@
-import { Manager, ManagerWithConfig } from '@/types/models/Manager'
-import { ManagerConfig } from '@/types/models/Manager/config'
+import { Manager } from '@/types/models/Manager'
+import { defaultManagerConfig, ManagerConfig } from '@/types/models/Manager/config'
 
 export interface ManagerState {
-  managerList: Array<ManagerWithConfig>
+  managerList: Array<Manager>
   manager: Manager
   config: ManagerConfig
   message: string
@@ -12,7 +12,8 @@ export interface ManagerState {
 export const managerState: ManagerState = {
   managerList: [],
   manager: {} as Manager,
-  config: {} as ManagerConfig,
+  // config: {} as ManagerConfig,
+  config: defaultManagerConfig,
   message: '',
   messageTimer: null
 }

@@ -4,7 +4,13 @@ import { app, BrowserWindow, ipcMain, IpcMainEvent, Menu, screen, Tray } from 'e
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
 import { StoreKeyEnum } from './types/store'
-import { createManager, createManagerMainImage, getManagerList } from './services/manager'
+import {
+  createManager,
+  createManagerMainImage,
+  getManagerCircleImage,
+  getManagerImage,
+  getManagerList
+} from './services/manager'
 import { Manager, ManagerCreateForm } from './types/models/Manager'
 import { User } from '../renderer/types/models/User'
 import { v4 } from 'uuid'
@@ -12,46 +18,13 @@ import dayjs from 'dayjs'
 import { authWindow, createAuthWindow } from './windows/auth'
 import { ManagerConfig } from './types/models/Manager/config'
 import { createManagerWindow, managerWindow } from './windows/manager'
+import { createMainWindow, mainWindow } from './windows/mainWindow'
 
 // const isDev = false
 
-/* Main */
-let mainWindow: BrowserWindow | undefined
+
 /* Tray */
 let tray: Tray
-
-const createMainWindow = () => {
-  mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 720,
-    autoHideMenuBar: true,
-    minWidth: 1024,
-    minHeight: 576,
-    maximizable: true,
-    resizable: true,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,
-      contextIsolation: false,
-    }
-  })
-
-  mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../../dist/index.html')}`)
-
-  mainWindow.webContents.on('did-frame-finish-load', () => {
-    if (mainWindow) {
-      mainWindow.webContents.send('move-home')
-    }
-  })
-
-  if (isDev) {
-    mainWindow.webContents.openDevTools()
-  }
-
-  mainWindow.on('closed', () => {
-    mainWindow = undefined
-  })
-}
 
 const createTray = () => {
   const trayImgPath = isDev ? path.join(__dirname, '/default/tray.jpg') : path.join(process.resourcesPath, 'default', 'tray.jpg')
@@ -172,21 +145,14 @@ app.on('ready', () => {
   })
 
   ipcMain.handle('sync-manager-config', () => {
-    const managerId = electronStore.get(StoreKeyEnum.MANAGER_ID)
-    if (managerId) {
-      const managerConfigPath = isDev ? path.join(__dirname, `data/${managerId}/managerConfig.json`) : path.join(process.resourcesPath, `data/${managerId}/managerConfig.json`)
-      const fileData = fs.readFileSync(managerConfigPath, 'utf-8')
-
-      return JSON.parse(fileData)
-    } else {
-      const defaultManagerConfigPath = isDev ? path.join(__dirname, 'default', 'defaultManagerConfig.json') : path.join(process.resourcesPath, 'default', 'defaultManagerConfig.json')
-      const fileData = fs.readFileSync(defaultManagerConfigPath, 'utf-8')
-
-      return JSON.parse(fileData)
-    }
+    return electronStore.get(StoreKeyEnum.MANAGER_CONFIG)
   })
 
-  ipcMain.on('clear-managerId', () => {
+  ipcMain.on('set-manger-id', (event, args: string) => {
+    electronStore.set(StoreKeyEnum.MANAGER_ID, args)
+  })
+
+  ipcMain.on('clear-manager-id', () => {
     electronStore.delete(StoreKeyEnum.MANAGER_ID)
   })
 
@@ -210,28 +176,10 @@ app.on('ready', () => {
   /**
    * Get full size image
    */
-  ipcMain.handle('get-manager-image', (event, args: Manager) => {
-    let imgPath: string
-    if (args && args.id) {
-      imgPath = isDev ? path.join(__dirname, 'data', args.id, args.img) : path.join(process.resourcesPath, 'data', args.id, args.img)
-    } else {
-      imgPath = isDev ? path.join(__dirname, 'default', 'manager.png') : path.join(process.resourcesPath, 'default', 'manager.png')
-    }
-    return fs.readFileSync(imgPath)
-
-  })
+  ipcMain.handle('get-manager-image', getManagerImage)
 
   /*  Get circle size image */
-  ipcMain.handle('get-manager-circle-image', (event, args: Manager) => {
-    let imgPath: string
-    if (args && args.id) {
-      imgPath = isDev ? path.join(__dirname, 'data', args.id, args.circleImg) : path.join(process.resourcesPath, 'data', args.id, args.circleImg)
-    } else {
-      imgPath = isDev ? path.join(__dirname, 'default', 'manager-circle.png') : path.join(process.resourcesPath, 'default', 'manager-circle.png')
-    }
-
-    return fs.readFileSync(imgPath)
-  })
+  ipcMain.handle('get-manager-circle-image', getManagerCircleImage)
 
   /* Create manager slot */
   ipcMain.on('create-manager', async (event, args: ManagerCreateForm) => {
