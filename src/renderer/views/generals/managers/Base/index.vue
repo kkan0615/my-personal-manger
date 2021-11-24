@@ -14,7 +14,7 @@
         class="tw-bg-white tw-w-60 tw-flex-grow-0 tw-flex-shrink tw-mr-2"
       >
         <div
-          class="tw-p-2 tw-text-lg tw-font-semibold tw-flex tw-items-center"
+          class="tw-p-2 tw-text-lg tw-flex tw-items-center"
         >
           <div
             class="tw-mr-auto"
@@ -32,7 +32,7 @@
             class="tw-mb-4"
           >
             <div
-              class="tw-mb-2 tw-font-semibold"
+              class="tw-mb-2"
             >
               Full Manager
             </div>
@@ -45,7 +45,7 @@
           <!-- Circle manager -->
           <div>
             <div
-              class="tw-mb-2 tw-font-semibold"
+              class="tw-mb-2 "
             >
               Circle Manager
             </div>

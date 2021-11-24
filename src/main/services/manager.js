@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getManagerCircleImage = exports.getManagerImage = exports.getManagerById = exports.getManagerList = exports.createManagerMainImage = exports.createManager = void 0;
+exports.getManagerCircleImage = exports.getManagerImage = exports.getManagerById = exports.getManagerList = exports.deleteManager = exports.updateManger = exports.createManagerMainImage = exports.createManager = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const electron_is_dev_1 = __importDefault(require("electron-is-dev"));
@@ -53,6 +53,14 @@ const createManagerMainImage = async (id, file) => {
     }
 };
 exports.createManagerMainImage = createManagerMainImage;
+const updateManger = () => {
+    console.log('updateManger');
+};
+exports.updateManger = updateManger;
+const deleteManager = (event, id) => {
+    console.log('deleteManager');
+};
+exports.deleteManager = deleteManager;
 const getManagerList = async () => {
     try {
         const result = [];

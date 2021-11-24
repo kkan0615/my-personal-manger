@@ -66,6 +66,8 @@ import { useRouter } from 'vue-router'
 import { Manager } from '@main/types/models/Manager'
 import { ManagerConfig } from '@main/types/models/Manager/config'
 import useElectron from '@/mixins/useElectron'
+import { ApplicationActionTypes } from '@/store/modules/systems/application/actions'
+import { Snackbar } from '@/types/applications/Snackbar'
 
 const { ipcRenderer } = useElectron()
 const store = useStore()
@@ -79,8 +81,11 @@ onBeforeMount(async () => {
 })
 
 const onClickTestBtn = async () => {
-  const test = await ipcRenderer.invoke('get-manager-list')
-  console.log(test)
+  await store.dispatch(ApplicationActionTypes.ADD_SNACKBAR_TO_LIST, {
+    title: 'test title',
+    content: 'test content',
+    type: 'danger',
+  } as Snackbar)
 }
 
 const onClickOpenMangerBtn = () => {

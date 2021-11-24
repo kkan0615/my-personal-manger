@@ -54,6 +54,14 @@ export const createManagerMainImage = async (id: string, file: File) => {
   }
 }
 
+export const updateManger = () => {
+  console.log('updateManger')
+}
+
+export const deleteManager = (event: IpcMainInvokeEvent, id: string) => {
+  console.log('deleteManager')
+}
+
 export const getManagerList = async () => {
   try {
     const result: Array<Manager> = []

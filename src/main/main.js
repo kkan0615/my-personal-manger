@@ -131,7 +131,7 @@ electron_1.app.on('ready', () => {
     electron_1.ipcMain.handle('sync-manager-config', () => {
         return store_1.electronStore.get(store_2.StoreKeyEnum.MANAGER_CONFIG);
     });
-    electron_1.ipcMain.on('set-manger-id', (event, args) => {
+    electron_1.ipcMain.on('set-manager-id', (event, args) => {
         store_1.electronStore.set(store_2.StoreKeyEnum.MANAGER_ID, args);
     });
     electron_1.ipcMain.on('clear-manager-id', () => {

@@ -6,7 +6,5 @@
 
 
 .circle-manager-container {
-  @apply tw-flex tw-justify-center tw-bg-transparent;
-  height: 50px;
-  width: 50px;
+  @apply tw-flex tw-justify-center tw-bg-transparent tw-h-14 tw-w-14;
 }

@@ -2,7 +2,7 @@
   "name": "my-personal-manager",
   "author": "Youngjin Kwak",
   "description": "Create your personal manager",
-  "version": "0.0.6a",
+  "version": "0.0.6b",
   "main": "src/main/main.js",
   "private": "true",
   "scripts": {
@@ -80,6 +80,7 @@
     "wait-on": "^6.0.0"
   },
   "dependencies": {
+    "@types/bootstrap": "^5.1.6",
     "@vueform/multiselect": "^2.2.0",
     "autoprefixer": "^10.4.0",
     "bootstrap": "^5.1.3",

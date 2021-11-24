@@ -1,7 +1,7 @@
 import { createI18n } from 'vue-i18n'
 import { koreanDictionary } from '@/locales/langs/ko'
 import { englishDictionary } from '@/locales/langs/en'
-import { getCurrentLanguage } from '@/utils/lang'
+import { getCurrentLanguage } from '@/utils/commons/lang'
 
 const messages = {
   /* korean */

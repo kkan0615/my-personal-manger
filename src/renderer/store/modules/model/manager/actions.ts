@@ -4,8 +4,8 @@ import { ManagerMutations, ManagerMutationTypes } from './mutations'
 import { ManagerState } from './state'
 import { Manager, ManagerMessage } from '@/types/models/Manager'
 import { defaultManagerConfig, ManagerConfig } from '@/types/models/Manager/config'
-import { getRandomInArr, getRandomInt } from '@/utils/random'
-import { getCurrentTimesInDay } from '@/utils/time'
+import { getRandomInArr, getRandomInt } from '@/utils/commons/random'
+import { getCurrentTimesInDay } from '@/utils/commons/time'
 
 const electron = window.require('electron')
 
@@ -15,7 +15,11 @@ export enum ManagerActionTypes {
   LOAD_MANAGER = 'manager/LOAD_MANAGER',
   SET_MANAGER = 'manager/SET_MANAGER',
   RESET_MANAGER = 'manager/RESET_MANAGER',
+  SET_MANAGER_ID = 'manager/SET_MANAGER_ID',
   CLEAR_MANAGER_ID = 'manager/CLEAR_MANAGER_ID',
+  CREATE_MANAGER = 'manager/CREATE_MANAGER',
+  UPDATE_MANAGER = 'manager/UPDATE_MANAGER',
+  DELETE_MANAGER = 'manager/DELETE_MANAGER',
   LOAD_MANAGER_CONFIG = 'manager/LOAD_MANAGER_CONFIG',
   SET_MANAGER_CONFIG = 'manager/SET_MANAGER_CONFIG',
   RESET_MANAGER_CONFIG = 'manager/RESET_MANAGER_CONFIG',
@@ -51,8 +55,22 @@ export interface ManagerActions {
   [ManagerActionTypes.RESET_MANAGER](
     { commit }: AugmentedActionContext,
   ): void
+  [ManagerActionTypes.SET_MANAGER_ID](
+    { commit }: AugmentedActionContext,
+    id: string
+  ): void
   [ManagerActionTypes.CLEAR_MANAGER_ID](
     { commit }: AugmentedActionContext,
+  ): void
+  [ManagerActionTypes.CREATE_MANAGER](
+    { commit }: AugmentedActionContext,
+  ): void
+  [ManagerActionTypes.UPDATE_MANAGER](
+    { commit }: AugmentedActionContext,
+  ): void
+  [ManagerActionTypes.DELETE_MANAGER](
+    { commit }: AugmentedActionContext,
+    id: string
   ): void
   [ManagerActionTypes.LOAD_MANAGER_CONFIG](
     { commit }: AugmentedActionContext,
@@ -108,8 +126,23 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
   [ManagerActionTypes.RESET_MANAGER] ({ commit }) {
     commit(ManagerMutationTypes.SET_MANAGER, {} as Manager)
   },
+  [ManagerActionTypes.SET_MANAGER_ID] (_, id) {
+    electron.ipcRenderer.send('set-manager-id', id)
+  },
   [ManagerActionTypes.CLEAR_MANAGER_ID] () {
     electron.ipcRenderer.send('clear-manager-id')
+  },
+  async [ManagerActionTypes.CREATE_MANAGER] (_) {
+    const createRes = await electron.ipcRenderer.invoke('create-manager')
+    console.log(createRes)
+  },
+  async [ManagerActionTypes.UPDATE_MANAGER] (_) {
+    const updateRes = await electron.ipcRenderer.invoke('update-manager')
+    console.log(updateRes)
+  },
+  async [ManagerActionTypes.DELETE_MANAGER] (_, id) {
+    const deleteRes = await electron.ipcRenderer.invoke('delete-manager', id)
+    console.log(deleteRes)
   },
   async [ManagerActionTypes.LOAD_MANAGER_CONFIG] ({ commit, rootState }) {
     const managerConfig: ManagerConfig = await electron.ipcRenderer.invoke('sync-manager-config')

@@ -19,11 +19,12 @@
           alt="manager"
         >
       </div>
-      <div
-        class="tw-text-lg tw-font-semibold"
-      >
-        {{ manager.name }}
-      </div>
+    </div>
+    <hr>
+    <div
+      class="tw-text-lg tw-px-2"
+    >
+      {{ manager.name }}
     </div>
   </c-card>
   <!-- Modal -->
@@ -49,8 +50,33 @@
             aria-label="Close"
           />
         </div>
+        <div
+          class="tw-w-full tw-flex tw-items-center tw-justify-end tw-space-x-2 tw-px-4 tw-py-2"
+        >
+          <c-button
+            class="btn-primary"
+            @click="onClickEdit"
+          >
+            Edit
+          </c-button>
+          <c-button
+            class="btn-danger"
+            @click="onClickDelete"
+          >
+            Delete
+          </c-button>
+          <c-button
+            class="btn-success"
+            @click="onClickSetManager"
+          >
+            Set manager
+          </c-button>
+        </div>
+        <hr>
         <div class="modal-body tw-flex">
-          <div>
+          <div
+            style="width: 300px"
+          >
             <div
               class="tw-p-2"
             >
@@ -64,9 +90,13 @@
                   Full Manager
                 </div>
                 <div
-                  class="tw-flex"
+                  class="manager-container"
                 >
-                  <base-manger-full-manager />
+                  <img
+                    class="tw-w-auto tw-h-full"
+                    :src="imgSrc"
+                    alt="manager"
+                  >
                 </div>
               </div>
               <!-- Circle manager -->
@@ -76,14 +106,129 @@
                 >
                   Circle Manager
                 </div>
-                <div>
-                  <base-manger-circle-manager />
+                <div
+                  class="circle-manager-container"
+                >
+                  <img
+                    class="tw-w-auto tw-h-full tw-cursor-pointer tw-bg-transparent tw-object-cover "
+                    alt="manager"
+                    :src="circleImg"
+                  >
                 </div>
               </div>
             </div>
           </div>
-          <div>
-            test2
+          <div
+            class="tw-flex-grow tw-flex-shrink"
+          >
+            <div>
+              <div
+                class="tw-font-semibold"
+              >
+                Config
+              </div>
+              <div
+                class="tw-flex tw-items-center"
+              >
+                <div>
+                  Name
+                </div>
+                <div
+                  class="tw-ml-auto"
+                >
+                  {{ manager.name }}
+                </div>
+              </div>
+              <!-- Morning messages -->
+              <div>
+                <div
+                  class="tw-font-semibold"
+                >
+                  Morning Messages
+                </div>
+                <div
+                  v-for="(message, i) in manager.morningMessages"
+                  :key="`morningMessage-${i}`"
+                  class="tw-flex tw-items-center"
+                >
+                  <div>
+                    {{ i + 1 }}
+                  </div>
+                  <div
+                    class="tw-ml-auto"
+                  >
+                    {{ message.message }}
+                  </div>
+                </div>
+              </div>
+              <!-- lunch messages -->
+              <div>
+                <div
+                  class="tw-font-semibold"
+                >
+                  Lunch Messages
+                </div>
+                <div
+                  v-for="(message, i) in manager.lunchMessages"
+                  :key="`lunchMessage-${i}`"
+                  class="tw-flex tw-items-center"
+                >
+                  <div>
+                    {{ i + 1 }}
+                  </div>
+                  <div
+                    class="tw-ml-auto"
+                  >
+                    {{ message.message }}
+                  </div>
+                </div>
+              </div>
+              <!-- Night messages -->
+              <div>
+                <div
+                  class="tw-font-semibold"
+                >
+                  Evening Messages
+                </div>
+                <div
+                  v-for="(message, i) in manager.eveningsMessages"
+                  :key="`nightMessage-${i}`"
+                  class="tw-flex tw-items-center"
+                >
+                  <div>
+                    {{ i + 1 }}
+                  </div>
+                  <div
+                    class="tw-ml-auto"
+                  >
+                    {{ message.message }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Night messages -->
+              <div>
+                <div
+                  class="tw-font-semibold"
+                >
+                  Click Messages
+                </div>
+                <div
+                  v-for="(message, i) in manager.randClickMessages"
+                  :key="`randClickMessage-${i}`"
+                  class="tw-flex tw-items-center"
+                >
+                  <div>
+                    {{ i + 1 }}
+                  </div>
+                  <div
+                    class="tw-ml-auto"
+                  >
+                    {{ message.message }}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -101,8 +246,11 @@ import CCard from '@/components/commons/Card/index.vue'
 import { Manager } from '@/types/models/Manager'
 import useElectron from '@/mixins/useElectron'
 import useStore from '@/store'
-import BaseMangerFullManager from '@/views/generals/managers/Base/components/FullManager.vue'
 import BaseMangerCircleManager from '@/views/generals/managers/Base/components/CircleManager.vue'
+import CButton from '@/components/commons/Button/index.vue'
+import { useRouter } from 'vue-router'
+import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
+import { getCircleImageFile, getImageFile } from '@/utils/manager'
 
 const props = defineProps({
   manager: {
@@ -119,23 +267,52 @@ const props = defineProps({
 
 const { ipcRenderer } = useElectron()
 const store = useStore()
+const router = useRouter()
 
-const imgSrc = ref('')
-const isActive = computed(() => store.state.manager.id === props.manager.id)
+const imgSrc = ref()
+const circleImg = ref()
+const isActive = computed(() => store.state.manager.manager.id === props.manager.id)
 
 onMounted(async () => {
-  imgSrc.value = await getImageFile()
+  imgSrc.value = await getImage()
+  circleImg.value = await getCircleImage()
 })
 
-const getImageFile = async () => {
+const getImage = async () => {
   if (props.manager) {
-    const imageBuffer: Buffer = await ipcRenderer.invoke('get-manager-image', {
-      id: props.manager?.id,
-      img: props.manager?.img,
-    } as Manager)
-    const imgData = new Blob([imageBuffer], { type: 'image/png' })
-    return URL.createObjectURL(imgData)
+    return getImageFile(props.manager)
   }
 }
+
+const getCircleImage = async () => {
+  if (props.manager) {
+    return getCircleImageFile(props.manager)
+  }
+}
+
+const onClickEdit = async () => {
+  try {
+    if (props.manager)
+      await router.push({ name: 'FormEditManager', params: { id: props.manager.id } })
+  } catch (e) {
+    console.error(e)
+  }
+}
+const onClickDelete = () => {
+  console.log('onClickEdit')
+}
+
+const onClickSetManager = async () => {
+  try {
+    if (props.manager) {
+      await store.dispatch(ManagerActionTypes.SET_MANAGER_ID, props.manager.id)
+      await store.dispatch(ManagerActionTypes.RESET_MANAGER)
+      await store.dispatch(ManagerActionTypes.LOAD_MANAGER)
+    }
+  } catch (e) {
+    console.error(e)
+  }
+}
+
 
 </script>

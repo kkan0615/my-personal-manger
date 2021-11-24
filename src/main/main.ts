@@ -148,7 +148,7 @@ app.on('ready', () => {
     return electronStore.get(StoreKeyEnum.MANAGER_CONFIG)
   })
 
-  ipcMain.on('set-manger-id', (event, args: string) => {
+  ipcMain.on('set-manager-id', (event, args: string) => {
     electronStore.set(StoreKeyEnum.MANAGER_ID, args)
   })
 
