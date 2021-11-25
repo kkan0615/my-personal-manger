@@ -1,3 +1,6 @@
+# ignore js files
+src/main/**/*.map
+src/main/**/*.js
 node_modules
 .DS_Store
 dist
