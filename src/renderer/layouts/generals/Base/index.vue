@@ -3,7 +3,7 @@
     class="tw-h-screen tw-bg-gray-300 tw-relative"
   >
     <c-snackbar-container
-      class="tw-absolute tw-right-14 tw-bottom-14 tw-z-10"
+      class="tw-absolute tw-right-4 tw-bottom-4 tw-z-10"
     >
       <c-snackbar
         v-for="snackbar in snackbarList"

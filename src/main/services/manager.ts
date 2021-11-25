@@ -16,12 +16,12 @@ const dataFolder = isDev ? path.join(__dirname, '..', 'data') : path.join(proces
 export const getCurrentManager = () => {
   const managerId = electronStore.get(StoreKeyEnum.MANAGER_ID)
   if (managerId) {
-    const managerPath = isDev ? path.join(__dirname, `data/${managerId}/manager.json`) : path.join(process.resourcesPath, `data/${managerId}/manager.json`)
+    const managerPath = isDev ? path.join(__dirname, `../data/${managerId}/manager.json`) : path.join(process.resourcesPath, `data/${managerId}/manager.json`)
     const fileData = fs.readFileSync(managerPath, 'utf-8')
 
     return JSON.parse(fileData)
   } else {
-    const defaultManagerPath = isDev ? path.join(__dirname, 'default', 'defaultManager.json') : path.join(process.resourcesPath, 'default', 'defaultManager.json')
+    const defaultManagerPath = isDev ? path.join(__dirname, '../default', 'defaultManager.json') : path.join(process.resourcesPath, 'default', 'defaultManager.json')
     const fileData = fs.readFileSync(defaultManagerPath, 'utf-8')
 
     return JSON.parse(fileData)

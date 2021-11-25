@@ -251,6 +251,7 @@ import CButton from '@/components/commons/Button/index.vue'
 import { useRouter } from 'vue-router'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { getCircleImageFile, getImageFile } from '@/utils/manager'
+import useToast from '@/mixins/useToast'
 
 const props = defineProps({
   manager: {
@@ -268,6 +269,7 @@ const props = defineProps({
 const { ipcRenderer } = useElectron()
 const store = useStore()
 const router = useRouter()
+const { showToast } = useToast()
 
 const imgSrc = ref()
 const circleImg = ref()
@@ -308,6 +310,12 @@ const onClickSetManager = async () => {
       await store.dispatch(ManagerActionTypes.SET_MANAGER_ID, props.manager.id)
       await store.dispatch(ManagerActionTypes.RESET_MANAGER)
       await store.dispatch(ManagerActionTypes.LOAD_MANAGER)
+
+      showToast({
+        title: 'Success',
+        content: 'Success to change',
+        type: 'success'
+      })
     }
   } catch (e) {
     console.error(e)

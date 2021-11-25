@@ -54,7 +54,7 @@ app.on('ready', () => {
   // @TODO: For test
   electronStore.set(StoreKeyEnum.MANAGER_ID, '13a6e982-f7c9-4f8a-b838-558740be6d7a')
   // @TODO: For test
-  electronStore.delete(StoreKeyEnum.USER)
+  // electronStore.delete(StoreKeyEnum.USER)
 
   /* Open manager */
   ipcMain.on('open-manager-window', () => {
