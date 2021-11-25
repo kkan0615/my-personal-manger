@@ -25,9 +25,8 @@ export interface ManagerWithConfig {
   config: ManagerConfig
 }
 
-export interface ManagerCreateForm {
-  manager: Manager
-  config: ManagerConfig
-  mainImg: File
-  circleImg: File
+export type ManagerCreateForm = Omit<Manager, 'id'> & {
+  mainImgFile: File
+  circleImgFile: File
 }
+export type ManagerUpdateForm = Manager

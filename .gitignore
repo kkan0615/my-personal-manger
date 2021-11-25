@@ -1,4 +1,4 @@
-# ignore js files
+# Ignores compiled TypeScript files
 src/main/**/*.map
 src/main/**/*.js
 node_modules

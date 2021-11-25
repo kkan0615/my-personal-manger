@@ -15,3 +15,5 @@ export const defaultManagerConfig: ManagerConfig = {
   displayStyle: 'FULL',
   isOnSound: false,
 }
+
+export type ManagerConfigUpdateForm = Pick<ManagerConfig, 'display' | 'isAlwaysTop' | 'displayStyle' | 'isOnSound'>
