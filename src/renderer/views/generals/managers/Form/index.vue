@@ -9,20 +9,17 @@
       class="tw-bg-white p-2 md:tw-w-3/4 tw-w-full"
     >
       <c-form>
-        <div
-          class="tw-flex tw-justify-center"
-        >
-          <div
-            class="tw-w-2/12"
-          >
+        <c-row-display>
+          <c-row-display-label>
             Name
-          </div>
-          <c-base-input
-            id="name-input"
-            v-model="name"
-            class="tw-w-10/12"
-          />
-        </div>
+          </c-row-display-label>
+          <c-row-display-content>
+            <c-base-input
+              id="name-input"
+              v-model="name"
+            />
+          </c-row-display-content>
+        </c-row-display>
       </c-form>
     </div>
   </div>
@@ -40,6 +37,9 @@ import CForm from '@/components/commons/Form/index.vue'
 import CBaseInput from '@/components/commons/inputs/Base/index.vue'
 import { ref } from 'vue'
 import { ManagerMessage } from '@/types/models/Manager'
+import CRowDisplayLabel from '@/components/commons/displays/Row/components/Label.vue'
+import CRowDisplay from '@/components/commons/displays/Row/index.vue'
+import CRowDisplayContent from '@/components/commons/displays/Row/components/Content.vue'
 
 const i18n = useI18n()
 

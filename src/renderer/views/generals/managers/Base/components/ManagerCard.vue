@@ -30,6 +30,7 @@
   <!-- Modal -->
   <div
     id="manager-modal"
+    ref="modalRef"
     class="modal fade"
     tabindex="-1"
     aria-hidden="true"
@@ -241,17 +242,17 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { computed, defineProps, onMounted, PropType, ref } from 'vue'
+import { computed, defineProps, onBeforeUnmount, onMounted, PropType, ref } from 'vue'
 import CCard from '@/components/commons/Card/index.vue'
 import { Manager } from '@/types/models/Manager'
 import useElectron from '@/mixins/useElectron'
 import useStore from '@/store'
-import BaseMangerCircleManager from '@/views/generals/managers/Base/components/CircleManager.vue'
 import CButton from '@/components/commons/Button/index.vue'
 import { useRouter } from 'vue-router'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { getCircleImageFile, getImageFile } from '@/utils/manager'
 import useToast from '@/mixins/useToast'
+import { Modal as BModal } from 'bootstrap'
 
 const props = defineProps({
   manager: {
@@ -273,11 +274,20 @@ const { showToast } = useToast()
 
 const imgSrc = ref()
 const circleImg = ref()
+const modalRef = ref()
+const modalInstance = ref<BModal | undefined>()
 const isActive = computed(() => store.state.manager.manager.id === props.manager.id)
 
 onMounted(async () => {
   imgSrc.value = await getImage()
   circleImg.value = await getCircleImage()
+  modalInstance.value = new BModal(modalRef.value)
+})
+
+onBeforeUnmount(() => {
+  if (modalInstance.value) {
+    modalInstance.value.dispose()
+  }
 })
 
 const getImage = async () => {

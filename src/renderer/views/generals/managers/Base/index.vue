@@ -13,8 +13,8 @@
       <c-card
         class="tw-bg-white tw-w-60 tw-flex-grow-0 tw-flex-shrink tw-mr-2"
       >
-        <div
-          class="tw-p-2 tw-text-lg tw-flex tw-items-center"
+        <c-card-title
+          class="tw-p-2 tw-flex tw-items-center"
         >
           <div
             class="tw-mr-auto"
@@ -22,7 +22,7 @@
             Current Manager
           </div>
           <base-manger-setting-dropdown />
-        </div>
+        </c-card-title>
         <hr>
         <div
           class="tw-p-2"
@@ -31,11 +31,11 @@
           <div
             class="tw-mb-4"
           >
-            <div
+            <c-card-sub-title
               class="tw-mb-2"
             >
               Full Manager
-            </div>
+            </c-card-sub-title>
             <div
               class="tw-flex"
             >
@@ -44,11 +44,11 @@
           </div>
           <!-- Circle manager -->
           <div>
-            <div
+            <c-card-sub-title
               class="tw-mb-2 "
             >
               Circle Manager
-            </div>
+            </c-card-sub-title>
             <div>
               <base-manger-circle-manager />
             </div>
@@ -59,14 +59,19 @@
         class="tw-flex-grow tw-flex-shrink-0"
       >
         <div
-          class="tw-flex tw-justify-end"
+          class="tw-flex mb-2"
         >
+          <div
+            class="tw-text-lg tw-font-bold"
+          >
+            Manager list ({{ managerList.length }})
+          </div>
           <c-base-input
             id="search-input"
             v-model="searchValue"
-            class="tw-w-56"
+            class="tw-w-56 tw-ml-auto"
             size="sm"
-            placeholder="search"
+            :placeholder="$t('commons.actions.search')"
           />
         </div>
         <div
@@ -104,6 +109,8 @@ import useStore from '@/store'
 import { computed, ref } from 'vue'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import CBaseInput from '@/components/commons/inputs/Base/index.vue'
+import CCardTitle from '@/components/commons/Card/components/Title.vue'
+import CCardSubTitle from '@/components/commons/Card/components/Subtitle.vue'
 
 const i18n = useI18n()
 const store = useStore()

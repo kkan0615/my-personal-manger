@@ -3,6 +3,9 @@ export const koreanDictionary = {
     hello: '세계야 반가워!'
   },
   commons: {
+    actions: {
+      search: '검색',
+    },
     result: {
       success: '성공',
     }

@@ -1,10 +1,10 @@
 import { GetterTree } from 'vuex'
 import { ManagerState } from './state'
 import { RootState } from '@/store'
-import { Manager, ManagerWithConfig } from '@/types/models/Manager'
+import { Manager } from '@/types/models/Manager'
 
 export type ManagerGetters<S = ManagerState> = {
-  managerList(state: S): Array<ManagerWithConfig>
+  managerList(state: S): Array<Manager>
   manager(state: S): Manager
 }
 

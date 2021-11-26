@@ -76,7 +76,7 @@ const props = defineProps({
   size: {
     type: String,
     required: false,
-    default: ''
+    default: 'sm'
   },
   min: {
     type: [String, Number],
