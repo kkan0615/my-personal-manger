@@ -8,7 +8,7 @@ import { createManagerWindow, managerWindow } from './manager'
 export let tray: Tray
 
 export const createTray = () => {
-  const trayImgPath = isDev ? path.join(__dirname, '/default/tray.jpg') : path.join(process.resourcesPath, 'default', 'tray.jpg')
+  const trayImgPath = isDev ? path.join(__dirname, '../default/tray.jpg') : path.join(process.resourcesPath, 'default', 'tray.jpg')
   tray = new Tray(trayImgPath)
   tray.setToolTip('My Personal Manager')
 

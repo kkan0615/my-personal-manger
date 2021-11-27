@@ -19,9 +19,6 @@ import { createMainWindow } from './windows/mainWindow'
 import { getManagerConfig, updateManagerConfig } from './services/managerConfig'
 import { createTray } from './windows/tray'
 
-// const isDev = false
-
-
 app.whenReady()
   .then(() => {
     /* If no data, set the data */
