@@ -94,7 +94,7 @@ app.on('ready', () => {
   ipcMain.handle('get-manager-circle-image', getManagerCircleImage)
 
   /* Create manager slot */
-  ipcMain.handle('create-manager', createManager)
+  ipcMain.on('create-manager', createManager)
 
   ipcMain.handle('get-manager-list', getManagerList)
 

@@ -100,8 +100,8 @@ export const createManager = async (event: IpcMainInvokeEvent, payload: ManagerC
   /* Create manager.json file */
   fs.writeFileSync(`${dataFolder}/${managerId}/manager.json`, JSON.stringify({
     id: managerId,
-    img: payload.mainImgFile.name,
-    circleImg: payload.circleImgFile.name,
+    img: payload.mainImgFile ? payload.mainImgFile.name : '',
+    circleImg: payload.circleImgFile ? payload.circleImgFile.name : '',
     name: payload.name,
     displayStyle: payload.displayStyle || 'FULL',
     randClickMessages: payload.randClickMessages,

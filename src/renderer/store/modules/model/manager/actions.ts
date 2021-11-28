@@ -137,16 +137,16 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
   },
   async [ManagerActionTypes.CREATE_MANAGER] (_, payload) {
     console.log(payload)
-    const createRes = await electron.ipcRenderer.invoke('create-manager', {
+    const createRes = await electron.ipcRenderer.send('create-manager', {
       name: payload.name,
       displayStyle: payload.displayStyle,
-      mainImgFile: payload.mainImgFile,
-      circleImgFile: payload.circleImgFile,
-      randClickMessages: payload.randClickMessages,
-      morningMessages: payload.morningMessages,
-      lunchMessages: payload.lunchMessages,
-      eveningsMessages: payload.eveningsMessages,
-      nightMessages: payload.nightMessages,
+      // mainImgFile: payload.mainImgFile,
+      // circleImgFile: payload.circleImgFile,
+      randClickMessages: [{ message: 'test', sound: undefined }], //payload.randClickMessages
+      morningMessages: [{ message: 'test', sound: undefined }], //payload.morningMessages
+      lunchMessages: [{ message: 'test', sound: undefined }], //payload.lunchMessages
+      eveningsMessages: [{ message: 'test', sound: undefined }], //payload.eveningsMessages
+      nightMessages: [{ message: 'test', sound: undefined }], //payload.nightMessages
     } as ManagerCreateForm)
     console.log(createRes)
   },

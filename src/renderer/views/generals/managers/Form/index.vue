@@ -94,7 +94,7 @@
                 />
                 <c-material-icon
                   class="tw-ml-2 tw-cursor-pointer"
-                  @click="onClickRevmoeRandClickMessageBtn"
+                  @click="onClickRemoveRandClickMessageBtn"
                 >
                   remove
                 </c-material-icon>
@@ -135,7 +135,7 @@
                 />
                 <c-material-icon
                   class="tw-ml-2  tw-cursor-pointer"
-                  @click="onClickRevmoeMorningMessageBtn"
+                  @click="onClickRemoveMorningMessageBtn"
                 >
                   remove
                 </c-material-icon>
@@ -176,7 +176,7 @@
                 />
                 <c-material-icon
                   class="tw-ml-2 tw-cursor-pointer"
-                  @click="onClickRevmoeLunchMessageBtn"
+                  @click="onClickRemoveLunchMessageBtn"
                 >
                   remove
                 </c-material-icon>
@@ -217,7 +217,7 @@
                 />
                 <c-material-icon
                   class="tw-ml-2 tw-cursor-pointer"
-                  @click="onClickRevmoeEveningMessageBtn"
+                  @click="onClickRemoveEveningMessageBtn"
                 >
                   remove
                 </c-material-icon>
@@ -258,7 +258,7 @@
                 />
                 <c-material-icon
                   class="tw-ml-2 tw-cursor-pointer"
-                  @click="onClickRevmoeNightMessageBtn"
+                  @click="onClickRemoveNightMessageBtn"
                 >
                   remove
                 </c-material-icon>
@@ -404,23 +404,23 @@ const onClickAddNightMessageBtn = () => {
   nightMessageList.value.push({} as ManagerMessage)
 }
 
-const onClickRevmoeRandClickMessageBtn = (index: number) => {
+const onClickRemoveRandClickMessageBtn = (index: number) => {
   randClickMessageList.value.splice(index, 1)
 }
 
-const onClickRevmoeMorningMessageBtn = (index: number) => {
+const onClickRemoveMorningMessageBtn = (index: number) => {
   morningMessageList.value.splice(index, 1)
 }
 
-const onClickRevmoeLunchMessageBtn = (index: number) => {
+const onClickRemoveLunchMessageBtn = (index: number) => {
   lunchMessageList.value.splice(index, 1)
 }
 
-const onClickRevmoeEveningMessageBtn = (index: number) => {
+const onClickRemoveEveningMessageBtn = (index: number) => {
   eveningMessageList.value.splice(index, 1)
 }
 
-const onClickRevmoeNightMessageBtn = (index: number) => {
+const onClickRemoveNightMessageBtn = (index: number) => {
   nightMessageList.value.splice(index, 1)
 }
 
@@ -438,6 +438,7 @@ const onClickCancelBtn = async () => {
 
 const createManager = async () => {
   try {
+    console.log(randClickMessageList.value.map(message => message))
     await store.dispatch(ManagerActionTypes.CREATE_MANAGER, {
       name: name.value,
       displayStyle: displayStyle.value,
