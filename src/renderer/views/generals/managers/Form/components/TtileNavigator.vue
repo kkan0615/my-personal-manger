@@ -52,15 +52,17 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref } from 'vue'
 import CList from '@/components/commons/List/index.vue'
 import CListItem from '@/components/commons/List/components/Item.vue'
 import CListTitle from '@/components/commons/List/components/Title.vue'
 import CCard from '@/components/commons/Card/index.vue'
 
 const onClickToId = (elementId: string) => {
-  document.getElementById(elementId).scrollIntoView({
-    behavior: 'smooth'
-  })
+  const elementById = document.getElementById(elementId)
+  if (elementById) {
+    elementById.scrollIntoView({
+      behavior: 'smooth'
+    })
+  }
 }
 </script>

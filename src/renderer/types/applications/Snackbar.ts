@@ -6,3 +6,5 @@ export interface Snackbar {
   content: string
   type?: SnackbarType // if undefined, use primary color
 }
+
+export type SnackbarCreateForm = Omit<Snackbar, 'id'>

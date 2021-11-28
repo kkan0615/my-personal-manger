@@ -22,4 +22,7 @@ export type ManagerCreateForm = Omit<Manager, 'id'> & {
   mainImgFile: File
   circleImgFile: File
 }
-export type ManagerUpdateForm = Manager
+export type ManagerUpdateForm = Manager & {
+  mainImgFile: File
+  circleImgFile: File
+}

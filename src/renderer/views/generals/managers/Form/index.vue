@@ -299,7 +299,7 @@ import useStore from '@/store'
 import { useRoute } from 'vue-router'
 import CCard from '@/components/commons/Card/index.vue'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
-import { getCircleImageFile, getCircleImageFileAsBlob, getImageFile, getImageFileAsBlob } from '@/utils/manager'
+import { getCircleImageFileAsBlob, getImageFileAsBlob } from '@/utils/manager'
 
 const i18n = useI18n()
 const store = useStore()
@@ -338,7 +338,7 @@ const initData = async () => {
   console.log(isEditForm.value)
   if (isEditForm.value) {
     const { id } = route.params
-    await store.dispatch(ManagerActionTypes.LOAD_MANAGER, id)
+    await store.dispatch(ManagerActionTypes.LOAD_MANAGER, id as string)
     mainImg.value = await getImageFileAsBlob(manager.value)
     circleImg.value = await getCircleImageFileAsBlob(manager.value)
     name.value = manager.value.name
@@ -374,11 +374,14 @@ const onClickCreateBtn = async () => {
   try {
     await store.dispatch(ManagerActionTypes.CREATE_MANAGER, {
       name: name.value,
-      randClickMessages: randClickMessageList.value,
-      morningMessages: morningMessageList.value,
-      lunchMessages: lunchMessageList.value,
-      eveningsMessages: eveningMessageList.value,
-      nightMessages: nightMessageList.value,
+      displayStyle: 'ALL',
+      mainImgFile: mainImg.value,
+      circleImgFile: circleImg.value,
+      randClickMessages: randClickMessageList.value || [],
+      morningMessages: morningMessageList.value || [],
+      lunchMessages: lunchMessageList.value || [],
+      eveningsMessages: eveningMessageList.value || [],
+      nightMessages: nightMessageList.value || [],
     } as ManagerCreateForm)
   } catch (e) {
     console.error(e)
@@ -390,6 +393,8 @@ const onClickUpdateBtn = async () => {
     await store.dispatch(ManagerActionTypes.UPDATE_MANAGER, {
       id: manager.value.id,
       name: name.value,
+      mainImgFile: mainImg.value,
+      circleImgFile: circleImg.value,
       randClickMessages: randClickMessageList.value,
       morningMessages: morningMessageList.value,
       lunchMessages: lunchMessageList.value,

@@ -1,12 +1,12 @@
 import useStore from '@/store'
 import { ApplicationActionTypes } from '@/store/modules/systems/application/actions'
-import { Snackbar } from '@/types/applications/Snackbar'
+import { Snackbar, SnackbarCreateForm } from '@/types/applications/Snackbar'
 import { v4 } from 'uuid'
 
 export default function () {
   const store = useStore()
 
-  const showToast = (args = {} as Snackbar) => {
+  const showToast = (args = {  } as SnackbarCreateForm) => {
     store.dispatch(ApplicationActionTypes.ADD_SNACKBAR_TO_LIST, {
       id: v4(),
       title: args.title || '',

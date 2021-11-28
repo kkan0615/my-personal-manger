@@ -25,7 +25,9 @@ const modalRef = ref<HTMLDivElement | undefined>()
 const modalInstance = ref<BModal | undefined>()
 
 onMounted(() => {
-  modalInstance.value = new BModal(modalRef.value)
+  if (modalRef.value) {
+    modalInstance.value = new BModal(modalRef.value)
+  }
 })
 
 onBeforeUnmount(() => {

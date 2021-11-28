@@ -2,7 +2,7 @@ import { ActionContext, ActionTree } from 'vuex'
 import { RootState } from '@/store'
 import { ManagerMutations, ManagerMutationTypes } from './mutations'
 import { ManagerState } from './state'
-import { Manager, ManagerMessage } from '@/types/models/Manager'
+import { Manager, ManagerCreateForm, ManagerMessage, ManagerUpdateForm } from '@/types/models/Manager'
 import { defaultManagerConfig, ManagerConfig } from '@/types/models/Manager/config'
 import { getRandomInArr, getRandomInt } from '@/utils/commons/random'
 import { getCurrentTimesInDay } from '@/utils/commons/time'
@@ -65,9 +65,11 @@ export interface ManagerActions {
   ): void
   [ManagerActionTypes.CREATE_MANAGER](
     { commit }: AugmentedActionContext,
+    payload: ManagerCreateForm
   ): void
   [ManagerActionTypes.UPDATE_MANAGER](
     { commit }: AugmentedActionContext,
+    payload: ManagerUpdateForm
   ): void
   [ManagerActionTypes.DELETE_MANAGER](
     { commit }: AugmentedActionContext,

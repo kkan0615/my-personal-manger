@@ -131,7 +131,7 @@ const form = inject(BFormProvideKey)
 
 const imagePreview = computed(() => {
   if (props.modelValue) {
-    const imgData = new Blob([props.modelValue], { type: 'image/png' })
+    const imgData = new Blob([props.modelValue as any], { type: 'image/png' })
     return URL.createObjectURL(imgData)
   } else {
     return ''
@@ -183,7 +183,7 @@ const onClickUploadBtn = () => {
   }
 }
 
-const onChangeInput = (event: InputEvent) => {
+const onChangeInput = (event: Event) => {
   emits('update:modelValue', (event.target as any).files[0])
 }
 

@@ -7,7 +7,7 @@
     >
       <c-snackbar
         v-for="snackbar in snackbarList"
-        :key="snackbar"
+        :key="snackbar.id"
         :snackbar="snackbar"
       />
     </c-snackbar-container>

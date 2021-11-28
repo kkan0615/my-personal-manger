@@ -47,7 +47,7 @@ const route = useRoute()
 
 const isLeft = ref(false)
 
-const message = computed(() => store.state.current.message)
+const message = computed(() => store.state.manager.message)
 
 onMounted(async () => {
   document.body.classList.add('tw-w-96')
