@@ -36,6 +36,7 @@ import CMaterialIcon from '@/components/commons/icons/Material/index.vue'
 import useStore from '@/store'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import useToast from '@/mixins/useToast'
+import { CurrentActionTypes } from '@/store/modules/systems/current/actions'
 
 const store = useStore()
 const { showToast } = useToast()
@@ -43,8 +44,8 @@ const { showToast } = useToast()
 const onClickResetToDefaultBtn = async () => {
   try {
     await store.dispatch(ManagerActionTypes.CLEAR_MANAGER_ID)
-    await store.dispatch(ManagerActionTypes.RESET_MANAGER)
-    await store.dispatch(ManagerActionTypes.LOAD_MANAGER)
+    await store.dispatch(CurrentActionTypes.RESET_MANAGER)
+    await store.dispatch(CurrentActionTypes.LOAD_MANAGER)
 
     showToast({
       title: 'Success',

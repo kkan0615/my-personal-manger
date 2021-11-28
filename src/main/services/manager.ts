@@ -28,14 +28,14 @@ export const getCurrentManager = () => {
   }
 }
 
-export const getManagerById = async (event: IpcMainInvokeEvent, args: string) => {
+export const getManager = async (event: IpcMainInvokeEvent, args: string) => {
   if (args) {
-    const managerPath = isDev ? path.join(__dirname, `data/${args}/manager.json`) : path.join(process.resourcesPath, `data/${args}/manager.json`)
+    const managerPath = isDev ? path.join(__dirname, `../data/${args}/manager.json`) : path.join(process.resourcesPath, `data/${args}/manager.json`)
     const fileData = fs.readFileSync(managerPath, 'utf-8')
 
     return JSON.parse(fileData)
   } else {
-    const defaultManagerPath = isDev ? path.join(__dirname, 'default', 'defaultManager.json') : path.join(process.resourcesPath, 'default', 'defaultManager.json')
+    const defaultManagerPath = isDev ? path.join(__dirname, '../default', 'defaultManager.json') : path.join(process.resourcesPath, 'default', 'defaultManager.json')
     const fileData = fs.readFileSync(defaultManagerPath, 'utf-8')
 
     return JSON.parse(fileData)

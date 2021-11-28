@@ -7,7 +7,7 @@ import { StoreKeyEnum } from './types/store'
 import {
   clearManagerId,
   createManager,
-  getCurrentManager,
+  getCurrentManager, getManager,
   getManagerCircleImage,
   getManagerImage,
   getManagerList, setManagerId
@@ -58,7 +58,9 @@ app.on('ready', () => {
     createManagerWindow()
   })
 
-  ipcMain.handle('sync-manager', getCurrentManager)
+  ipcMain.handle('get-current-manager', getCurrentManager)
+
+  ipcMain.handle('get-manager', getManager)
 
   ipcMain.handle('sync-manager-config', getManagerConfig)
 

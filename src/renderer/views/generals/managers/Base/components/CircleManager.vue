@@ -24,17 +24,18 @@ import { computed, onMounted, ref } from 'vue'
 import useElectron from '@/mixins/useElectron'
 import { Manager } from '@/types/models/Manager'
 import { ManagerMutationTypes } from '@/store/modules/model/manager/mutations'
+import { CurrentMutationTypes } from '@/store/modules/systems/current/mutations'
 
 const store = useStore()
 const { ipcRenderer } = useElectron()
 
 const imgSrc = ref()
 
-const manager = computed(() => store.state.manager.manager)
+const manager = computed(() => store.state.current.manager)
 
 onMounted(async () => {
   store.subscribe(async mutation => {
-    if (mutation.type === ManagerMutationTypes.SET_MANAGER) {
+    if (mutation.type === CurrentMutationTypes.SET_MANAGER) {
       imgSrc.value = await getImageFile()
     }
   })

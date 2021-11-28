@@ -1,5 +1,3 @@
-import { ManagerConfig } from '@/types/models/Manager/config'
-
 export interface ManagerMessage {
   sound?: string
   message: string
@@ -20,21 +18,8 @@ export interface Manager {
   displayStyle: ManagerDisplayStyle
 }
 
-export interface ManagerCreateForm {
-  manager: Manager
-  config: ManagerConfig
-  mainImg: File
-  circleImg: File
+export type ManagerCreateForm = Omit<Manager, 'id'> & {
+  mainImgFile: File
+  circleImgFile: File
 }
-
-export interface ManagerUpdateForm {
-  manager: Manager
-  config: ManagerConfig
-  mainImg: File
-  circleImg: File
-}
-
-export interface ManagerWithConfig {
-  manager: Manager
-  config: ManagerConfig
-}
+export type ManagerUpdateForm = Manager

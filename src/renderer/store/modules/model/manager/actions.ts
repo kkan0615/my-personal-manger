@@ -47,6 +47,7 @@ export interface ManagerActions {
   ): void
   [ManagerActionTypes.LOAD_MANAGER](
     { commit }: AugmentedActionContext,
+    payload: string
   ): Promise<void>
   [ManagerActionTypes.SET_MANAGER](
     { commit }: AugmentedActionContext,
@@ -116,8 +117,8 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
   [ManagerActionTypes.RESET_MANAGER_LIST] ({ commit }) {
     commit(ManagerMutationTypes.SET_MANAGER_LIST, [])
   },
-  async [ManagerActionTypes.LOAD_MANAGER] ({ commit }) {
-    const manager = await electron.ipcRenderer.invoke('sync-manager')
+  async [ManagerActionTypes.LOAD_MANAGER] ({ commit }, payload) {
+    const manager = await electron.ipcRenderer.invoke('get-manager', payload)
     commit(ManagerMutationTypes.SET_MANAGER, manager)
   },
   [ManagerActionTypes.SET_MANAGER] ({ commit }, payload) {
@@ -165,8 +166,8 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
     }, 2500))
     commit(ManagerMutationTypes.SET_MESSAGE, payload)
   },
-  [ManagerActionTypes.HELLO_MANAGER] ({ commit, state, rootState, dispatch }) {
-    commit(ManagerMutationTypes.SET_MESSAGE, `I am ${state.manager.name} Hello ${rootState.current.user.name}  master!`)
+  [ManagerActionTypes.HELLO_MANAGER] ({ commit, rootState, dispatch }) {
+    commit(ManagerMutationTypes.SET_MESSAGE, `I am ${rootState.current.manager.name} Hello ${rootState.current.user.name}  master!`)
     dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
   },
   [ManagerActionTypes.CLICK_MANAGER] ({ commit, state, rootState, dispatch }) {
@@ -179,20 +180,20 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
       const currentTimesInDay = getCurrentTimesInDay()
       switch (currentTimesInDay) {
         case 'MORNING':
-          clickMessage = getRandomInArr(state.manager.morningMessages)
+          clickMessage = getRandomInArr(rootState.current.manager.morningMessages)
           break
         case 'AFTERNOON':
-          clickMessage = getRandomInArr(state.manager.lunchMessages)
+          clickMessage = getRandomInArr(rootState.current.manager.lunchMessages)
           break
         case 'EVENING':
-          clickMessage = getRandomInArr(state.manager.eveningsMessages)
+          clickMessage = getRandomInArr(rootState.current.manager.eveningsMessages)
           break
         case 'NIGHT':
-          clickMessage = getRandomInArr(state.manager.nightMessages)
+          clickMessage = getRandomInArr(rootState.current.manager.nightMessages)
           break
       }
     } else {
-      clickMessage = getRandomInArr(state.manager.randClickMessages)
+      clickMessage = getRandomInArr(rootState.current.manager.randClickMessages)
     }
     if (clickMessage) {
       commit(ManagerMutationTypes.SET_MESSAGE, clickMessage.message)

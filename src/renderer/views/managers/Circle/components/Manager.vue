@@ -50,7 +50,7 @@ const contextmenuY = ref(0)
 const displayContextMenu = ref(false)
 const imgSrc = ref()
 
-const manager = computed(() => store.state.manager.manager)
+const manager = computed(() => store.state.current.manager)
 
 onMounted(async () => {
   imgSrc.value = await getImageFile()

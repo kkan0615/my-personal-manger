@@ -5,6 +5,9 @@ export const koreanDictionary = {
   commons: {
     actions: {
       search: '검색',
+      create: '생성',
+      update: '수정',
+      cancel: '취소',
     },
     result: {
       success: '성공',

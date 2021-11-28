@@ -19,3 +19,20 @@ export const getCircleImageFile = async (manager: Manager) => {
   const imgData = new Blob([imageBuffer], { type: 'image/png' })
   return URL.createObjectURL(imgData)
 }
+
+
+export const getImageFileAsBlob = async (manager: Manager) => {
+  const imageBuffer: Buffer = await electron.ipcRenderer.invoke('get-manager-image', {
+    id: manager.id,
+    img: manager.img,
+  })
+  return new Blob([imageBuffer], { type: 'image/png' })
+}
+
+export const getCircleImageFileAsBlob = async (manager: Manager) => {
+  const imageBuffer: Buffer = await electron.ipcRenderer.invoke('get-manager-circle-image', {
+    id: manager.id,
+    circleImg: manager.circleImg,
+  })
+  return new Blob([imageBuffer], { type: 'image/png' })
+}

@@ -20,7 +20,7 @@ onMounted(async () => {
   /* Load manager config */
   await store.dispatch(ManagerActionTypes.LOAD_MANAGER_CONFIG)
   /* Load Manager */
-  await store.dispatch(ManagerActionTypes.LOAD_MANAGER)
+  await store.dispatch(CurrentActionTypes.LOAD_MANAGER)
 })
 
 /* Move to home */

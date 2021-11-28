@@ -4,6 +4,7 @@ import { CurrentMutations, CurrentMutationTypes } from './mutations'
 import { CurrentState } from './state'
 import { User } from '@/types/models/User'
 import { v4 } from 'uuid'
+import { Manager } from '@/types/models/Manager'
 
 const electron = window.require('electron')
 
@@ -11,6 +12,8 @@ export enum CurrentActionTypes {
   LOAD_USER = 'current/LOAD_USER',
   RESET_USER = 'current/RESET_USER',
   REGISTER_USER = 'current/RESET_USER',
+  LOAD_MANAGER = 'current/LOAD_MANAGER',
+  RESET_MANAGER = 'current/RESET_MANAGER',
 }
 
 export type AugmentedActionContext = {
@@ -31,6 +34,12 @@ export interface CurrentActions {
     { commit }: AugmentedActionContext,
     payload: User
   ): void
+  [CurrentActionTypes.LOAD_MANAGER](
+    { commit }: AugmentedActionContext,
+  ): void
+  [CurrentActionTypes.RESET_MANAGER](
+    { commit }: AugmentedActionContext,
+  ): void
 }
 
 export const currentActions: ActionTree<CurrentState, RootState> & CurrentActions = {
@@ -45,5 +54,12 @@ export const currentActions: ActionTree<CurrentState, RootState> & CurrentAction
     payload.id = v4()
     electron.ipcRenderer.send('register-user', payload)
     commit(CurrentMutationTypes.SET_USER, payload)
+  },
+  async [CurrentActionTypes.LOAD_MANAGER] ({ commit }) {
+    const manager = await electron.ipcRenderer.invoke('get-current-manager')
+    commit(CurrentMutationTypes.SET_MANAGER, manager)
+  },
+  [CurrentActionTypes.RESET_MANAGER] ({ commit }) {
+    commit(CurrentMutationTypes.SET_MANAGER, {} as Manager)
   },
 }

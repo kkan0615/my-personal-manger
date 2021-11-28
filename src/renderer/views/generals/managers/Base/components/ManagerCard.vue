@@ -253,6 +253,7 @@ import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { getCircleImageFile, getImageFile } from '@/utils/manager'
 import useToast from '@/mixins/useToast'
 import { Modal as BModal } from 'bootstrap'
+import { CurrentActionTypes } from '@/store/modules/systems/current/actions'
 
 const props = defineProps({
   manager: {
@@ -317,9 +318,9 @@ const onClickDelete = () => {
 const onClickSetManager = async () => {
   try {
     if (props.manager) {
+      await store.dispatch(CurrentActionTypes.RESET_MANAGER)
       await store.dispatch(ManagerActionTypes.SET_MANAGER_ID, props.manager.id)
-      await store.dispatch(ManagerActionTypes.RESET_MANAGER)
-      await store.dispatch(ManagerActionTypes.LOAD_MANAGER)
+      await store.dispatch(CurrentActionTypes.LOAD_MANAGER)
 
       showToast({
         title: 'Success',

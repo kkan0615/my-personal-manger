@@ -20,6 +20,6 @@ import { ref } from 'vue'
   scoped
 >
 .c-list {
-  @apply tw-rounded tw-flex tw-flex-col tw-divide-y tw-divide-gray-500;
+  @apply tw-rounded tw-flex tw-flex-col;
 }
 </style>

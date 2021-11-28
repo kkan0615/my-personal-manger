@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tw-h-screen tw-bg-gray-300 tw-relative"
+    class="tw-h-screen tw-relative"
   >
     <c-snackbar-container
       class="tw-absolute tw-right-4 tw-bottom-4 tw-z-10"
