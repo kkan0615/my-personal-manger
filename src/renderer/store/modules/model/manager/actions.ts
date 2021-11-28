@@ -135,8 +135,19 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
   [ManagerActionTypes.CLEAR_MANAGER_ID] () {
     electron.ipcRenderer.send('clear-manager-id')
   },
-  async [ManagerActionTypes.CREATE_MANAGER] (_) {
-    const createRes = await electron.ipcRenderer.invoke('create-manager')
+  async [ManagerActionTypes.CREATE_MANAGER] (_, payload) {
+    console.log(payload)
+    const createRes = await electron.ipcRenderer.invoke('create-manager', {
+      name: payload.name,
+      displayStyle: payload.displayStyle,
+      mainImgFile: payload.mainImgFile,
+      circleImgFile: payload.circleImgFile,
+      randClickMessages: payload.randClickMessages,
+      morningMessages: payload.morningMessages,
+      lunchMessages: payload.lunchMessages,
+      eveningsMessages: payload.eveningsMessages,
+      nightMessages: payload.nightMessages,
+    } as ManagerCreateForm)
     console.log(createRes)
   },
   async [ManagerActionTypes.UPDATE_MANAGER] (_) {

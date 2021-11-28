@@ -9,7 +9,7 @@
       class="tw-flex"
     >
       <div
-        class="tw-bg-white p-2 md:tw-w-5/12 tw-w-full"
+        class="tw-bg-white p-2 lg:tw-w-5/12 tw-w-full"
       >
         <c-form
           ref="formRef"
@@ -47,6 +47,7 @@
           </div>
           <div
             id="manager-setting"
+            class="tw-mb-2"
           >
             <div
               class="form-subtitle"
@@ -91,10 +92,16 @@
                   id="name-input"
                   v-model="message.message"
                 />
+                <c-material-icon
+                  class="tw-ml-2 tw-cursor-pointer"
+                  @click="onClickRevmoeRandClickMessageBtn"
+                >
+                  remove
+                </c-material-icon>
               </c-row-display>
             </div>
             <c-button
-              class="btn-outline-primary btn-sm tw-w-full tw-mt-3"
+              class="btn-outline-primary btn-sm tw-mt-3"
               @click="onClickAddRandClickMessageBtn"
             >
               Add
@@ -126,10 +133,16 @@
                   id="name-input"
                   v-model="message.message"
                 />
+                <c-material-icon
+                  class="tw-ml-2  tw-cursor-pointer"
+                  @click="onClickRevmoeMorningMessageBtn"
+                >
+                  remove
+                </c-material-icon>
               </c-row-display>
             </div>
             <c-button
-              class="btn-outline-primary btn-sm tw-w-full tw-mt-3"
+              class="btn-outline-primary btn-sm tw-mt-3"
               @click="onClickAddMorningMessageBtn"
             >
               Add
@@ -161,10 +174,16 @@
                   id="name-input"
                   v-model="message.message"
                 />
+                <c-material-icon
+                  class="tw-ml-2 tw-cursor-pointer"
+                  @click="onClickRevmoeLunchMessageBtn"
+                >
+                  remove
+                </c-material-icon>
               </c-row-display>
             </div>
             <c-button
-              class="btn-outline-primary btn-sm tw-w-full tw-mt-3"
+              class="btn-outline-primary btn-sm tw-mt-3"
               @click="onClickAddLunchMessageBtn"
             >
               Add
@@ -196,10 +215,16 @@
                   id="name-input"
                   v-model="message.message"
                 />
+                <c-material-icon
+                  class="tw-ml-2 tw-cursor-pointer"
+                  @click="onClickRevmoeEveningMessageBtn"
+                >
+                  remove
+                </c-material-icon>
               </c-row-display>
             </div>
             <c-button
-              class="btn-sm btn-outline-primary tw-w-full tw-mt-3"
+              class="btn-sm btn-outline-primary tw-mt-3"
               @click="onClickAddEveningMessageBtn"
             >
               Add
@@ -231,10 +256,16 @@
                   id="name-input"
                   v-model="message.message"
                 />
+                <c-material-icon
+                  class="tw-ml-2 tw-cursor-pointer"
+                  @click="onClickRevmoeNightMessageBtn"
+                >
+                  remove
+                </c-material-icon>
               </c-row-display>
             </div>
             <c-button
-              class="btn-outline-primary btn-sm tw-w-full tw-mt-3"
+              class="btn-outline-primary btn-sm tw-mt-3"
               @click="onClickAddNightMessageBtn"
             >
               Add
@@ -244,32 +275,27 @@
         <hr
           class="tw-my-2"
         >
+        <!-- actions -->
         <div
           class="tw-flex tw-justify-end"
         >
           <c-button
             class="tw-mr-2"
+            @click="onClickCancelBtn"
           >
             {{ $t('commons.actions.cancel') }}
           </c-button>
           <c-button
-            v-if="!isEditForm"
             class="btn-primary"
-            @click="onClickCreateBtn"
+            @click="onClickSaveBtn"
           >
-            {{ $t('commons.actions.create') }}
-          </c-button>
-          <c-button
-            v-else
-            class="btn-primary"
-            @click="onClickUpdateBtn"
-          >
-            {{ $t('commons.actions.update') }}
+            {{ isEditForm ? $t('commons.actions.update') : $t('commons.actions.create') }}
           </c-button>
         </div>
       </div>
+      <!-- Navigator -->
       <div
-        class="tw-fixed tw-right-8 tw-w-3/12"
+        class="xl:tw tw-fixed tw-right-8 tw-w-3/12"
       >
         <form-manger-title-navigator />
       </div>
@@ -288,7 +314,7 @@ import { useI18n } from 'vue-i18n'
 import CForm from '@/components/commons/Form/index.vue'
 import CBaseInput from '@/components/commons/inputs/Base/index.vue'
 import { computed, onMounted, ref } from 'vue'
-import { ManagerCreateForm, ManagerMessage, ManagerUpdateForm } from '@/types/models/Manager'
+import { ManagerCreateForm, ManagerDisplayStyle, ManagerMessage, ManagerUpdateForm } from '@/types/models/Manager'
 import CRowDisplayLabel from '@/components/commons/displays/Row/components/Label.vue'
 import CRowDisplay from '@/components/commons/displays/Row/index.vue'
 import CRowDisplayContent from '@/components/commons/displays/Row/components/Content.vue'
@@ -296,14 +322,16 @@ import CButton from '@/components/commons/Button/index.vue'
 import CImageInput from '@/components/commons/inputs/Image/index.vue'
 import FormMangerTitleNavigator from '@/views/generals/managers/Form/components/TtileNavigator.vue'
 import useStore from '@/store'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import CCard from '@/components/commons/Card/index.vue'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { getCircleImageFileAsBlob, getImageFileAsBlob } from '@/utils/manager'
+import CMaterialIcon from '@/components/commons/icons/Material/index.vue'
 
 const i18n = useI18n()
 const store = useStore()
 const route = useRoute()
+const router = useRouter()
 
 const breadcrumbs: Array<CBreadcrumb> = [
   {
@@ -326,6 +354,7 @@ const morningMessageList = ref<Array<ManagerMessage>>([])
 const lunchMessageList = ref<Array<ManagerMessage>>([])
 const eveningMessageList = ref<Array<ManagerMessage>>([])
 const nightMessageList = ref<Array<ManagerMessage>>([])
+const displayStyle = ref<ManagerDisplayStyle>('ALL')
 
 const isEditForm = computed(() => route.name === 'FormEditManager')
 const manager = computed(() => store.state.manager.manager)
@@ -335,7 +364,6 @@ onMounted(() => {
 })
 
 const initData = async () => {
-  console.log(isEditForm.value)
   if (isEditForm.value) {
     const { id } = route.params
     await store.dispatch(ManagerActionTypes.LOAD_MANAGER, id as string)
@@ -347,6 +375,12 @@ const initData = async () => {
     lunchMessageList.value = manager.value.lunchMessages
     eveningMessageList.value = manager.value.eveningsMessages
     nightMessageList.value = manager.value.nightMessages
+  } else {
+    randClickMessageList.value = [{ message: '', sound: undefined }] // at least one message
+    morningMessageList.value = [{ message: '', sound: undefined }] // at least one message
+    lunchMessageList.value = [{ message: '', sound: undefined }] // at least one message
+    eveningMessageList.value = [{ message: '', sound: undefined }] // at least one message
+    nightMessageList.value = [{ message: '', sound: undefined }] // at least one message
   }
 }
 
@@ -370,11 +404,43 @@ const onClickAddNightMessageBtn = () => {
   nightMessageList.value.push({} as ManagerMessage)
 }
 
-const onClickCreateBtn = async () => {
+const onClickRevmoeRandClickMessageBtn = (index: number) => {
+  randClickMessageList.value.splice(index, 1)
+}
+
+const onClickRevmoeMorningMessageBtn = (index: number) => {
+  morningMessageList.value.splice(index, 1)
+}
+
+const onClickRevmoeLunchMessageBtn = (index: number) => {
+  lunchMessageList.value.splice(index, 1)
+}
+
+const onClickRevmoeEveningMessageBtn = (index: number) => {
+  eveningMessageList.value.splice(index, 1)
+}
+
+const onClickRevmoeNightMessageBtn = (index: number) => {
+  nightMessageList.value.splice(index, 1)
+}
+
+const onClickSaveBtn = async () => {
+  if (isEditForm.value) {
+    await updateManager()
+  } else {
+    await createManager()
+  }
+}
+
+const onClickCancelBtn = async () => {
+  await router.go(-1)
+}
+
+const createManager = async () => {
   try {
     await store.dispatch(ManagerActionTypes.CREATE_MANAGER, {
       name: name.value,
-      displayStyle: 'ALL',
+      displayStyle: displayStyle.value,
       mainImgFile: mainImg.value,
       circleImgFile: circleImg.value,
       randClickMessages: randClickMessageList.value || [],
@@ -388,11 +454,12 @@ const onClickCreateBtn = async () => {
   }
 }
 
-const onClickUpdateBtn = async () => {
+const updateManager = async () => {
   try {
     await store.dispatch(ManagerActionTypes.UPDATE_MANAGER, {
       id: manager.value.id,
       name: name.value,
+      displayStyle: displayStyle.value,
       mainImgFile: mainImg.value,
       circleImgFile: circleImg.value,
       randClickMessages: randClickMessageList.value,
