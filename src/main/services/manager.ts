@@ -2,13 +2,32 @@ import fs from 'fs'
 import path from 'path'
 import isDev from 'electron-is-dev'
 import { IpcMainInvokeEvent, IpcMainEvent } from 'electron'
-import { Manager, ManagerCreateForm } from '../types/models/Manager'
+import { Manager, ManagerCreateForm, ManagerUpdateForm } from '../types/models/Manager'
 import { v4 } from 'uuid'
 import { electronStore } from '../store'
 import { StoreKeyEnum } from '../types/store'
 
 /* Path to data directory */
 const dataFolder = isDev ? path.join(__dirname, '..', 'data') : path.join(process.resourcesPath, 'data')
+
+/**
+ * Get manager list
+ */
+export const getManagerList = async () => {
+  try {
+    const result: Array<Manager> = []
+    const folderNameList = fs.readdirSync(dataFolder)
+    for (let i = 0; i < folderNameList.length; i++) {
+      const folderName = folderNameList[i]
+      const manager = fs.readFileSync(`${dataFolder}/${folderName}/manager.json`)
+      result.push(JSON.parse(manager as any))
+    }
+    return result
+  } catch (e) {
+    console.error(e)
+    throw { code: 500, message: e }
+  }
+}
 
 /**
  * Get current manager stored in electron-store
@@ -28,6 +47,11 @@ export const getCurrentManager = () => {
   }
 }
 
+/**
+ * Get manager detail by id
+ * @param event
+ * @param args - id of manager
+ */
 export const getManager = async (event: IpcMainInvokeEvent, args: string) => {
   if (args) {
     const managerPath = isDev ? path.join(__dirname, `../data/${args}/manager.json`) : path.join(process.resourcesPath, `data/${args}/manager.json`)
@@ -71,6 +95,11 @@ export const clearManagerId = () => {
   electronStore.delete(StoreKeyEnum.MANAGER_ID)
 }
 
+/**
+ * Create manager
+ * @param event
+ * @param payload - Manager create form
+ */
 export const createManager = async (event: IpcMainInvokeEvent, payload: ManagerCreateForm) => {
   /* Data data folder is not exist */
   if (!fs.existsSync(dataFolder)) {
@@ -129,37 +158,79 @@ export const createManagerMainImage = async (id: string, file: File) => {
   }
 }
 
-export const updateManger = () => {
-  console.log('updateManger')
+/**
+ * Update manager
+ * @param event
+ * @param payload - manager update form
+ */
+export const updateManger = async (event: IpcMainInvokeEvent, payload: ManagerUpdateForm) => {
+  /* Data data folder is not exist */
+  if (!fs.existsSync(dataFolder) && !fs.existsSync(`${dataFolder}/${payload.id}`)) {
+    throw { code: 500, message: 'Directory is not exist' }
+  }
+
+  const exManagerJson: Manager = JSON.parse(fs.readFileSync(`${dataFolder}/${payload.id}/manager.json`) as any)
+
+  if (payload.mainImgFile) {
+    /* Find main ex image file */
+    const mainImgFilePath = path.join(dataFolder, payload.id, exManagerJson.img)
+    const mainImgFileData = fs.readFileSync(mainImgFilePath, 'utf-8')
+    if (mainImgFileData) {
+      /* Remove old file */
+      fs.rmSync(mainImgFilePath)
+      /* Blob to int8Array */
+      const fileData = new Int8Array(await payload.mainImgFile.arrayBuffer())
+      /* Create file */
+      fs.writeFileSync(`${dataFolder}/${payload.id}/manger.${payload.mainImgFile.name.split('.')[1]}`, fileData)
+    }
+  }
+
+  if (payload.circleImgFile) {
+    /* Find main ex circle image file */
+    const circleImgFilePath = path.join(dataFolder, payload.id, exManagerJson.circleImg)
+    const circleImgFileData = fs.readFileSync(circleImgFilePath, 'utf-8')
+    if (circleImgFileData) {
+      /* Remove old file */
+      fs.rmSync(circleImgFileData)
+      /* Blob to int8Array */
+      const fileData = new Int8Array(await payload.circleImgFile.arrayBuffer())
+      /* Create file */
+      fs.writeFileSync(`${dataFolder}/${payload.id}/manger_circle.${payload.circleImgFile.name.split('.')[1]}`, fileData)
+    }
+  }
+
+  /* Remove ex manager.json file */
+  fs.rmSync(`${dataFolder}/${payload.id}/manager.json`)
+  /* Create manager.json file */
+  fs.writeFileSync(`${dataFolder}/${payload.id}/manager.json`, JSON.stringify({
+    id: payload.id,
+    img: payload.mainImgFile ? payload.mainImgFile.name : exManagerJson.img,
+    circleImg: payload.circleImgFile ? payload.circleImgFile.name : exManagerJson.circleImg,
+    name: payload.name || exManagerJson.name,
+    displayStyle: payload.displayStyle || exManagerJson.displayStyle || 'FULL',
+    randClickMessages: payload.randClickMessages || exManagerJson.randClickMessages,
+    morningMessages: payload.morningMessages || exManagerJson.morningMessages,
+    lunchMessages: payload.lunchMessages || exManagerJson.lunchMessages,
+    nightMessages: payload.nightMessages || exManagerJson.nightMessages,
+    eveningsMessages: payload.eveningsMessages || exManagerJson.eveningsMessages,
+  } as Manager))
 }
 
 /**
  * Delete manager
  * @param event
- * @param id - id of manager
+ * @param arg - id of manager
  */
-export const deleteManager = (event: IpcMainInvokeEvent, id: string) => {
+export const deleteManager = (event: IpcMainInvokeEvent, arg: string) => {
   const dirNameList = fs.readdirSync(dataFolder)
   // 1. if existed, remove directory including all data
-  if (dirNameList.includes(id)) {
-    fs.rmdirSync(`${dataFolder}/${id}}`)
-  } else {
-    throw { code: 'no data', message: 'Fail to find dir by id' }
-  }
-}
-
-export const getManagerList = async () => {
-  try {
-    const result: Array<Manager> = []
-    const folderNameList = fs.readdirSync(dataFolder)
-    for (let i = 0; i < folderNameList.length; i++) {
-      const folderName = folderNameList[i]
-      const manager = fs.readFileSync(`${dataFolder}/${folderName}/manager.json`)
-      result.push(JSON.parse(manager as any))
+  if (dirNameList.includes(arg)) {
+    // 2. Remove all with directory
+    fs.rmdirSync(`${dataFolder}/${arg}}`)
+    if (electronStore.get(StoreKeyEnum.MANAGER_ID) === arg) {
+      electronStore.delete(StoreKeyEnum.MANAGER_ID)
     }
-    return result
-  } catch (e) {
-    console.error(e)
-    throw { code: 500, message: e }
+  } else {
+    throw { code: 500, message: 'Fail to find dir by id' }
   }
 }

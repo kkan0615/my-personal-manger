@@ -142,11 +142,11 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
       displayStyle: payload.displayStyle,
       // mainImgFile: payload.mainImgFile,
       // circleImgFile: payload.circleImgFile,
-      randClickMessages: [{ message: 'test', sound: undefined }], //payload.randClickMessages
-      morningMessages: [{ message: 'test', sound: undefined }], //payload.morningMessages
-      lunchMessages: [{ message: 'test', sound: undefined }], //payload.lunchMessages
-      eveningsMessages: [{ message: 'test', sound: undefined }], //payload.eveningsMessages
-      nightMessages: [{ message: 'test', sound: undefined }], //payload.nightMessages
+      randClickMessages: JSON.parse(JSON.stringify(payload.randClickMessages)), // To handle Cloned object error
+      morningMessages: JSON.parse(JSON.stringify(payload.morningMessages)), // To handle Cloned object error
+      lunchMessages: JSON.parse(JSON.stringify(payload.lunchMessages)), // To handle Cloned object error
+      eveningsMessages: JSON.parse(JSON.stringify(payload.eveningsMessages)), // To handle Cloned object error
+      nightMessages: JSON.parse(JSON.stringify(payload.nightMessages)), // To handle Cloned object error
     } as ManagerCreateForm)
     console.log(createRes)
   },
