@@ -26,10 +26,10 @@ export interface ManagerWithConfig {
 }
 
 export type ManagerCreateForm = Omit<Manager, 'id'> & {
-  mainImgFile: File
-  circleImgFile: File
+  mainImgFile: Int8Array
+  circleImgFile: Int8Array
 }
 export type ManagerUpdateForm = Manager & {
-  mainImgFile?: File
-  circleImgFile?: File
+  mainImgFile?: Int8Array
+  circleImgFile?: Int8Array
 }

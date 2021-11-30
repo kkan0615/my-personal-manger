@@ -327,11 +327,13 @@ import CCard from '@/components/commons/Card/index.vue'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { getCircleImageFileAsBlob, getImageFileAsBlob } from '@/utils/manager'
 import CMaterialIcon from '@/components/commons/icons/Material/index.vue'
+import useToast from '@/mixins/useToast'
 
 const i18n = useI18n()
 const store = useStore()
 const route = useRoute()
 const router = useRouter()
+const { showToast } = useToast()
 
 const breadcrumbs: Array<CBreadcrumb> = [
   {
@@ -346,8 +348,8 @@ const breadcrumbs: Array<CBreadcrumb> = [
 
 const formRef = ref<HTMLFormElement>()
 
-const mainImg = ref()
-const circleImg = ref()
+const mainImg = ref<File>()
+const circleImg = ref<File>()
 const name = ref('')
 const randClickMessageList = ref<Array<ManagerMessage>>([])
 const morningMessageList = ref<Array<ManagerMessage>>([])
@@ -365,8 +367,10 @@ onMounted(() => {
 
 const initData = async () => {
   if (isEditForm.value) {
+    console.log(route.params)
     const { id } = route.params
     await store.dispatch(ManagerActionTypes.LOAD_MANAGER, id as string)
+    console.log(manager.value)
     mainImg.value = await getImageFileAsBlob(manager.value)
     circleImg.value = await getCircleImageFileAsBlob(manager.value)
     name.value = manager.value.name
@@ -438,18 +442,26 @@ const onClickCancelBtn = async () => {
 
 const createManager = async () => {
   try {
-    console.log(randClickMessageList.value.map(message => message))
     await store.dispatch(ManagerActionTypes.CREATE_MANAGER, {
       name: name.value,
       displayStyle: displayStyle.value,
-      mainImgFile: mainImg.value,
-      circleImgFile: circleImg.value,
+      img: mainImg.value ? mainImg.value.name : '',
+      circleImg: circleImg.value ? circleImg.value.name : '',
+      mainImgFile: mainImg.value ? new Int8Array(await mainImg.value.arrayBuffer()) : undefined,
+      circleImgFile: circleImg.value ? new Int8Array(await circleImg.value.arrayBuffer()) : undefined,
       randClickMessages: randClickMessageList.value || [],
       morningMessages: morningMessageList.value || [],
       lunchMessages: lunchMessageList.value || [],
       eveningsMessages: eveningMessageList.value || [],
       nightMessages: nightMessageList.value || [],
     } as ManagerCreateForm)
+
+    await router.push({ name: 'BaseManager' })
+    showToast({
+      title: 'Success',
+      content: 'Success to change',
+      type: 'success'
+    })
   } catch (e) {
     console.error(e)
   }
@@ -461,14 +473,23 @@ const updateManager = async () => {
       id: manager.value.id,
       name: name.value,
       displayStyle: displayStyle.value,
-      mainImgFile: mainImg.value,
-      circleImgFile: circleImg.value,
-      randClickMessages: randClickMessageList.value,
-      morningMessages: morningMessageList.value,
-      lunchMessages: lunchMessageList.value,
-      eveningsMessages: eveningMessageList.value,
-      nightMessages: nightMessageList.value,
+      img: mainImg.value && mainImg.value.name ? mainImg.value.name : manager.value.img || '',
+      circleImg: circleImg.value && circleImg.value.name ? circleImg.value.name : manager.value.circleImg || '',
+      mainImgFile: mainImg.value && mainImg.value.name ? new Int8Array(await mainImg.value.arrayBuffer()) : manager.value.mainImgFile || undefined,
+      circleImgFile: circleImg.value && circleImg.value.name ? new Int8Array(await circleImg.value.arrayBuffer()) : manager.value.circleImgFile || undefined,
+      randClickMessages: randClickMessageList.value || [],
+      morningMessages: morningMessageList.value || [],
+      lunchMessages: lunchMessageList.value || [],
+      eveningsMessages: eveningMessageList.value || [],
+      nightMessages: nightMessageList.value || [],
     } as ManagerUpdateForm)
+
+    await router.push({ name: 'BaseManager' })
+    showToast({
+      title: 'Success',
+      content: 'Success to change',
+      type: 'success'
+    })
   } catch (e) {
     console.error(e)
   }

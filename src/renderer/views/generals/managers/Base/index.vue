@@ -78,9 +78,10 @@
           class="tw-grid tw-grid-cols-6 tw-gap-4"
         >
           <base-manger-manager-card
-            v-for="manager in managerList"
+            v-for="(manager, index) in managerList"
             :key="manager.id"
             :manager="manager"
+            :index="index"
           />
           <base-manger-new-card />
         </div>

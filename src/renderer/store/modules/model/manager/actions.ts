@@ -136,27 +136,39 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
     electron.ipcRenderer.send('clear-manager-id')
   },
   async [ManagerActionTypes.CREATE_MANAGER] (_, payload) {
-    console.log(payload)
-    const createRes = await electron.ipcRenderer.send('create-manager', {
+    const createRes = await electron.ipcRenderer.invoke('create-manager', {
       name: payload.name,
+      img: payload.img,
+      circleImg: payload.circleImg,
       displayStyle: payload.displayStyle,
-      // mainImgFile: payload.mainImgFile,
-      // circleImgFile: payload.circleImgFile,
+      mainImgFile: payload.mainImgFile,
+      circleImgFile: payload.circleImgFile,
       randClickMessages: JSON.parse(JSON.stringify(payload.randClickMessages)), // To handle Cloned object error
       morningMessages: JSON.parse(JSON.stringify(payload.morningMessages)), // To handle Cloned object error
       lunchMessages: JSON.parse(JSON.stringify(payload.lunchMessages)), // To handle Cloned object error
       eveningsMessages: JSON.parse(JSON.stringify(payload.eveningsMessages)), // To handle Cloned object error
       nightMessages: JSON.parse(JSON.stringify(payload.nightMessages)), // To handle Cloned object error
     } as ManagerCreateForm)
-    console.log(createRes)
   },
-  async [ManagerActionTypes.UPDATE_MANAGER] (_) {
-    const updateRes = await electron.ipcRenderer.invoke('update-manager')
+  async [ManagerActionTypes.UPDATE_MANAGER] (_, payload) {
+    const updateRes = await electron.ipcRenderer.invoke('update-manager', {
+      id: payload.id,
+      name: payload.name,
+      img: payload.img,
+      circleImg: payload.circleImg,
+      displayStyle: payload.displayStyle,
+      mainImgFile: payload.mainImgFile,
+      circleImgFile: payload.circleImgFile,
+      randClickMessages: JSON.parse(JSON.stringify(payload.randClickMessages)), // To handle Cloned object error
+      morningMessages: JSON.parse(JSON.stringify(payload.morningMessages)), // To handle Cloned object error
+      lunchMessages: JSON.parse(JSON.stringify(payload.lunchMessages)), // To handle Cloned object error
+      eveningsMessages: JSON.parse(JSON.stringify(payload.eveningsMessages)), // To handle Cloned object error
+      nightMessages: JSON.parse(JSON.stringify(payload.nightMessages)), // To handle Cloned object error
+    } as ManagerUpdateForm)
     console.log(updateRes)
   },
   async [ManagerActionTypes.DELETE_MANAGER] (_, id) {
     const deleteRes = await electron.ipcRenderer.invoke('delete-manager', id)
-    console.log(deleteRes)
   },
   async [ManagerActionTypes.LOAD_MANAGER_CONFIG] ({ commit, rootState }) {
     const managerConfig: ManagerConfig = await electron.ipcRenderer.invoke('sync-manager-config')

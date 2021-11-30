@@ -6,6 +6,7 @@ import { Manager, ManagerCreateForm, ManagerUpdateForm } from '../types/models/M
 import { v4 } from 'uuid'
 import { electronStore } from '../store'
 import { StoreKeyEnum } from '../types/store'
+import { toRef } from 'vue'
 
 /* Path to data directory */
 const dataFolder = isDev ? path.join(__dirname, '..', 'data') : path.join(process.resourcesPath, 'data')
@@ -67,21 +68,23 @@ export const getManager = async (event: IpcMainInvokeEvent, args: string) => {
 }
 
 export const getManagerImage = (event: IpcMainInvokeEvent, args: Manager) => {
+  console.log(args)
   let imgPath: string
   if (args && args.id) {
-    imgPath = isDev ? path.join(__dirname, '../data', args.id, args.img) : path.join(process.resourcesPath, 'data', args.id, args.img)
+    imgPath = isDev ? path.join(__dirname, '../data', args.id, `manager.${args.img.split('.')[1]}`) : path.join(process.resourcesPath, 'data', args.id, `manager.${args.img.split('.')[1]}`)
   } else {
-    imgPath = isDev ? path.join(__dirname, '../default', args.img) : path.join(process.resourcesPath, 'default', args.img)
+    imgPath = isDev ? path.join(__dirname, '../default', 'manager.png') : path.join(process.resourcesPath, 'default', 'manager.png')
   }
+  console.log(imgPath)
   return fs.readFileSync(imgPath)
 }
 
 export const getManagerCircleImage = (event: IpcMainInvokeEvent, args: Manager) => {
   let imgPath: string
   if (args && args.id) {
-    imgPath = isDev ? path.join(__dirname, '../data', args.id, args.circleImg) : path.join(process.resourcesPath, 'data', args.id, args.circleImg)
+    imgPath = isDev ? path.join(__dirname, '../data', args.id, `manager-circle.${args.circleImg.split('.')[1]}`) : path.join(process.resourcesPath, 'data', args.id, `manager-circle.${args.circleImg.split('.')[1]}`)
   } else {
-    imgPath = isDev ? path.join(__dirname, '../default', args.circleImg) : path.join(process.resourcesPath, 'default', args.circleImg)
+    imgPath = isDev ? path.join(__dirname, '../default', 'manager-circle.jpg') : path.join(process.resourcesPath, 'default', 'manager-circle.jpg')
   }
 
   return fs.readFileSync(imgPath)
@@ -101,6 +104,7 @@ export const clearManagerId = () => {
  * @param payload - Manager create form
  */
 export const createManager = async (event: IpcMainInvokeEvent, payload: ManagerCreateForm) => {
+  console.log(payload)
   /* Data data folder is not exist */
   if (!fs.existsSync(dataFolder)) {
     fs.mkdirSync(dataFolder)
@@ -109,28 +113,24 @@ export const createManager = async (event: IpcMainInvokeEvent, payload: ManagerC
   /* Set manager Id */
   const managerId = v4()
 
+  /* Data data folder is not exist */
+  fs.mkdirSync(`${dataFolder}/${managerId}`)
+
   if (payload.mainImgFile) {
-    /* Blob to int8Array */
-    const fileData = new Int8Array(await payload.mainImgFile.arrayBuffer())
     /* Create file */
-    fs.writeFileSync(`${dataFolder}/${managerId}/manger.${payload.mainImgFile.name.split('.')[1]}`, fileData)
+    fs.writeFileSync(`${dataFolder}/${managerId}/manager.${payload.img.split('.')[1]}`, payload.mainImgFile)
   }
 
   if (payload.circleImgFile) {
-    /* Blob to int8Array */
-    const fileData = new Int8Array(await payload.circleImgFile.arrayBuffer())
     /* Create file */
-    fs.writeFileSync(`${dataFolder}/${managerId}/manger_circle.${payload.circleImgFile.name.split('.')[1]}`, fileData)
+    fs.writeFileSync(`${dataFolder}/${managerId}/manager-circle.${payload.circleImg.split('.')[1]}`, payload.circleImgFile)
   }
 
-  /* Create file */
-  /* Make directory with id */
-  fs.mkdirSync(`${dataFolder}/${managerId}`)
   /* Create manager.json file */
   fs.writeFileSync(`${dataFolder}/${managerId}/manager.json`, JSON.stringify({
     id: managerId,
-    img: payload.mainImgFile ? payload.mainImgFile.name : '',
-    circleImg: payload.circleImgFile ? payload.circleImgFile.name : '',
+    img: payload.img ? payload.img : '',
+    circleImg: payload.circleImg ? payload.circleImg : '',
     name: payload.name,
     displayStyle: payload.displayStyle || 'FULL',
     randClickMessages: payload.randClickMessages,
@@ -151,7 +151,7 @@ export const createManagerMainImage = async (id: string, file: File) => {
     /* Blob to int8Array */
     const fileData = new Int8Array(await file.arrayBuffer())
     /* Create file */
-    fs.writeFileSync(`${dataFolder}/${id}/manger.${file.name.split('.')[1]}`, fileData)
+    fs.writeFileSync(`${dataFolder}/${id}/manager.${file.name.split('.')[1]}`, fileData)
   } catch (e) {
     console.error(e)
     throw { code: 500, message: e }
@@ -163,7 +163,8 @@ export const createManagerMainImage = async (id: string, file: File) => {
  * @param event
  * @param payload - manager update form
  */
-export const updateManger = async (event: IpcMainInvokeEvent, payload: ManagerUpdateForm) => {
+export const updateManager = async (event: IpcMainInvokeEvent, payload: ManagerUpdateForm) => {
+  console.log(payload)
   /* Data data folder is not exist */
   if (!fs.existsSync(dataFolder) && !fs.existsSync(`${dataFolder}/${payload.id}`)) {
     throw { code: 500, message: 'Directory is not exist' }
@@ -173,29 +174,25 @@ export const updateManger = async (event: IpcMainInvokeEvent, payload: ManagerUp
 
   if (payload.mainImgFile) {
     /* Find main ex image file */
-    const mainImgFilePath = path.join(dataFolder, payload.id, exManagerJson.img)
+    const mainImgFilePath = path.join(dataFolder, payload.id, `manager.${exManagerJson.img.split('.')[1]}`)
     const mainImgFileData = fs.readFileSync(mainImgFilePath, 'utf-8')
     if (mainImgFileData) {
       /* Remove old file */
       fs.rmSync(mainImgFilePath)
-      /* Blob to int8Array */
-      const fileData = new Int8Array(await payload.mainImgFile.arrayBuffer())
       /* Create file */
-      fs.writeFileSync(`${dataFolder}/${payload.id}/manger.${payload.mainImgFile.name.split('.')[1]}`, fileData)
+      fs.writeFileSync(`${dataFolder}/${payload.id}/manager.${payload.img.split('.')[1]}`, payload.mainImgFile)
     }
   }
 
   if (payload.circleImgFile) {
     /* Find main ex circle image file */
-    const circleImgFilePath = path.join(dataFolder, payload.id, exManagerJson.circleImg)
+    const circleImgFilePath = path.join(dataFolder, payload.id, `manager-circle.${exManagerJson.circleImg.split('.')[1]}`)
     const circleImgFileData = fs.readFileSync(circleImgFilePath, 'utf-8')
     if (circleImgFileData) {
       /* Remove old file */
       fs.rmSync(circleImgFileData)
-      /* Blob to int8Array */
-      const fileData = new Int8Array(await payload.circleImgFile.arrayBuffer())
       /* Create file */
-      fs.writeFileSync(`${dataFolder}/${payload.id}/manger_circle.${payload.circleImgFile.name.split('.')[1]}`, fileData)
+      fs.writeFileSync(`${dataFolder}/${payload.id}/manager-circle.${exManagerJson.circleImg.split('.')[1]}`, payload.circleImgFile)
     }
   }
 
@@ -204,8 +201,8 @@ export const updateManger = async (event: IpcMainInvokeEvent, payload: ManagerUp
   /* Create manager.json file */
   fs.writeFileSync(`${dataFolder}/${payload.id}/manager.json`, JSON.stringify({
     id: payload.id,
-    img: payload.mainImgFile ? payload.mainImgFile.name : exManagerJson.img,
-    circleImg: payload.circleImgFile ? payload.circleImgFile.name : exManagerJson.circleImg,
+    img: payload.img ? payload.img : exManagerJson.img,
+    circleImg: payload.circleImg ? payload.circleImg : exManagerJson.circleImg,
     name: payload.name || exManagerJson.name,
     displayStyle: payload.displayStyle || exManagerJson.displayStyle || 'FULL',
     randClickMessages: payload.randClickMessages || exManagerJson.randClickMessages,
@@ -225,8 +222,9 @@ export const deleteManager = (event: IpcMainInvokeEvent, arg: string) => {
   const dirNameList = fs.readdirSync(dataFolder)
   // 1. if existed, remove directory including all data
   if (dirNameList.includes(arg)) {
+    console.log('pass?', arg)
     // 2. Remove all with directory
-    fs.rmdirSync(`${dataFolder}/${arg}}`)
+    fs.rmdirSync(`${dataFolder}/${arg}`, { recursive: true, force: true } as any)
     if (electronStore.get(StoreKeyEnum.MANAGER_ID) === arg) {
       electronStore.delete(StoreKeyEnum.MANAGER_ID)
     }

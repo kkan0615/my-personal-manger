@@ -2,7 +2,7 @@
   <c-card
     class="tw-h-48 tw-bg-white tw-cursor-pointer hover:tw-bg-gray-100"
     data-bs-toggle="modal"
-    data-bs-target="#manager-modal"
+    :data-bs-target="`#${modalId}`"
     :class="{
       'tw-ring': isActive,
     }"
@@ -29,7 +29,7 @@
   </c-card>
   <!-- Modal -->
   <div
-    id="manager-modal"
+    :id="modalId"
     ref="modalRef"
     class="modal fade"
     tabindex="-1"
@@ -62,7 +62,7 @@
           </c-button>
           <c-button
             class="btn-danger"
-            @click="onClickDelete"
+            @click="onClickDeleteBtn"
           >
             Delete
           </c-button>
@@ -127,6 +127,18 @@
                 class="tw-font-semibold"
               >
                 Config
+              </div>
+              <div
+                class="tw-flex tw-items-center"
+              >
+                <div>
+                  Id
+                </div>
+                <div
+                  class="tw-ml-auto"
+                >
+                  {{ manager.id }}
+                </div>
               </div>
               <div
                 class="tw-flex tw-items-center"
@@ -261,11 +273,16 @@ const props = defineProps({
     required: true,
     default: () => {},
   },
-  active: {
-    type: Boolean,
+  index: {
+    type: Number,
     required: false,
-    default: false,
-  }
+    default: 0,
+  },
+  // active: {
+  //   type: Boolean,
+  //   required: false,
+  //   default: false,
+  // }
 })
 
 const { ipcRenderer } = useElectron()
@@ -277,7 +294,9 @@ const imgSrc = ref()
 const circleImg = ref()
 const modalRef = ref()
 const modalInstance = ref<BModal | undefined>()
-const isActive = computed(() => store.state.manager.manager.id === props.manager.id)
+
+const isActive = computed(() => store.state.current.manager.id === props.manager.id)
+const modalId = computed(() => `modal-id-${props.index || 0}`)
 
 onMounted(async () => {
   imgSrc.value = await getImage()
@@ -311,8 +330,23 @@ const onClickEdit = async () => {
     console.error(e)
   }
 }
-const onClickDelete = () => {
-  console.log('onClickEdit')
+const onClickDeleteBtn = async () => {
+  try {
+    if (props.manager) {
+      await store.dispatch(ManagerActionTypes.DELETE_MANAGER, props.manager.id)
+      await store.dispatch(CurrentActionTypes.RESET_MANAGER)
+      await store.dispatch(CurrentActionTypes.LOAD_MANAGER)
+      await store.dispatch(ManagerActionTypes.LOAD_MANAGER_LIST)
+
+      showToast({
+        title: 'Success',
+        content: 'Success to change',
+        type: 'success'
+      })
+    }
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 const onClickSetManager = async () => {

@@ -6,11 +6,11 @@ import isDev from 'electron-is-dev'
 import { StoreKeyEnum } from './types/store'
 import {
   clearManagerId,
-  createManager,
+  createManager, deleteManager,
   getCurrentManager, getManager,
   getManagerCircleImage,
   getManagerImage,
-  getManagerList, setManagerId
+  getManagerList, setManagerId, updateManager
 } from './services/manager'
 import { User } from './types/models/User'
 import { authWindow, createAuthWindow } from './windows/auth'
@@ -94,7 +94,9 @@ app.on('ready', () => {
   ipcMain.handle('get-manager-circle-image', getManagerCircleImage)
 
   /* Create manager slot */
-  ipcMain.on('create-manager', createManager)
+  ipcMain.handle('create-manager', createManager)
+  ipcMain.handle('update-manager', updateManager)
+  ipcMain.handle('delete-manager', deleteManager)
 
   ipcMain.handle('get-manager-list', getManagerList)
 
