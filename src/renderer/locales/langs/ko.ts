@@ -18,9 +18,13 @@ export const koreanDictionary = {
         updated: '업데이트에 성공했습니다.',
         deleted: '삭제에 성공했습니다.',
         setToManager: '매니저 설정에 성공했습니다.',
+        failRedirect: '페이지 이동에 실패했습니다.'
       },
-      success: '성공',
-      fail: '실패',
+      Titles: {
+        success: '성공',
+        fail: '실패',
+        failRedirect: '페이지 이동 실패',
+      }
     },
   },
   router: {
@@ -40,6 +44,10 @@ export const koreanDictionary = {
         nightMessages: '새벽 인사 메시지',
         displayStyle: '보이는 방식'
       },
+      Extras: {
+        fullManager: '전체 모드',
+        circleManager: '원형 모드',
+      }
     },
     Systems: {}
   }

@@ -37,7 +37,7 @@
               v-else
               :src="imagePreview"
               alt="manager preview"
-              class="tw-w-auto tw-h-full tw-bg-transparent"
+              class="tw-w-full tw-h-full tw-bg-transparent"
             >
           </div>
         </div>
