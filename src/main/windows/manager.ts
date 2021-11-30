@@ -8,6 +8,9 @@ import {
   moveMangerScreen,
   stopMoveMangerScreen
 } from '../services/managerWindow'
+import { electronStore } from '../store'
+import { StoreKeyEnum } from '../types/store'
+import { defaultManagerConfig, ManagerConfig } from '../types/models/Manager/config'
 
 export let managerWindow: BrowserWindow | undefined
 
@@ -17,11 +20,13 @@ export const createManagerWindow = () => {
     const width = 400
     const height = 350
 
+    const managerConfig: ManagerConfig = <ManagerConfig>electronStore.get(StoreKeyEnum.MANAGER_CONFIG)
+
     managerWindow = new BrowserWindow({
       width,
       height,
       frame: false,
-      alwaysOnTop: true,
+      alwaysOnTop: managerConfig ? managerConfig.isAlwaysTop : defaultManagerConfig.isAlwaysTop,
       transparent: true,
       backgroundColor: undefined,
       hasShadow: true,

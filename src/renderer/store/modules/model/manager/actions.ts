@@ -2,7 +2,7 @@ import { ActionContext, ActionTree } from 'vuex'
 import { RootState } from '@/store'
 import { ManagerMutations, ManagerMutationTypes } from './mutations'
 import { ManagerState } from './state'
-import { Manager, ManagerCreateForm, ManagerMessage, ManagerUpdateForm } from '@/types/models/Manager'
+import { Manager, ManagerCreateForm, ManagerMessage, ManagerUpdateForm, ReplaceWordEnum } from '@/types/models/Manager'
 import { defaultManagerConfig, ManagerConfig } from '@/types/models/Manager/config'
 import { getRandomInArr, getRandomInt } from '@/utils/commons/random'
 import { getCurrentTimesInDay } from '@/utils/commons/time'
@@ -206,8 +206,27 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
     commit(ManagerMutationTypes.SET_MESSAGE, payload)
   },
   [ManagerActionTypes.HELLO_MANAGER] ({ commit, rootState, dispatch }) {
-    commit(ManagerMutationTypes.SET_MESSAGE, `I am ${rootState.current.manager.name} Hello ${rootState.current.user.name}  master!`)
-    dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
+    let clickMessage: ManagerMessage | null = null
+    const currentTimesInDay = getCurrentTimesInDay()
+    switch (currentTimesInDay) {
+      case 'MORNING':
+        clickMessage = getRandomInArr(rootState.current.manager.morningMessages)
+        break
+      case 'AFTERNOON':
+        clickMessage = getRandomInArr(rootState.current.manager.lunchMessages)
+        break
+      case 'EVENING':
+        clickMessage = getRandomInArr(rootState.current.manager.eveningsMessages)
+        break
+      case 'NIGHT':
+        clickMessage = getRandomInArr(rootState.current.manager.nightMessages)
+        break
+    }
+    if (clickMessage) {
+      const message = clickMessage.message.replaceAll(ReplaceWordEnum.MASTER_NAME, rootState.current.user.name)
+      commit(ManagerMutationTypes.SET_MESSAGE, message)
+      dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
+    }
   },
   [ManagerActionTypes.CLICK_MANAGER] ({ commit, state, rootState, dispatch }) {
     if (state.messageTimer) {
@@ -215,27 +234,10 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
     }
 
     let clickMessage: ManagerMessage | null = null
-    if (getRandomInt() === 1) {
-      const currentTimesInDay = getCurrentTimesInDay()
-      switch (currentTimesInDay) {
-        case 'MORNING':
-          clickMessage = getRandomInArr(rootState.current.manager.morningMessages)
-          break
-        case 'AFTERNOON':
-          clickMessage = getRandomInArr(rootState.current.manager.lunchMessages)
-          break
-        case 'EVENING':
-          clickMessage = getRandomInArr(rootState.current.manager.eveningsMessages)
-          break
-        case 'NIGHT':
-          clickMessage = getRandomInArr(rootState.current.manager.nightMessages)
-          break
-      }
-    } else {
-      clickMessage = getRandomInArr(rootState.current.manager.randClickMessages)
-    }
+    clickMessage = getRandomInArr(rootState.current.manager.randClickMessages)
     if (clickMessage) {
-      commit(ManagerMutationTypes.SET_MESSAGE, clickMessage.message)
+      const message = clickMessage.message.replaceAll(ReplaceWordEnum.MASTER_NAME, rootState.current.user.name)
+      commit(ManagerMutationTypes.SET_MESSAGE, message)
       dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
     }
   },

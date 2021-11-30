@@ -22,7 +22,12 @@ export type ManagerCreateForm = Omit<Manager, 'id'> & {
   mainImgFile: Int8Array
   circleImgFile: Int8Array
 }
+
 export type ManagerUpdateForm = Manager & {
   mainImgFile?: Int8Array
   circleImgFile?: Int8Array
+}
+
+export enum ReplaceWordEnum {
+  'MASTER_NAME'= '{{ name }}'
 }

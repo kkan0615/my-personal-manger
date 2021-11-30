@@ -6,7 +6,6 @@ import { Manager, ManagerCreateForm, ManagerUpdateForm } from '../types/models/M
 import { v4 } from 'uuid'
 import { electronStore } from '../store'
 import { StoreKeyEnum } from '../types/store'
-import { toRef } from 'vue'
 
 /* Path to data directory */
 const dataFolder = isDev ? path.join(__dirname, '..', 'data') : path.join(process.resourcesPath, 'data')

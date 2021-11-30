@@ -15,11 +15,11 @@
           ref="formRef"
         >
           <!-- Manager images -->
-          <div
+          <c-subtitle-typo
             class="form-subtitle"
           >
             Manager Images
-          </div>
+          </c-subtitle-typo>
           <div
             id="manager-image-list"
             class="tw-flex tw-space-x-4"
@@ -47,13 +47,11 @@
           </div>
           <div
             id="manager-setting"
-            class="tw-mb-2"
+            class="tw-my-2"
           >
-            <div
-              class="form-subtitle"
-            >
+            <c-subtitle-typo>
               Manager
-            </div>
+            </c-subtitle-typo>
             <c-row-display>
               <c-row-display-label>
                 Name
@@ -67,15 +65,14 @@
             </c-row-display>
           </div>
           <!-- Random click message -->
-          <c-card
+          <c-subtitle-typo
             id="random-click-message-list"
+          >
+            Random click messages
+          </c-subtitle-typo>
+          <c-card
             class="tw-p-2 tw-shadow-none tw-mb-3"
           >
-            <div
-              class="form-subtitle"
-            >
-              Random click messages
-            </div>
             <div
               class="tw-flex tw-flex-col tw-space-y-2"
             >
@@ -108,15 +105,14 @@
             </c-button>
           </c-card>
           <!-- Morning message -->
-          <c-card
+          <c-subtitle-typo
             id="morning-message-list"
+          >
+            Morning messages
+          </c-subtitle-typo>
+          <c-card
             class="tw-p-2 tw-shadow-none tw-mb-3"
           >
-            <div
-              class="form-subtitle"
-            >
-              Morning messages
-            </div>
             <div
               class="tw-flex tw-flex-col tw-space-y-2"
             >
@@ -149,15 +145,14 @@
             </c-button>
           </c-card>
           <!-- Lunch message -->
-          <c-card
+          <c-subtitle-typo
             id="lunch-message-list"
+          >
+            Lunch messages
+          </c-subtitle-typo>
+          <c-card
             class="tw-p-2 tw-shadow-none tw-mb-3"
           >
-            <div
-              class="form-subtitle"
-            >
-              Lunch messages
-            </div>
             <div
               class="tw-flex tw-flex-col tw-space-y-2"
             >
@@ -190,15 +185,14 @@
             </c-button>
           </c-card>
           <!-- Evening message -->
-          <c-card
+          <c-subtitle-typo
             id="evening-message-list"
+          >
+            Evening messages
+          </c-subtitle-typo>
+          <c-card
             class="tw-p-2 tw-shadow-none tw-mb-3"
           >
-            <div
-              class="form-subtitle"
-            >
-              Evening messages
-            </div>
             <div
               class="tw-flex tw-flex-col tw-space-y-2"
             >
@@ -231,15 +225,14 @@
             </c-button>
           </c-card>
           <!-- night message -->
-          <c-card
+          <c-subtitle-typo
             id="night-message-list"
+          >
+            Night messages
+          </c-subtitle-typo>
+          <c-card
             class="tw-p-2 tw-shadow-none"
           >
-            <div
-              class="form-subtitle"
-            >
-              Night messages
-            </div>
             <div
               class="tw-flex tw-flex-col tw-space-y-2"
             >
@@ -328,6 +321,7 @@ import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { getCircleImageFileAsBlob, getImageFileAsBlob } from '@/utils/manager'
 import CMaterialIcon from '@/components/commons/icons/Material/index.vue'
 import useToast from '@/mixins/useToast'
+import CSubtitleTypo from '@/components/commons/typographies/Subtitle/index.vue'
 
 const i18n = useI18n()
 const store = useStore()
@@ -348,8 +342,8 @@ const breadcrumbs: Array<CBreadcrumb> = [
 
 const formRef = ref<HTMLFormElement>()
 
-const mainImg = ref<File>()
-const circleImg = ref<File>()
+const mainImg = ref<File | Blob>()
+const circleImg = ref<File | Blob>()
 const name = ref('')
 const randClickMessageList = ref<Array<ManagerMessage>>([])
 const morningMessageList = ref<Array<ManagerMessage>>([])
@@ -445,8 +439,8 @@ const createManager = async () => {
     await store.dispatch(ManagerActionTypes.CREATE_MANAGER, {
       name: name.value,
       displayStyle: displayStyle.value,
-      img: mainImg.value ? mainImg.value.name : '',
-      circleImg: circleImg.value ? circleImg.value.name : '',
+      img: mainImg.value && mainImg.value.name ? mainImg.value.name : '',
+      circleImg: circleImg.value && circleImg.value.name ? circleImg.value.name : '',
       mainImgFile: mainImg.value ? new Int8Array(await mainImg.value.arrayBuffer()) : undefined,
       circleImgFile: circleImg.value ? new Int8Array(await circleImg.value.arrayBuffer()) : undefined,
       randClickMessages: randClickMessageList.value || [],

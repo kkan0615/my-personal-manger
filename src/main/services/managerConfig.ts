@@ -1,7 +1,8 @@
 import { ManagerConfig, ManagerConfigUpdateForm } from '../types/models/Manager/config'
 import { electronStore } from '../store'
 import { StoreKeyEnum } from '../types/store'
-import { IpcMainEvent } from 'electron'
+import { IpcMainInvokeEvent } from 'electron'
+import { managerWindow } from '../windows/manager'
 
 /**
  * Get manager config stored in electron-store
@@ -20,7 +21,7 @@ export const clearManagerConfig = () => {
  * @param event
  * @param args
  */
-export const updateManagerConfig = async (event: IpcMainEvent, args: ManagerConfigUpdateForm) => {
+export const updateManagerConfig = (event: IpcMainInvokeEvent, args: ManagerConfigUpdateForm) => {
   const config = <ManagerConfig>electronStore.get(StoreKeyEnum.MANAGER_CONFIG)
   if (config) {
     config.isAlwaysTop = args.isAlwaysTop
@@ -30,5 +31,11 @@ export const updateManagerConfig = async (event: IpcMainEvent, args: ManagerConf
     electronStore.set(StoreKeyEnum.MANAGER_CONFIG, config)
   } else {
     electronStore.set(StoreKeyEnum.MANAGER_CONFIG, args)
+  }
+
+  console.log('args', args)
+  if (args.isAlwaysTop !== undefined && managerWindow) {
+    managerWindow.setAlwaysOnTop(args.isAlwaysTop)
+    console.log('pass?', managerWindow.isAlwaysOnTop())
   }
 }

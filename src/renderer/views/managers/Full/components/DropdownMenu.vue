@@ -46,6 +46,7 @@ import useStore from '@/store'
 import useElectron from '@/mixins/useElectron'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import { CurrentActionTypes } from '@/store/modules/systems/current/actions'
+import { MangerConfigUpdateForm } from '@/types/models/Manager/config'
 
 const { ipcRenderer } = useElectron()
 const store = useStore()
@@ -54,25 +55,18 @@ const manager = computed(() => store.state.manager.manager)
 const config = computed(() => store.state.current.managerConfig)
 
 const onClickOnAlwaysTheTop = async () => {
-  ipcRenderer.send('update-manager-config-by-id', {
-    id: manager.value.id,
-    config: {
-      ...config.value,
-      isAlwaysTop: true
-    }
-  })
-
+  await store.dispatch(CurrentActionTypes.UPDATE_MANAGER_CONFIG, {
+    ...config,
+    isAlwaysTop: true,
+  } as MangerConfigUpdateForm)
   await store.dispatch(CurrentActionTypes.LOAD_MANAGER_CONFIG)
 }
 
 const onClickOffAlwaysTheTop = async () => {
-  ipcRenderer.send('update-manager-config-by-id', {
-    id: manager.value.id,
-    config: {
-      ...config.value,
-      isAlwaysTop: false
-    }
-  })
+  await store.dispatch(CurrentActionTypes.UPDATE_MANAGER_CONFIG, {
+    ...config,
+    isAlwaysTop: false,
+  } as MangerConfigUpdateForm)
   await store.dispatch(ManagerActionTypes.LOAD_MANAGER_CONFIG)
 }
 </script>

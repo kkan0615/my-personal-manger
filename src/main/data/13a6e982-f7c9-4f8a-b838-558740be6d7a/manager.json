@@ -1,62 +1,12 @@
 {
-  "id": "13a6e982-f7c9-4f8a-b838-558740be6d7a",
-  "name": "nozomi tojo",
-  "img": "manager.png",
-  "circleImg": "manager-circle.png",
-  "displayStyle": "ALL",
-  "morningMessages": [
-    {
-      "message": "Morning test 1"
-    },
-    {
-      "message": "Morning test 2"
-    },
-    {
-      "message": "Morning test 3"
-    }
-  ],
-  "lunchMessages":[
-    {
-      "message": "Lunch test 1"
-    },
-    {
-      "message": "Lunch test 2"
-    },
-    {
-      "message": "Lunch test 3"
-    }
-  ],
-  "eveningsMessages": [
-    {
-      "message": "Evening test 1"
-    },
-    {
-      "message": "Evening test 2"
-    },
-    {
-      "message": "Evening test 3"
-    }
-  ],
-  "nightMessages": [
-    {
-      "message": "Night test 1"
-    },
-    {
-      "message": "Night test 2"
-    },
-    {
-      "message": "Night test 3"
-    }
-  ],
-  "randClickMessages":[
-    {
-      "message": "test 1"
-    },
-    {
-      "message": "test 2"
-    },
-    {
-      "message": "test 3"
-    }
-  ]
+  "id":"13a6e982-f7c9-4f8a-b838-558740be6d7a",
+  "img":"manager.png",
+  "circleImg":"manager-circle.png",
+  "name":"nozomi tojo",
+  "displayStyle":"ALL",
+  "randClickMessages": [{"message":"test 1"},{"message":"test 2"},{"message":"test 3"}, {"message": "{{ name }} hi" }],
+  "morningMessages":[{"message":"Morning {{ name }} 2"},{"message":"Morning test 3"}],
+  "lunchMessages":[{"message":"Lunch {{ name }} 1"},{"message":"Lunch test 2"},{"message":"Lunch test 3"}],
+  "nightMessages":[{"message":"Night {{ name }} 1"},{"message":"Night test 2"},{"message":"Night test 3"}],
+  "eveningsMessages":[{"message":"Evening {{ name }} 1"},{"message":"Evening test 2"},{"message":"Evening test 3"}]
 }

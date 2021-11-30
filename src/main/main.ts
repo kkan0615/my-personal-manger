@@ -100,7 +100,7 @@ app.on('ready', () => {
 
   ipcMain.handle('get-manager-list', getManagerList)
 
-  ipcMain.on('update-manager-config', updateManagerConfig)
+  ipcMain.handle('update-manager-config', updateManagerConfig)
 })
 
 /* When all windows are closed */

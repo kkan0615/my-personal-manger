@@ -87,17 +87,16 @@ export const currentActions: ActionTree<CurrentState, RootState> & CurrentAction
   [CurrentActionTypes.RESET_MANAGER_CONFIG] ({ commit }) {
     commit(CurrentMutationTypes.SET_MANAGER_CONFIG, {} as ManagerConfig)
   },
-  [CurrentActionTypes.UPDATE_MANAGER_CONFIG] ({ commit }, payload) {
+  async [CurrentActionTypes.UPDATE_MANAGER_CONFIG] ({ commit }, payload) {
     const mangerConfigUpdateForm: MangerConfigUpdateForm = {
-      display: payload.display || defaultManagerConfig.display,
-      isAlwaysTop: payload.isAlwaysTop || defaultManagerConfig.isAlwaysTop,
-      displayStyle: payload.displayStyle || defaultManagerConfig.displayStyle,
-      isOnSound: payload.isOnSound || defaultManagerConfig.isOnSound,
+      display: payload.display !== undefined ? payload.display : defaultManagerConfig.display,
+      isAlwaysTop: payload.isAlwaysTop !== undefined ? payload.isAlwaysTop : defaultManagerConfig.isAlwaysTop,
+      displayStyle: payload.displayStyle !== undefined ? payload.displayStyle : defaultManagerConfig.displayStyle,
+      isOnSound: payload.isOnSound !== undefined ? payload.isOnSound : defaultManagerConfig.isOnSound,
     }
 
-    electron.ipcRenderer.send('update-manager-config', mangerConfigUpdateForm)
-    commit(CurrentMutationTypes.SET_MANAGER_CONFIG, {
-      ...mangerConfigUpdateForm,
-    })
+    alert(mangerConfigUpdateForm.isAlwaysTop)
+    await electron.ipcRenderer.invoke('update-manager-config', mangerConfigUpdateForm)
+    commit(CurrentMutationTypes.SET_MANAGER_CONFIG, mangerConfigUpdateForm)
   },
 }

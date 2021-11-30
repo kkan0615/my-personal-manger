@@ -118,33 +118,36 @@
           <div
             class="tw-flex-grow tw-flex-shrink"
           >
-            <div>
-              <c-subtitle-typo>
-                Manager
-              </c-subtitle-typo>
-              <div
-                class="tw-flex tw-items-center"
-              >
-                <div>
-                  {{ $t('Types.Models.Attributes.id') }}
-                </div>
-                <div
-                  class="tw-ml-auto"
-                >
-                  {{ manager.id }}
-                </div>
-              </div>
-              <div
-                class="tw-flex tw-items-center"
-              >
-                <div>
-                  {{ $t('Types.Models.Attributes.name') }}
-                </div>
-                <div
-                  class="tw-ml-auto"
-                >
-                  {{ manager.name }}
-                </div>
+            <div
+              class="tw-flex-col tw-space-y-2"
+            >
+              <div>
+                <!-- Manger -->
+                <c-subtitle-typo>
+                  Manager
+                </c-subtitle-typo>
+                <!-- id -->
+                <c-row-display>
+                  <c-row-display-label
+                    class="tw-font-semibold"
+                  >
+                    {{ $t('Types.Models.Attributes.id') }}
+                  </c-row-display-label>
+                  <c-row-display-content>
+                    {{ manager.id }}
+                  </c-row-display-content>
+                </c-row-display>
+                <!-- Name -->
+                <c-row-display>
+                  <c-row-display-label
+                    class="tw-font-semibold"
+                  >
+                    {{ $t('Types.Models.Attributes.name') }}
+                  </c-row-display-label>
+                  <c-row-display-content>
+                    {{ manager.name }}
+                  </c-row-display-content>
+                </c-row-display>
               </div>
               <!-- Morning messages -->
               <div>
@@ -156,8 +159,10 @@
                   :key="`morningMessage-${i}`"
                   class="tw-flex tw-items-center"
                 >
-                  <div>
-                    {{ i + 1 }}
+                  <div
+                    class="tw-mr-2"
+                  >
+                    {{ i + 1 }}.
                   </div>
                   <div>
                     {{ message.message }}
@@ -174,8 +179,10 @@
                   :key="`lunchMessage-${i}`"
                   class="tw-flex tw-items-center"
                 >
-                  <div>
-                    {{ i + 1 }}
+                  <div
+                    class="tw-mr-2"
+                  >
+                    {{ i + 1 }}.
                   </div>
                   <div>
                     {{ message.message }}
@@ -192,8 +199,10 @@
                   :key="`nightMessage-${i}`"
                   class="tw-flex tw-items-center"
                 >
-                  <div>
-                    {{ i + 1 }}
+                  <div
+                    class="tw-mr-2"
+                  >
+                    {{ i + 1 }}.
                   </div>
                   <div>
                     {{ message.message }}
@@ -211,8 +220,10 @@
                   :key="`randClickMessage-${i}`"
                   class="tw-flex tw-items-center"
                 >
-                  <div>
-                    {{ i + 1 }}
+                  <div
+                    class="tw-mr-2"
+                  >
+                    {{ i + 1 }}.
                   </div>
                   <div>
                     {{ message.message }}
@@ -245,6 +256,9 @@ import useToast from '@/mixins/useToast'
 import { Modal as BModal } from 'bootstrap'
 import { CurrentActionTypes } from '@/store/modules/systems/current/actions'
 import CSubtitleTypo from '@/components/commons/typographies/Subtitle/index.vue'
+import CRowDisplay from '@/components/commons/displays/Row/index.vue'
+import CRowDisplayContent from '@/components/commons/displays/Row/components/Content.vue'
+import CRowDisplayLabel from '@/components/commons/displays/Row/components/Label.vue'
 
 const props = defineProps({
   manager: {
@@ -257,11 +271,6 @@ const props = defineProps({
     required: false,
     default: 0,
   },
-  // active: {
-  //   type: Boolean,
-  //   required: false,
-  //   default: false,
-  // }
 })
 
 const { ipcRenderer } = useElectron()
@@ -307,6 +316,11 @@ const onClickEdit = async () => {
       await router.push({ name: 'FormEditManager', params: { id: props.manager.id } })
   } catch (e) {
     console.error(e)
+    showToast({
+      title: 'Redirect',
+      content: 'Redirect',
+      type: 'danger'
+    })
   }
 }
 const onClickDeleteBtn = async () => {
@@ -325,6 +339,11 @@ const onClickDeleteBtn = async () => {
     }
   } catch (e) {
     console.error(e)
+    showToast({
+      title: 'Fail',
+      content: 'Fail to delete',
+      type: 'danger'
+    })
   }
 }
 
@@ -337,12 +356,23 @@ const onClickSetManager = async () => {
 
       showToast({
         title: 'Success',
-        content: 'Success to change',
+        content: 'Success to Set',
         type: 'success'
       })
     }
   } catch (e) {
     console.error(e)
+    showToast({
+      title: 'Fail',
+      content: 'Fail to set',
+      type: 'danger'
+    })
   }
 }
 </script>
+<style
+  scoped
+  lang="scss"
+>
+
+</style>
