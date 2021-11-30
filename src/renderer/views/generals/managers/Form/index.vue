@@ -9,7 +9,7 @@
       class="tw-flex"
     >
       <div
-        class="tw-bg-white p-2 lg:tw-w-5/12 tw-w-full"
+        class="tw-bg-white p-2 lg:tw-w-5/12 tw-w-full lg:tw-border-r tw-border-none"
       >
         <c-form
           ref="formRef"
@@ -283,13 +283,13 @@
             class="tw-mr-2"
             @click="onClickCancelBtn"
           >
-            {{ $t('commons.actions.cancel') }}
+            {{ $t('commons.Actions.cancel') }}
           </c-button>
           <c-button
             class="btn-primary"
             @click="onClickSaveBtn"
           >
-            {{ isEditForm ? $t('commons.actions.update') : $t('commons.actions.create') }}
+            {{ isEditForm ? $t('commons.Actions.update') : $t('commons.Actions.create') }}
           </c-button>
         </div>
       </div>

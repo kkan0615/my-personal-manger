@@ -332,6 +332,14 @@ const onClickSetManager = async () => {
     console.error(e)
   }
 }
-
-
 </script>
+<style
+  scoped
+  lang="scss"
+>
+.manager-card {
+  .subtitle {
+    @apply tw-text-gray-500
+  }
+}
+</style>

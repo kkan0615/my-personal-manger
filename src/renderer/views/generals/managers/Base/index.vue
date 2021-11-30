@@ -71,7 +71,7 @@
             v-model="searchValue"
             class="tw-w-56 tw-ml-auto"
             size="sm"
-            :placeholder="$t('commons.actions.search')"
+            :placeholder="$t('commons.Actions.search')"
           />
         </div>
         <div
