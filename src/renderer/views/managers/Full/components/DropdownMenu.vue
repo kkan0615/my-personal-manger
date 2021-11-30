@@ -45,12 +45,13 @@ import { computed } from 'vue'
 import useStore from '@/store'
 import useElectron from '@/mixins/useElectron'
 import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
+import { CurrentActionTypes } from '@/store/modules/systems/current/actions'
 
 const { ipcRenderer } = useElectron()
 const store = useStore()
 
 const manager = computed(() => store.state.manager.manager)
-const config = computed(() => store.state.manager.config)
+const config = computed(() => store.state.current.managerConfig)
 
 const onClickOnAlwaysTheTop = async () => {
   ipcRenderer.send('update-manager-config-by-id', {
@@ -61,7 +62,7 @@ const onClickOnAlwaysTheTop = async () => {
     }
   })
 
-  await store.dispatch(ManagerActionTypes.LOAD_MANAGER_CONFIG)
+  await store.dispatch(CurrentActionTypes.LOAD_MANAGER_CONFIG)
 }
 
 const onClickOffAlwaysTheTop = async () => {

@@ -16,7 +16,7 @@ import { useRouter } from 'vue-router'
 const store = useStore()
 const router = useRouter()
 
-const managerConfig = computed(() => store.state.manager.config)
+const managerConfig = computed(() => store.state.current.managerConfig)
 
 /* Move to specific place */
 if (managerConfig.value && managerConfig.value.displayStyle === 'CIRCLE') {

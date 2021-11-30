@@ -58,19 +58,19 @@
             class="btn-primary"
             @click="onClickEdit"
           >
-            Edit
+            {{ $t('commons.Actions.update') }}
           </c-button>
           <c-button
             class="btn-danger"
             @click="onClickDeleteBtn"
           >
-            Delete
+            {{ $t('commons.Actions.delete') }}
           </c-button>
           <c-button
             class="btn-success"
             @click="onClickSetManager"
           >
-            Set manager
+            {{ $t('commons.Actions.setToManager') }}
           </c-button>
         </div>
         <hr>
@@ -85,11 +85,9 @@
               <div
                 class="tw-mb-4"
               >
-                <div
-                  class="tw-mb-2 tw-font-semibold"
-                >
+                <c-subtitle-typo>
                   Full Manager
-                </div>
+                </c-subtitle-typo>
                 <div
                   class="manager-container"
                 >
@@ -102,11 +100,9 @@
               </div>
               <!-- Circle manager -->
               <div>
-                <div
-                  class="tw-mb-2 tw-font-semibold"
-                >
+                <c-subtitle-typo>
                   Circle Manager
-                </div>
+                </c-subtitle-typo>
                 <div
                   class="circle-manager-container"
                 >
@@ -123,16 +119,14 @@
             class="tw-flex-grow tw-flex-shrink"
           >
             <div>
-              <div
-                class="tw-font-semibold"
-              >
-                Config
-              </div>
+              <c-subtitle-typo>
+                Manager
+              </c-subtitle-typo>
               <div
                 class="tw-flex tw-items-center"
               >
                 <div>
-                  Id
+                  {{ $t('Types.Models.Attributes.id') }}
                 </div>
                 <div
                   class="tw-ml-auto"
@@ -144,7 +138,7 @@
                 class="tw-flex tw-items-center"
               >
                 <div>
-                  Name
+                  {{ $t('Types.Models.Attributes.name') }}
                 </div>
                 <div
                   class="tw-ml-auto"
@@ -154,11 +148,9 @@
               </div>
               <!-- Morning messages -->
               <div>
-                <div
-                  class="tw-font-semibold"
-                >
+                <c-subtitle-typo>
                   Morning Messages
-                </div>
+                </c-subtitle-typo>
                 <div
                   v-for="(message, i) in manager.morningMessages"
                   :key="`morningMessage-${i}`"
@@ -167,20 +159,16 @@
                   <div>
                     {{ i + 1 }}
                   </div>
-                  <div
-                    class="tw-ml-auto"
-                  >
+                  <div>
                     {{ message.message }}
                   </div>
                 </div>
               </div>
               <!-- lunch messages -->
               <div>
-                <div
-                  class="tw-font-semibold"
-                >
+                <c-subtitle-typo>
                   Lunch Messages
-                </div>
+                </c-subtitle-typo>
                 <div
                   v-for="(message, i) in manager.lunchMessages"
                   :key="`lunchMessage-${i}`"
@@ -189,20 +177,16 @@
                   <div>
                     {{ i + 1 }}
                   </div>
-                  <div
-                    class="tw-ml-auto"
-                  >
+                  <div>
                     {{ message.message }}
                   </div>
                 </div>
               </div>
               <!-- Night messages -->
               <div>
-                <div
-                  class="tw-font-semibold"
-                >
+                <c-subtitle-typo>
                   Evening Messages
-                </div>
+                </c-subtitle-typo>
                 <div
                   v-for="(message, i) in manager.eveningsMessages"
                   :key="`nightMessage-${i}`"
@@ -211,9 +195,7 @@
                   <div>
                     {{ i + 1 }}
                   </div>
-                  <div
-                    class="tw-ml-auto"
-                  >
+                  <div>
                     {{ message.message }}
                   </div>
                 </div>
@@ -221,11 +203,9 @@
 
               <!-- Night messages -->
               <div>
-                <div
-                  class="tw-font-semibold"
-                >
+                <c-subtitle-typo>
                   Click Messages
-                </div>
+                </c-subtitle-typo>
                 <div
                   v-for="(message, i) in manager.randClickMessages"
                   :key="`randClickMessage-${i}`"
@@ -234,9 +214,7 @@
                   <div>
                     {{ i + 1 }}
                   </div>
-                  <div
-                    class="tw-ml-auto"
-                  >
+                  <div>
                     {{ message.message }}
                   </div>
                 </div>
@@ -266,6 +244,7 @@ import { getCircleImageFile, getImageFile } from '@/utils/manager'
 import useToast from '@/mixins/useToast'
 import { Modal as BModal } from 'bootstrap'
 import { CurrentActionTypes } from '@/store/modules/systems/current/actions'
+import CSubtitleTypo from '@/components/commons/typographies/Subtitle/index.vue'
 
 const props = defineProps({
   manager: {
@@ -366,6 +345,4 @@ const onClickSetManager = async () => {
     console.error(e)
   }
 }
-
-
 </script>
