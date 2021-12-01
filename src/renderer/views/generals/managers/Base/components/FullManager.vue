@@ -23,7 +23,6 @@ import useStore from '@/store'
 import { computed, onMounted, ref } from 'vue'
 import { Manager } from '@/types/models/Manager'
 import useElectron from '@/mixins/useElectron'
-import { ManagerMutationTypes } from '@/store/modules/model/manager/mutations'
 import { CurrentMutationTypes } from '@/store/modules/systems/current/mutations'
 
 const store = useStore()

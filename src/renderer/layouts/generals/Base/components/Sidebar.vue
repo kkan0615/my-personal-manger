@@ -26,6 +26,25 @@
             </span>
           </c-sidebar-layout-menu-item>
         </router-link>
+        <!--     schedules menu     -->
+        <router-link
+          :to="{ name: 'BaseSchedule' }"
+        >
+          <c-sidebar-layout-menu-item
+            class="tw-text-2xl"
+          >
+            <c-material-icon
+              class="tw-text-2xl"
+            >
+              date_range
+            </c-material-icon>
+            <span
+              class="c-sidebar-menu-item--title"
+            >
+              Schedule
+            </span>
+          </c-sidebar-layout-menu-item>
+        </router-link>
         <!--     manager menu     -->
         <router-link
           :to="{ name: 'BaseManager' }"

@@ -95,7 +95,6 @@ export const currentActions: ActionTree<CurrentState, RootState> & CurrentAction
       isOnSound: payload.isOnSound !== undefined ? payload.isOnSound : defaultManagerConfig.isOnSound,
     }
 
-    alert(mangerConfigUpdateForm.isAlwaysTop)
     await electron.ipcRenderer.invoke('update-manager-config', mangerConfigUpdateForm)
     commit(CurrentMutationTypes.SET_MANAGER_CONFIG, mangerConfigUpdateForm)
   },

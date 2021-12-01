@@ -9,12 +9,16 @@
     tabindex="-1"
     aria-hidden="true"
   >
-    <slot />
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <slot />
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts">
 export default {
-  name: 'CPrototype',
+  name: 'CModal',
 }
 </script>
 <script setup lang="ts">

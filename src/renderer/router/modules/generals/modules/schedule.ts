@@ -4,12 +4,17 @@ export const generalScheduleRoutes: Array<RouteRecordRaw> = [
   {
     path: 'schedule',
     name: 'ScheduleGeneralLayout',
-    component: () => import('@/layouts/generals/Schedule/index.vue'),
-    redirect: { name: 'BaseManager' },
+    component: () => import('@/layouts/generals/schedules/Base/index.vue'),
+    redirect: { name: 'BaseSchedule' },
     children: [
       {
-        path: '',
+        path: 'list',
         name: 'BaseSchedule',
+        component: () => import('@/views/generals/schedules/Base/index.vue'),
+      },
+      {
+        path: 'id/:id',
+        name: 'DetailSchedule',
         component: () => import('@/views/generals/schedules/Base/index.vue'),
       },
       {
@@ -19,7 +24,7 @@ export const generalScheduleRoutes: Array<RouteRecordRaw> = [
       },
       {
         path: 'form/edit/id/:id',
-        name: 'FormSchedule',
+        name: 'FormEditSchedule',
         component: () => import('@/views/generals/schedules/Form/index.vue'),
       },
     ]

@@ -9,7 +9,7 @@
       class="tw-flex"
     >
       <div
-        class="tw-bg-white p-2 lg:tw-w-5/12 tw-w-full lg:tw-border-r tw-border-none"
+        class="tw-p-2 tw-pr-2 md:tw-pr-12 lg:tw-w-6/12 tw-w-full lg:tw-border-r-2 tw-border-none"
       >
         <c-form
           ref="formRef"
@@ -288,7 +288,7 @@
       </div>
       <!-- Navigator -->
       <div
-        class="xl:tw tw-fixed tw-right-8 tw-w-3/12"
+        class="tw-fixed tw-right-8 tw-w-3/12 md:tw-visible tw-hidden"
       >
         <form-manger-title-navigator />
       </div>

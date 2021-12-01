@@ -29,8 +29,12 @@ export const koreanDictionary = {
   },
   router: {
     Home: 'Home',
-    BaseManager: '매니저',
+    ModuleManager: '매니저',
+    BaseManager: '매니저 목록',
     FormManager: '매니저 입력',
+    ModuleSchedule: '스케쥴',
+    BaseSchedule: '스케쥴 목록',
+    FormSchedule: '스케쥴 입력',
   },
   Types: {
     Models: {

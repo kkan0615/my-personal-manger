@@ -4,14 +4,14 @@
   >
     <c-header-layout
       class="tw-flex-grow-0 tw-flex-shrink"
-      :title="$t('router.BaseManager')"
+      :title="$t(`router.BaseManager`)"
       :breadcrumbs="breadcrumbs"
     />
     <div
-      class="tw-flex tw-flex-grow tw-flex-shrink-0"
+      class="tw-flex tw-flex-grow tw-flex-shrink-0 tw-w-full"
     >
       <c-card
-        class="tw-bg-white tw-w-60 tw-flex-grow-0 tw-flex-shrink tw-mr-2"
+        class="tw-w-96 tw-flex-grow tw-flex-shrink tw-mr-2"
       >
         <c-card-title
           class="tw-p-2 tw-flex tw-items-center"
@@ -56,7 +56,7 @@
         </div>
       </c-card>
       <div
-        class="tw-flex-grow tw-flex-shrink-0"
+        class="tw-w-full tw-flex-grow tw-flex-shrink"
       >
         <div
           class="tw-flex mb-2"
@@ -75,7 +75,7 @@
           />
         </div>
         <div
-          class="tw-grid tw-grid-cols-6 tw-gap-4"
+          class="tw-grid md:tw-grid-cols-3 tw-grid-cols-6 tw-gap-4"
         >
           <base-manger-manager-card
             v-for="(manager, index) in managerList"

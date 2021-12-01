@@ -16,7 +16,7 @@ import { User } from './types/models/User'
 import { authWindow, createAuthWindow } from './windows/auth'
 import { createManagerWindow } from './windows/manager'
 import { createMainWindow } from './windows/mainWindow'
-import { getManagerConfig, updateManagerConfig } from './services/managerConfig'
+import { clearManagerConfig, getManagerConfig, updateManagerConfig } from './services/managerConfig'
 import { createTray } from './windows/tray'
 
 app.whenReady()
@@ -101,6 +101,7 @@ app.on('ready', () => {
   ipcMain.handle('get-manager-list', getManagerList)
 
   ipcMain.handle('update-manager-config', updateManagerConfig)
+  ipcMain.handle('clear-manager-config', clearManagerConfig)
 })
 
 /* When all windows are closed */

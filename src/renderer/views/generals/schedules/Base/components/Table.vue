@@ -1,16 +1,13 @@
 <template>
   <div>
-    <c-form>
-      FormSchedule
-    </c-form>
+    BaseManagerTable
   </div>
 </template>
 <script lang="ts">
 export default {
-  name: 'FormSchedule',
+  name: 'BaseManagerTable',
 }
 </script>
 <script setup lang="ts">
 import { ref } from 'vue'
-import CForm from '@/components/commons/Form/index.vue'
 </script>
