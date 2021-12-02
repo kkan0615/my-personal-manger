@@ -11,25 +11,39 @@
       <base-schedule-create-dialog />
       <base-schedule-filter />
     </div>
-    <div>
-      <div>
-        {{ route.name }}
-      </div>
-      content
+    <div
+      class="tw-flex"
+    >
       <div
-        v-if="route.name === 'DetailSchedule'"
-        class="tw-text-red-500"
+        :class="{
+          'tw-w-full': route.name === 'BaseSchedule',
+          'tw-w-9/12': route.name === 'DetailSchedule'
+        }"
       >
-        <router-link :to="{ name: 'BaseSchedule' }">
-          BaseSchedule
-        </router-link>
+        <div>
+          {{ route.name }}
+        </div>
+        <div
+          v-if="route.name === 'DetailSchedule'"
+          class="tw-text-red-500"
+        >
+          <router-link :to="{ name: 'BaseSchedule' }">
+            BaseSchedule
+          </router-link>
+        </div>
+        <div
+          class="tw-text-red-500"
+        >
+          <router-link :to="{ name: 'DetailSchedule', params: { id: 'test' } }">
+            test
+          </router-link>
+        </div>
       </div>
       <div
-        class="tw-text-red-500"
+        v-if="route.name ==='DetailSchedule'"
+        class="tw-w-3/12"
       >
-        <router-link :to="{ name: 'DetailSchedule', params: { id: 'test' } }">
-          test
-        </router-link>
+        right
       </div>
     </div>
   </div>
@@ -41,13 +55,14 @@ export default {
 </script>
 <script setup lang="ts">
 import BaseScheduleFilter from '@/views/generals/schedules/Base/components/Filter.vue'
-import { useI18n } from 'vue-i18n'
-import useStore from '@/store'
-import { useRoute, useRouter } from 'vue-router'
 import CHeaderLayout from '@/components/commons/layouts/Header/index.vue'
-import CButton from '@/components/commons/Button/index.vue'
-import { CBreadcrumb } from '@/types/libs/components/breadcrumb'
 import BaseScheduleCreateDialog from '@/views/generals/schedules/Base/components/CreateDialog.vue'
+import useStore from '@/store'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
+import { CBreadcrumb } from '@/types/libs/components/breadcrumb'
+import { onMounted } from 'vue'
+import { ScheduleActionTypes } from '@/store/modules/model/schedule/actions'
 
 const i18n = useI18n()
 const store = useStore()
@@ -64,6 +79,14 @@ const breadcrumbs: Array<CBreadcrumb> = [
     disabled: true,
   },
 ]
+
+onMounted(async () => {
+  try {
+    await store.dispatch(ScheduleActionTypes.LOAD_SCHEDULE_LIST)
+  } catch (e) {
+    console.error(e)
+  }
+})
 
 const onClickCreateBtn = async () => {
   try {

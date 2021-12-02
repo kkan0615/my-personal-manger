@@ -3,5 +3,7 @@ export enum StoreKeyEnum {
   MANAGER_ID = 'managerId',
   MANAGER = 'manager',
   MANAGER_CONFIG = 'manager-config',
-  SCHEDULE_LIST = 'SCHEDULE_LIST'
+  SAVED_SCHEDULE_LIST = 'SAVED_SCHEDULE_LIST',
+  DONE_SCHEDULE_LIST = 'DONE_SCHEDULE_LIST',
+  SCHEDULE_LIST = 'SCHEDULE_LIST',
 }

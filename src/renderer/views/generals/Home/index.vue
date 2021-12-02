@@ -76,10 +76,6 @@ const router = useRouter()
 const test = computed(() => store.state.prototype.test)
 const user = computed(() => store.state.current.user)
 
-onBeforeMount(async () => {
-  await store.dispatch(PrototypeActionTypes.ADD_TEST, 'Arrived at home')
-})
-
 const onClickTestBtn = async () => {
   await store.dispatch(ApplicationActionTypes.ADD_SNACKBAR_TO_LIST, {
     title: 'test title',
@@ -97,7 +93,7 @@ const onClickCloseManagerBtn = () => {
 }
 
 const onClickTryToChangeBtn = async () => {
-  await store.dispatch(PrototypeActionTypes.ADD_TEST, 'changed from home')
+  // await store.dispatch(PrototypeActionTypes.ADD_TEST, 'changed from home')
 }
 
 const onClickToOverlayManagerBtn = async () => {

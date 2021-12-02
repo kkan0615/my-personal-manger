@@ -8,6 +8,8 @@ import { ApplicationState } from '@/store/modules/systems/application/state'
 import { applicationModule, ApplicationStore } from '@/store/modules/systems/application'
 import { CurrentState } from '@/store/modules/systems/current/state'
 import { currentModule, CurrentStore } from '@/store/modules/systems/current'
+import { ScheduleState } from '@/store/modules/model/schedule/state'
+import { scheduleModule, ScheduleStore } from '@/store/modules/model/schedule'
 
 // define your typings for the store state
 export interface RootState {
@@ -15,13 +17,15 @@ export interface RootState {
   application: ApplicationState
   current: CurrentState
   manager: ManagerState
+  schedule: ScheduleState
 }
 
 export type RootStore =
   PrototypeStore<Pick<RootState, 'prototype'>> &
   ApplicationStore<Pick<RootState, 'application'>> &
   CurrentStore<Pick<RootState, 'current'>> &
-  ManagerStore<Pick<RootState, 'manager'>>
+  ManagerStore<Pick<RootState, 'manager'>> &
+  ScheduleStore<Pick<RootState, 'schedule'>>
 
 // define injection key
 export const key: InjectionKey<Store<RootState>> = Symbol()
@@ -36,6 +40,7 @@ export const store = createStore<RootState>({
     application: applicationModule,
     current: currentModule,
     manager: managerModule,
+    schedule: scheduleModule,
   }
 })
 

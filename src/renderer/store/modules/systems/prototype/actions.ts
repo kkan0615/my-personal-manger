@@ -4,8 +4,8 @@ import { PrototypeMutations, PrototypeMutationTypes } from './mutations'
 import { PrototypeState } from './state'
 
 export enum PrototypeActionTypes {
-  ADD_TEST = 'prototype/ADD_TOAST',
-  REMOVE_TEST = 'prototype/REMOVE_TOAST',
+  LOAD_TEST = 'prototype/LOAD_TEST',
+  RESET_TEST = 'prototype/RESET_TEST',
 }
 
 export type AugmentedActionContext = {
@@ -16,21 +16,21 @@ export type AugmentedActionContext = {
 } & Omit<ActionContext<PrototypeState, RootState>, 'commit'>
 
 export interface PrototypeActions {
-  [PrototypeActionTypes.ADD_TEST](
+  [PrototypeActionTypes.LOAD_TEST](
     { commit }: AugmentedActionContext,
     payload: any
   ): void
-  [PrototypeActionTypes.REMOVE_TEST](
+  [PrototypeActionTypes.RESET_TEST](
     { commit }: AugmentedActionContext,
     payload: any
   ): void
 }
 
 export const prototypeActions: ActionTree<PrototypeState, RootState> & PrototypeActions = {
-  [PrototypeActionTypes.ADD_TEST] ({ commit }, payload) {
+  [PrototypeActionTypes.LOAD_TEST] ({ commit }, payload) {
     commit(PrototypeMutationTypes.SET_TEST, payload)
   },
-  [PrototypeActionTypes.REMOVE_TEST] ({ commit }, payload) {
+  [PrototypeActionTypes.RESET_TEST] ({ commit }, payload) {
     commit(PrototypeMutationTypes.SET_TEST, {})
   },
 }
