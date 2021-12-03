@@ -23,6 +23,9 @@
         <div>
           {{ route.name }}
         </div>
+        <div>
+          <base-schedule-schedule-item />
+        </div>
         <div
           v-if="route.name === 'DetailSchedule'"
           class="tw-text-red-500"
@@ -63,6 +66,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { CBreadcrumb } from '@/types/libs/components/breadcrumb'
 import { onMounted } from 'vue'
 import { ScheduleActionTypes } from '@/store/modules/model/schedule/actions'
+import BaseScheduleScheduleItem from '@/views/generals/schedules/Base/components/ScheduleItem.vue'
 
 const i18n = useI18n()
 const store = useStore()

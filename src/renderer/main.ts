@@ -14,6 +14,10 @@ import '@/styles/index.scss'
 import VCalendar from 'v-calendar'
 /* I18n localization */
 import i18n from '@/locales'
+import { installDayjsPlugins } from '@/utils/libs/dayjs'
+
+/* Install dayjs plugins */
+installDayjsPlugins()
 
 const app = createApp(App)
 app

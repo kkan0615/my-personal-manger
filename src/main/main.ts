@@ -18,6 +18,14 @@ import { createManagerWindow } from './windows/manager'
 import { createMainWindow } from './windows/mainWindow'
 import { clearManagerConfig, getManagerConfig, updateManagerConfig } from './services/managerConfig'
 import { createTray } from './windows/tray'
+import {
+  createSchedule,
+  deleteSchedule,
+  getDoneScheduleList,
+  getSavedScheduleList,
+  getSchedule,
+  updateSchedule
+} from './services/schedule'
 
 app.whenReady()
   .then(() => {
@@ -59,19 +67,14 @@ app.on('ready', () => {
   })
 
   ipcMain.handle('get-current-manager', getCurrentManager)
-
   ipcMain.handle('get-manager', getManager)
-
   ipcMain.handle('sync-manager-config', getManagerConfig)
-
   ipcMain.on('set-manager-id', setManagerId)
-
   ipcMain.on('clear-manager-id', clearManagerId)
 
   ipcMain.handle('get-user', () => {
     return electronStore.get(StoreKeyEnum.USER)
   })
-
   ipcMain.on('register-user', (event, args) => {
     electronStore.set(StoreKeyEnum.USER, args)
     createMainWindow()
@@ -80,28 +83,31 @@ app.on('ready', () => {
       authWindow.destroy()
     }
   })
-
   ipcMain.on('set-user', (event, args: User) => {
     electronStore.set(StoreKeyEnum.USER, args)
   })
 
-  /**
-   * Get full size image
-   */
+  /* Get full size image */
   ipcMain.handle('get-manager-image', getManagerImage)
-
   /*  Get circle size image */
   ipcMain.handle('get-manager-circle-image', getManagerCircleImage)
 
-  /* Create manager slot */
+  ipcMain.handle('get-manager-list', getManagerList)
   ipcMain.handle('create-manager', createManager)
   ipcMain.handle('update-manager', updateManager)
   ipcMain.handle('delete-manager', deleteManager)
 
-  ipcMain.handle('get-manager-list', getManagerList)
-
+  /* Manger config */
   ipcMain.handle('update-manager-config', updateManagerConfig)
   ipcMain.handle('clear-manager-config', clearManagerConfig)
+
+  /* Schedule */
+  ipcMain.handle('get-saved-schedule-list', getSavedScheduleList)
+  ipcMain.handle('get-done-schedule-list', getDoneScheduleList)
+  ipcMain.handle('get-schedule', getSchedule)
+  ipcMain.handle('create-schedule', createSchedule)
+  ipcMain.handle('update-schedule', updateSchedule)
+  ipcMain.handle('delete-schedule', deleteSchedule)
 })
 
 /* When all windows are closed */
