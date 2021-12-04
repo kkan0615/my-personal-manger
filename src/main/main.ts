@@ -3,6 +3,7 @@ import fs from 'fs'
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
+import schedule  from 'node-schedule'
 import { StoreKeyEnum } from './types/store'
 import {
   clearManagerId,
@@ -19,11 +20,12 @@ import { createMainWindow } from './windows/mainWindow'
 import { clearManagerConfig, getManagerConfig, updateManagerConfig } from './services/managerConfig'
 import { createTray } from './windows/tray'
 import {
+  clearAllList,
   createSchedule,
   deleteSchedule,
   getDoneScheduleList,
   getSavedScheduleList,
-  getSchedule,
+  getSchedule, initJobSchedules,
   updateSchedule
 } from './services/schedule'
 
@@ -60,6 +62,7 @@ app.on('ready', () => {
   electronStore.set(StoreKeyEnum.MANAGER_ID, '13a6e982-f7c9-4f8a-b838-558740be6d7a')
   // @TODO: For test
   // electronStore.delete(StoreKeyEnum.USER)
+  initJobSchedules()
 
   /* Open manager */
   ipcMain.on('open-manager-window', () => {
@@ -104,6 +107,7 @@ app.on('ready', () => {
   /* Schedule */
   ipcMain.handle('get-saved-schedule-list', getSavedScheduleList)
   ipcMain.handle('get-done-schedule-list', getDoneScheduleList)
+  ipcMain.handle('clear-all-schedule-list', clearAllList)
   ipcMain.handle('get-schedule', getSchedule)
   ipcMain.handle('create-schedule', createSchedule)
   ipcMain.handle('update-schedule', updateSchedule)
@@ -113,6 +117,8 @@ app.on('ready', () => {
 /* When all windows are closed */
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    /* Cancel all jobs */
+    for (const job in schedule.scheduledJobs) schedule.cancelJob(job)
     app.quit()
   }
 })

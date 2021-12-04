@@ -24,7 +24,16 @@
           {{ route.name }}
         </div>
         <div>
-          <base-schedule-schedule-item />
+          <c-button
+            class="btn-danger"
+            @click="onClickTest"
+          >
+            test
+          </c-button>
+          <base-schedule-schedule-item
+            v-for="schedule in scheduleList"
+            :schedule="schedule"
+          />
         </div>
         <div
           v-if="route.name === 'DetailSchedule'"
@@ -64,14 +73,17 @@ import useStore from '@/store'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { CBreadcrumb } from '@/types/libs/components/breadcrumb'
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { ScheduleActionTypes } from '@/store/modules/model/schedule/actions'
 import BaseScheduleScheduleItem from '@/views/generals/schedules/Base/components/ScheduleItem.vue'
+import CButton from '@/components/commons/Button/index.vue'
+import useElectron from '@/mixins/useElectron'
 
 const i18n = useI18n()
 const store = useStore()
 const router = useRouter()
 const route = useRoute()
+const { ipcRenderer } = useElectron()
 
 const breadcrumbs: Array<CBreadcrumb> = [
   {
@@ -84,6 +96,8 @@ const breadcrumbs: Array<CBreadcrumb> = [
   },
 ]
 
+const scheduleList = computed(() => store.state.schedule.scheduleList)
+
 onMounted(async () => {
   try {
     await store.dispatch(ScheduleActionTypes.LOAD_SCHEDULE_LIST)
@@ -92,12 +106,7 @@ onMounted(async () => {
   }
 })
 
-const onClickCreateBtn = async () => {
-  try {
-    await router.push({ name: 'FormSchedule' })
-  } catch (e) {
-    console.error(e)
-  }
+const onClickTest = async () => {
+  await ipcRenderer.invoke('clear-all-schedule-list')
 }
-
 </script>

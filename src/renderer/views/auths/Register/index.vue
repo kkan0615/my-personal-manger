@@ -38,6 +38,7 @@
             is24hr
             trim-weeks
             :max-date="new Date()"
+            :popover="{visibility:'focus', positionFixed: true}"
           >
             <template #default="{ inputValue, inputEvents }">
               <input

@@ -7,10 +7,14 @@
     >
       saved
     </div>
-    <div>
-      title
+    <div
+      class="tw-mx-auto"
+    >
+      {{ schedule.title }}
     </div>
-    <div>
+    <div
+      class="tw-mx-auto"
+    >
       {{ date }}
     </div>
     <div
@@ -30,7 +34,9 @@
           delete
         </c-material-icon>
       </button>
-      <button>
+      <button
+        @click="onClickInfoBtn"
+      >
         <c-material-icon
           class="tw-text-bs-primary"
         >
@@ -46,17 +52,31 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { computed, defineProps } from 'vue'
+import { computed, defineProps, PropType } from 'vue'
 import dayjs from 'dayjs'
 import CMaterialIcon from '@/components/commons/icons/Material/index.vue'
+import { Schedule } from '@/types/models/Schedule'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   schedule: {
-    type: Object,
+    type: Object as PropType<Schedule>,
     required: false, // @TODO: CHANGE TO TRUE
     default: () => {}
   }
 })
 
-const date = computed(() => dayjs().format('llll'))
+const router = useRouter()
+
+const date = computed(() => (props.schedule && props.schedule.date ?
+  dayjs(props.schedule?.date).format('llll') : ''))
+
+const onClickInfoBtn = async () => {
+  try {
+    if (props.schedule)
+      await router.push({ name: 'DetailSchedule', params: { id: props.schedule.id } })
+  } catch (e) {
+    console.error(e)
+  }
+}
 </script>
