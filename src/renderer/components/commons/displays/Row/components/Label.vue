@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tw-w-2/12"
+    class="tw-w-3/12"
   >
     <span
       v-if="required"

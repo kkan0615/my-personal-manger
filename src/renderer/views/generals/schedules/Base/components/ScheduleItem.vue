@@ -3,22 +3,24 @@
     class="tw-flex tw-items-center tw-w-full tw-border tw-rounded tw-p-3"
   >
     <div
-      class="badge tw-bg-bs-primary"
+      class="tw-w-6/12 tw-flex tw-items-center"
     >
-      saved
+      <div
+        class="badge tw-bg-bs-primary tw-mr-2"
+      >
+        saved
+      </div>
+      <div>
+        {{ schedule.title }}
+      </div>
     </div>
     <div
-      class="tw-mx-auto"
-    >
-      {{ schedule.title }}
-    </div>
-    <div
-      class="tw-mx-auto"
+      class="tw-mx-auto tw-w-4/12"
     >
       {{ date }}
     </div>
     <div
-      class="tw-ml-auto tw-flex tw-items-center tw-space-x-2"
+      class="tw-w-2/12 tw-flex tw-items-center tw-space-x-2 tw-justify-center"
     >
       <button>
         <c-material-icon
@@ -27,7 +29,9 @@
           edit
         </c-material-icon>
       </button>
-      <button>
+      <button
+        @click="onClickDeleteBtn"
+      >
         <c-material-icon
           class="tw-text-red-500"
         >
@@ -57,6 +61,8 @@ import dayjs from 'dayjs'
 import CMaterialIcon from '@/components/commons/icons/Material/index.vue'
 import { Schedule } from '@/types/models/Schedule'
 import { useRouter } from 'vue-router'
+import useStore from '@/store'
+import { ScheduleActionTypes } from '@/store/modules/model/schedule/actions'
 
 const props = defineProps({
   schedule: {
@@ -67,9 +73,20 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const store = useStore()
 
 const date = computed(() => (props.schedule && props.schedule.date ?
   dayjs(props.schedule?.date).format('llll') : ''))
+
+const onClickDeleteBtn = async () => {
+  try {
+    if (props.schedule) {
+      await store.dispatch(ScheduleActionTypes.DELETE_SCHEDULE, props.schedule.id)
+    }
+  } catch (e) {
+    console.error(e)
+  }
+}
 
 const onClickInfoBtn = async () => {
   try {

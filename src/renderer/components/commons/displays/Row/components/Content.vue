@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tw-w-10/12"
+    class="tw-w-9/12"
   >
     <slot />
   </div>

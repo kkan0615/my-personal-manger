@@ -1,18 +1,20 @@
 <template>
-  <div>
+  <div
+    class="tw-h-full"
+  >
     <c-header-layout
       class="tw-flex-grow-0 tw-flex-shrink"
       :title="$t('router.BaseSchedule')"
       :breadcrumbs="breadcrumbs"
     />
     <div
-      class="tw-flex tw-justify-end"
+      class="tw-flex tw-justify-end tw-mb-2"
     >
       <base-schedule-create-dialog />
       <base-schedule-filter />
     </div>
     <div
-      class="tw-flex"
+      class="tw-flex tw-h-full"
     >
       <div
         :class="{
@@ -30,10 +32,36 @@
           >
             test
           </c-button>
-          <base-schedule-schedule-item
-            v-for="schedule in scheduleList"
-            :schedule="schedule"
-          />
+          <div>
+            <div
+              class="tw-flex tw-items-center tw-mb-2"
+            >
+              <div
+                class="tw-w-6/12"
+              >
+                Title
+              </div>
+              <div
+                class="tw-w-4/12"
+              >
+                Date
+              </div>
+              <div
+                class="tw-w-2/12"
+              >
+                Actions
+              </div>
+            </div>
+            <div
+              class="tw-flex-col tw-space-y-2"
+            >
+              <base-schedule-schedule-item
+                v-for="schedule in scheduleList"
+                :key="schedule.id"
+                :schedule="schedule"
+              />
+            </div>
+          </div>
         </div>
         <div
           v-if="route.name === 'DetailSchedule'"
@@ -51,12 +79,12 @@
           </router-link>
         </div>
       </div>
-      <div
+      <c-card
         v-if="route.name ==='DetailSchedule'"
-        class="tw-w-3/12"
+        class="tw-w-3/12 tw-p-4 tw-h-full"
       >
-        right
-      </div>
+        <base-schedule-detail />
+      </c-card>
     </div>
   </div>
 </template>
@@ -78,6 +106,8 @@ import { ScheduleActionTypes } from '@/store/modules/model/schedule/actions'
 import BaseScheduleScheduleItem from '@/views/generals/schedules/Base/components/ScheduleItem.vue'
 import CButton from '@/components/commons/Button/index.vue'
 import useElectron from '@/mixins/useElectron'
+import BaseScheduleDetail from '@/views/generals/schedules/Base/components/Detail.vue'
+import CCard from '@/components/commons/Card/index.vue'
 
 const i18n = useI18n()
 const store = useStore()
