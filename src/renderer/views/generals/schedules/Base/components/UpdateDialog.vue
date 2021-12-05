@@ -5,19 +5,22 @@
     <template
       #activator="{ open, }"
     >
-      <c-button
-        class="btn-success tw-mr-2"
-        @click="open"
+      <button
+        @click="onClickOpenBtn(open)"
       >
-        {{ $t('commons.Actions.create') }}
-      </c-button>
+        <c-material-icon
+          class="tw-text-bs-primary"
+        >
+          edit
+        </c-material-icon>
+      </button>
     </template>
     <div>
       <div class="modal-header">
         <h5
           class="modal-title"
         >
-          {{ $t('commons.Actions.create') }}
+          {{ $t('commons.Actions.update') }}
         </h5>
         <button
           type="button"
@@ -82,7 +85,7 @@
             </c-row-display-label>
             <c-row-display-content>
               <c-textarea
-                id="content-input"
+                id="content-textarea"
               />
             </c-row-display-content>
           </c-row-display>
@@ -101,7 +104,7 @@
           class="btn btn-primary"
           @click="onClickCreateBtn"
         >
-          {{ $t('commons.Actions.create') }}
+          {{ $t('commons.Actions.update') }}
         </button>
       </div>
     </div>
@@ -109,24 +112,32 @@
 </template>
 <script lang="ts">
 export default {
-  name: 'BaseScheduleCreateDialog',
+  name: 'BaseScheduleUpdateDialog',
 }
 </script>
 <script setup lang="ts">
 import CModal from '@/components/commons/Modal/index.vue'
-import CButton from '@/components/commons/Button/index.vue'
 import CForm from '@/components/commons/Form/index.vue'
 import CRowDisplay from '@/components/commons/displays/Row/index.vue'
 import CRowDisplayLabel from '@/components/commons/displays/Row/components/Label.vue'
 import CRowDisplayContent from '@/components/commons/displays/Row/components/Content.vue'
 import CBaseInput from '@/components/commons/inputs/Base/index.vue'
-import { ref } from 'vue'
+import { defineProps, PropType, ref } from 'vue'
 import dayjs from 'dayjs'
 import useStore from '@/store'
 import { ScheduleActionTypes } from '@/store/modules/model/schedule/actions'
-import { ScheduleCreateForm } from '@/types/models/Schedule'
+import { Schedule, ScheduleUpdateForm } from '@/types/models/Schedule'
 import useToast from '@/mixins/useToast'
 import CTextarea from '@/components/commons/inputs/Textarea/index.vue'
+import CMaterialIcon from '@/components/commons/icons/Material/index.vue'
+
+const props = defineProps({
+  schedule: {
+    type: Object as PropType<Schedule>,
+    required: false, // @TODO: CHANGE TO TRUE
+    default: () => {}
+  }
+})
 
 const store = useStore()
 const { showToast } = useToast()
@@ -135,33 +146,45 @@ const formRef = ref<HTMLFormElement>()
 const modalRef = ref<any>()
 const title = ref('')
 const date = ref(dayjs().add(1, 'hour').toDate())
+const content = ref('')
 
 const initData = () => {
-  title.value = ''
-  date.value = dayjs().add(1, 'hour').toDate()
+  if (props.schedule) {
+    title.value = props.schedule.title || ''
+    date.value = dayjs(props.schedule.date).toDate()
+    content.value = props.schedule.content || ''
+  }
+}
+
+const onClickOpenBtn = (cb: () => void) => {
+  initData()
+  cb()
 }
 
 const onClickCreateBtn = async () => {
   try {
-    const params = {
-      title: title.value,
-      date: date.value,
-    } as ScheduleCreateForm
+    if (props.schedule) {
+      const params = {
+        id: props.schedule.id,
+        title: title.value,
+        date: date.value,
+      } as ScheduleUpdateForm
 
-    /* Create schedule */
-    await store.dispatch(ScheduleActionTypes.CREATE_SCHEDULE, params)
-    /* Reload list */
-    await store.dispatch(ScheduleActionTypes.LOAD_SCHEDULE_LIST)
-    /* Reset data */
-    initData()
-    if (modalRef.value) {
-      modalRef.value.closeModal()
+      /* Create schedule */
+      await store.dispatch(ScheduleActionTypes.UPDATE_SCHEDULE, params)
+      /* Reload list */
+      await store.dispatch(ScheduleActionTypes.LOAD_SCHEDULE_LIST)
+      /* Reset data */
+      initData()
+      if (modalRef.value) {
+        modalRef.value.closeModal()
+      }
+      showToast({
+        title: 'Success',
+        content: 'Success to change',
+        type: 'success'
+      })
     }
-    showToast({
-      title: 'Success',
-      content: 'Success to change',
-      type: 'success'
-    })
   } catch (e) {
     console.error(e)
     showToast({

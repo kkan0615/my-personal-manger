@@ -52,7 +52,7 @@
         Created At
       </c-row-display-label>
       <c-row-display-content>
-        {{ scheduleDate }}
+        {{ createdAt }}
       </c-row-display-content>
     </c-row-display>
     <!-- Date -->

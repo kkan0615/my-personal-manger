@@ -73,9 +73,7 @@ export const scheduleActions: ActionTree<ScheduleState, RootState> & ScheduleAct
     commit(ScheduleMutationTypes.SET_SCHEDULE, {} as Schedule)
   },
   async [ScheduleActionTypes.CREATE_SCHEDULE] (_, payload) {
-    const newScheduleId = <string>(await electron.ipcRenderer.invoke('create-schedule', payload))
-    console.log(newScheduleId)
-    return newScheduleId
+    return <string>(await electron.ipcRenderer.invoke('create-schedule', payload))
   },
   async [ScheduleActionTypes.UPDATE_SCHEDULE] (_, payload) {
     await electron.ipcRenderer.invoke('update-schedule', payload)

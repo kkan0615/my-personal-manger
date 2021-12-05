@@ -20,15 +20,11 @@
       {{ date }}
     </div>
     <div
-      class="tw-w-2/12 tw-flex tw-items-center tw-space-x-2 tw-justify-center"
+      class="tw-w-2/12 tw-flex tw-items-center tw-space-x-2"
     >
-      <button>
-        <c-material-icon
-          class="tw-text-bs-primary"
-        >
-          edit
-        </c-material-icon>
-      </button>
+      <base-schedule-update-dialog
+        :schedule="schedule"
+      />
       <button
         @click="onClickDeleteBtn"
       >
@@ -63,6 +59,7 @@ import { Schedule } from '@/types/models/Schedule'
 import { useRouter } from 'vue-router'
 import useStore from '@/store'
 import { ScheduleActionTypes } from '@/store/modules/model/schedule/actions'
+import BaseScheduleUpdateDialog from '@/views/generals/schedules/Base/components/UpdateDialog.vue'
 
 const props = defineProps({
   schedule: {
@@ -82,6 +79,8 @@ const onClickDeleteBtn = async () => {
   try {
     if (props.schedule) {
       await store.dispatch(ScheduleActionTypes.DELETE_SCHEDULE, props.schedule.id)
+      /* Reload list */
+      await store.dispatch(ScheduleActionTypes.LOAD_SCHEDULE_LIST)
     }
   } catch (e) {
     console.error(e)

@@ -9,7 +9,8 @@ export const koreanDictionary = {
       update: '수정',
       delete: '삭제',
       cancel: '취소',
-      setToManager: '매니저로 설정'
+      setToManager: '매니저로 설정',
+      filter: '검색조건'
     },
     Results: {
       Messages: {

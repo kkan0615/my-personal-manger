@@ -30,6 +30,7 @@ export const createManagerWindow = () => {
       transparent: true,
       backgroundColor: undefined,
       hasShadow: true,
+      skipTaskbar: true,
       webPreferences: {
         preload: path.join(__dirname, '../preload.js'),
         nodeIntegration: true,
