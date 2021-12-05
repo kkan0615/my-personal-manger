@@ -361,10 +361,8 @@ onMounted(() => {
 
 const initData = async () => {
   if (isEditForm.value) {
-    console.log(route.params)
     const { id } = route.params
     await store.dispatch(ManagerActionTypes.LOAD_MANAGER, id as string)
-    console.log(manager.value)
     mainImg.value = await getImageFileAsBlob(manager.value)
     circleImg.value = await getCircleImageFileAsBlob(manager.value)
     name.value = manager.value.name
@@ -439,8 +437,8 @@ const createManager = async () => {
     await store.dispatch(ManagerActionTypes.CREATE_MANAGER, {
       name: name.value,
       displayStyle: displayStyle.value,
-      img: mainImg.value && mainImg.value.name ? mainImg.value.name : '',
-      circleImg: circleImg.value && circleImg.value.name ? circleImg.value.name : '',
+      img: mainImg.value && (mainImg.value as any).name ? (mainImg.value as any).name : '',
+      circleImg: circleImg.value && (circleImg.value as any).name ? (circleImg.value as any).name : '',
       mainImgFile: mainImg.value ? new Int8Array(await mainImg.value.arrayBuffer()) : undefined,
       circleImgFile: circleImg.value ? new Int8Array(await circleImg.value.arrayBuffer()) : undefined,
       randClickMessages: randClickMessageList.value || [],
@@ -467,10 +465,10 @@ const updateManager = async () => {
       id: manager.value.id,
       name: name.value,
       displayStyle: displayStyle.value,
-      img: mainImg.value && mainImg.value.name ? mainImg.value.name : manager.value.img || '',
-      circleImg: circleImg.value && circleImg.value.name ? circleImg.value.name : manager.value.circleImg || '',
-      mainImgFile: mainImg.value && mainImg.value.name ? new Int8Array(await mainImg.value.arrayBuffer()) : manager.value.mainImgFile || undefined,
-      circleImgFile: circleImg.value && circleImg.value.name ? new Int8Array(await circleImg.value.arrayBuffer()) : manager.value.circleImgFile || undefined,
+      img: mainImg.value && (mainImg.value as any) ? (mainImg.value as any) : manager.value.img || '',
+      circleImg: circleImg.value && (circleImg.value as any).name ? (circleImg.value as any).name : manager.value.circleImg || '',
+      mainImgFile: mainImg.value && (mainImg.value as any) ? new Int8Array(await mainImg.value.arrayBuffer()) : (manager.value as any).mainImgFile || undefined,
+      circleImgFile: circleImg.value && (circleImg.value as any) ? new Int8Array(await circleImg.value.arrayBuffer()) : (manager.value as any).circleImgFile || undefined,
       randClickMessages: randClickMessageList.value || [],
       morningMessages: morningMessageList.value || [],
       lunchMessages: lunchMessageList.value || [],

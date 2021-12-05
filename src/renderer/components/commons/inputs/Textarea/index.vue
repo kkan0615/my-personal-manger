@@ -91,7 +91,9 @@ const props = defineProps({
     default: () => []
   },
   modelValue: {
+    type: String,
     required: false,
+    default: ''
   },
 })
 

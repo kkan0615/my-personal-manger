@@ -56,7 +56,7 @@ const config = computed(() => store.state.current.managerConfig)
 
 const onClickOnAlwaysTheTop = async () => {
   await store.dispatch(CurrentActionTypes.UPDATE_MANAGER_CONFIG, {
-    ...config,
+    ...config.value,
     isAlwaysTop: true,
   } as MangerConfigUpdateForm)
   await store.dispatch(CurrentActionTypes.LOAD_MANAGER_CONFIG)
@@ -64,7 +64,7 @@ const onClickOnAlwaysTheTop = async () => {
 
 const onClickOffAlwaysTheTop = async () => {
   await store.dispatch(CurrentActionTypes.UPDATE_MANAGER_CONFIG, {
-    ...config,
+    ...config.value,
     isAlwaysTop: false,
   } as MangerConfigUpdateForm)
   await store.dispatch(ManagerActionTypes.LOAD_MANAGER_CONFIG)
