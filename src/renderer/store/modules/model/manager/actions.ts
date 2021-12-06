@@ -2,10 +2,12 @@ import { ActionContext, ActionTree } from 'vuex'
 import { RootState } from '@/store'
 import { ManagerMutations, ManagerMutationTypes } from './mutations'
 import { ManagerState } from './state'
-import { Manager, ManagerCreateForm, ManagerMessage, ManagerUpdateForm, ReplaceWordEnum } from '@/types/models/Manager'
+import { Manager, ManagerCreateForm, ManagerMessage, ManagerUpdateForm } from '@/types/models/Manager'
 import { defaultManagerConfig, ManagerConfig } from '@/types/models/Manager/config'
-import { getRandomInArr, getRandomInt } from '@/utils/commons/random'
+import { getRandomInArr } from '@/utils/commons/random'
 import { getCurrentTimesInDay } from '@/utils/commons/time'
+import { ReservedWordEnum } from '@/types/models/Manager/reservedWord'
+import { replaceAllReservedWords } from '@/utils/manager'
 
 const electron = window.require('electron')
 
@@ -26,9 +28,12 @@ export enum ManagerActionTypes {
   SET_MESSAGE = 'manger/SET_MESSAGE',
   HELLO_MANAGER = 'manger/HELLO_MANAGER',
   CLICK_MANAGER = 'manger/CLICK_MANAGER',
+  SCHEDULE_MANAGER = 'manger/SCHEDULE_MANAGER',
   HAPPY_BIRTHDAY = 'manager/HAPPY_BIRTHDAY',
   ON_MASSAGE_TIMER = 'manger/ON_MASSAGE_TIMER',
-  OFF_MESSAGE_TIMER = 'manager/OFF_MESSAGE_TIMER'
+  OFF_MESSAGE_TIMER = 'manager/OFF_MESSAGE_TIMER',
+  OPEN_MANAGER_WINDOW = 'manager/OPEN_MANAGER_WINDOW',
+  CLOSE_MANAGER_WINDOW = 'manager/CLOSE_MANAGER_WINDOW',
 }
 
 export type AugmentedActionContext = {
@@ -95,6 +100,10 @@ export interface ManagerActions {
   [ManagerActionTypes.CLICK_MANAGER](
     { commit }: AugmentedActionContext,
   ): void
+  [ManagerActionTypes.SCHEDULE_MANAGER](
+    { commit }: AugmentedActionContext,
+    payload: string
+  ): void
   [ManagerActionTypes.HAPPY_BIRTHDAY](
     { commit }: AugmentedActionContext,
   ): void
@@ -102,6 +111,12 @@ export interface ManagerActions {
     { commit }: AugmentedActionContext,
   ): void
   [ManagerActionTypes.OFF_MESSAGE_TIMER](
+    { commit }: AugmentedActionContext,
+  ): void
+  [ManagerActionTypes.OPEN_MANAGER_WINDOW](
+    { commit }: AugmentedActionContext,
+  ): void
+  [ManagerActionTypes.CLOSE_MANAGER_WINDOW](
     { commit }: AugmentedActionContext,
   ): void
 }
@@ -206,24 +221,28 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
     commit(ManagerMutationTypes.SET_MESSAGE, payload)
   },
   [ManagerActionTypes.HELLO_MANAGER] ({ commit, rootState, dispatch }) {
-    let clickMessage: ManagerMessage | null = null
+    let helloMessage: ManagerMessage | null = null
     const currentTimesInDay = getCurrentTimesInDay()
     switch (currentTimesInDay) {
       case 'MORNING':
-        clickMessage = getRandomInArr(rootState.current.manager.morningMessages)
+        helloMessage = getRandomInArr(rootState.current.manager.morningMessages)
         break
       case 'AFTERNOON':
-        clickMessage = getRandomInArr(rootState.current.manager.lunchMessages)
+        helloMessage = getRandomInArr(rootState.current.manager.lunchMessages)
         break
       case 'EVENING':
-        clickMessage = getRandomInArr(rootState.current.manager.eveningsMessages)
+        helloMessage = getRandomInArr(rootState.current.manager.eveningsMessages)
         break
       case 'NIGHT':
-        clickMessage = getRandomInArr(rootState.current.manager.nightMessages)
+        helloMessage = getRandomInArr(rootState.current.manager.nightMessages)
         break
     }
-    if (clickMessage) {
-      const message = clickMessage.message.replaceAll(ReplaceWordEnum.MASTER_NAME, rootState.current.user.name)
+    if (helloMessage) {
+      const message = replaceAllReservedWords({
+        message: helloMessage.message,
+        userName: rootState.current.user.name,
+        managerName: rootState.current.manager.name,
+      })
       commit(ManagerMutationTypes.SET_MESSAGE, message)
       dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
     }
@@ -236,13 +255,35 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
     let clickMessage: ManagerMessage | null = null
     clickMessage = getRandomInArr(rootState.current.manager.randClickMessages)
     if (clickMessage) {
-      const message = clickMessage.message.replaceAll(ReplaceWordEnum.MASTER_NAME, rootState.current.user.name)
+      const message = replaceAllReservedWords({
+        message: clickMessage.message,
+        userName: rootState.current.user.name,
+        managerName: rootState.current.manager.name,
+      })
       commit(ManagerMutationTypes.SET_MESSAGE, message)
       dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
     }
   },
-  [ManagerActionTypes.HAPPY_BIRTHDAY] ({ commit, state, dispatch }) {
-    commit(ManagerMutationTypes.SET_MESSAGE, `I am ${state.manager.name} Hello {{ name }} master!`)
+  [ManagerActionTypes.SCHEDULE_MANAGER] ({ commit, state, rootState, dispatch }, payload) {
+    if (state.messageTimer) {
+      commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
+    }
+    const message = replaceAllReservedWords({
+      message: state.manager.scheduleMessage || `{{ ${ReservedWordEnum.SCHEDULE_TITLE} is on! }}`,
+      userName: rootState.current.user.name,
+      managerName: rootState.current.manager.name,
+      scheduleTitle: payload,
+    })
+    commit(ManagerMutationTypes.SET_MESSAGE, message)
+    dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
+  },
+  [ManagerActionTypes.HAPPY_BIRTHDAY] ({ commit, state, rootState, dispatch }) {
+    const message = replaceAllReservedWords({
+      message: state.manager.happyBirthdayMessage || `Happy Birthday ${ReservedWordEnum.USER_NAME}!`,
+      userName: rootState.current.user.name,
+      managerName: rootState.current.manager.name,
+    })
+    commit(ManagerMutationTypes.SET_MESSAGE, message)
     dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
   },
   [ManagerActionTypes.ON_MASSAGE_TIMER] ({ commit }) {
@@ -253,6 +294,12 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
       }, 2500))
   },
   [ManagerActionTypes.OFF_MESSAGE_TIMER] ({ commit }) {
+    commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
+  },
+  [ManagerActionTypes.OPEN_MANAGER_WINDOW] ({ commit }) {
+    commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
+  },
+  [ManagerActionTypes.CLOSE_MANAGER_WINDOW] ({ commit }) {
     commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
   },
 }

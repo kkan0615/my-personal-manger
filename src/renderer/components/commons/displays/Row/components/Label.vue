@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tw-w-3/12"
+    class="c-row-display-label"
   >
     <span
       v-if="required"

@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, screen } from 'electron'
 import path from 'path'
 import isDev from 'electron-is-dev'
 
@@ -6,9 +6,12 @@ import isDev from 'electron-is-dev'
 export let mainWindow: BrowserWindow | undefined
 
 export const createMainWindow = () => {
+  const displayScreen = screen.getPrimaryDisplay()
+  const dimensions = displayScreen.workAreaSize
+
   mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 720,
+    width: parseInt((dimensions.width * 0.8).toString()),
+    height: parseInt((dimensions.height * 0.8).toString()),
     autoHideMenuBar: true,
     minWidth: 1024,
     minHeight: 576,
