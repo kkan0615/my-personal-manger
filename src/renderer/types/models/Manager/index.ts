@@ -15,6 +15,8 @@ export interface Manager {
   eveningsMessages: Array<ManagerMessage>
   nightMessages: Array<ManagerMessage>
   randClickMessages: Array<ManagerMessage>
+  scheduleMessage?: ManagerMessage
+  happyBirthdayMessage?: ManagerMessage
   displayStyle: ManagerDisplayStyle
 }
 
@@ -28,6 +30,3 @@ export type ManagerUpdateForm = Manager & {
   circleImgFile?: Int8Array
 }
 
-export enum ReplaceWordEnum {
-  'MASTER_NAME'= '{{ name }}'
-}

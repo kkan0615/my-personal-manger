@@ -1,5 +1,5 @@
 /* Tray */
-import { Menu, Tray } from 'electron'
+import { Menu, Tray, MenuItemConstructorOptions, MenuItem } from 'electron'
 import isDev from 'electron-is-dev'
 import path from 'path'
 import { createMainWindow, mainWindow } from './mainWindow'
@@ -12,20 +12,13 @@ export const createTray = () => {
   tray = new Tray(trayImgPath)
   tray.setToolTip('My Personal Manager')
 
-  const contextMenuList = Menu.buildFromTemplate([{
+  const trayTemplate: Array<(MenuItemConstructorOptions) | (MenuItem)> = [{
     label: 'Open main',
     click: () => {
       if (mainWindow)
         mainWindow.show()
       else {
         createMainWindow()
-      }
-    },
-  }, {
-    label: 'Close main',
-    click: () => {
-      if (mainWindow && mainWindow.closable) {
-        mainWindow.close()
       }
     },
   }, {
@@ -38,13 +31,6 @@ export const createTray = () => {
       }
     },
   }, {
-    label: 'Close Manager',
-    click: () => {
-      if (managerWindow && managerWindow.closable) {
-        managerWindow.close()
-      }
-    },
-  }, {
     label: 'Exit',
     click: () => {
       if (mainWindow && mainWindow.closable)
@@ -52,6 +38,32 @@ export const createTray = () => {
       if (managerWindow && managerWindow.closable)
         managerWindow.close()
     },
-  }])
+  }]
+
+  // If Main window ex, add close
+  if (mainWindow) {
+    trayTemplate.push({
+      label: 'Close main',
+      click: () => {
+        if (mainWindow && mainWindow.closable) {
+          mainWindow.close()
+        }
+      },
+    },)
+  }
+
+  // If Manager window ex, add close
+  if (managerWindow) {
+    trayTemplate.push({
+      label: 'Close Manager',
+      click: () => {
+        if (managerWindow && managerWindow.closable) {
+          managerWindow.close()
+        }
+      },
+    },)
+  }
+
+  const contextMenuList = Menu.buildFromTemplate(trayTemplate)
   tray.setContextMenu(contextMenuList)
 }

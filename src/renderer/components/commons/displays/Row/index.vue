@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tw-flex tw-items-center"
+    class="c-row-display"
   >
     <slot />
   </div>

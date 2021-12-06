@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tw-w-9/12"
+    class="c-row-display-content"
   >
     <slot />
   </div>

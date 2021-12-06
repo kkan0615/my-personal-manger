@@ -1,52 +1,39 @@
 <template>
   <div>
-    <div
-      class="tw-text-2xl"
+    <div>
+      Hello {{ user.name }}!
+    </div>
+    <c-row-display
+      class="tw-space-x-3"
     >
-      Home {{ $t('message.hello') }}
-    </div>
-    <div>
-      store data: [ {{ test }} ]
-    </div>
-    <div>
-      <button
-        class="btn btn-primary"
-        type="button"
-        @click="onClickTestBtn"
+      <c-card
+        class="tw-w-1/2 hover:tw-bg-gray-500"
+        @click="onClickMoveToScheduleCard"
       >
-        test
-      </button>
-    </div>
-    <button
-      class="btn btn-primary"
-      type="button"
-      @click="onClickOpenMangerBtn"
+        Schedule
+      </c-card>
+      <c-card
+        class="tw-w-1/2 hover:tw-bg-gray-500"
+        @click="onClickMoveToMangerCard"
+      >
+        Manager
+      </c-card>
+    </c-row-display>
+    <div
+      class="tw-flex tw-items-center tw-space-x-3"
     >
-      open the manager
-    </button>
-    <button
-      class="btn btn-primary"
-      type="button"
-      @click="onClickCloseManagerBtn"
-    >
-      close the manger
-    </button>
-    <button
-      class="btn btn-primary"
-      type="button"
-      @click="onClickTryToChangeBtn"
-    >
-      change test data
-    </button>
-    <button
-      class="btn btn-primary"
-      type="button"
-      @click="onClickToOverlayManagerBtn"
-    >
-      move to overlay manager
-    </button>
-    <div>
-      {{ user }}
+      <c-button
+        class="btn-primary"
+        @click="onClickOpenMangerBtn"
+      >
+        Open Manager
+      </c-button>
+      <c-button
+        class="btn-danger"
+        @click="onClickCloseManagerBtn"
+      >
+        Close Manager
+      </c-button>
     </div>
   </div>
 </template>
@@ -54,50 +41,45 @@
   lang="ts"
 >
 export default {
-  name: 'PrototypeWithOutScriptSetup',
+  name: 'HomeGeneral',
 }
 </script>
 <script setup lang="ts">
-import { closeManagerWindow, openManagerWindow } from '@/utils/electrons/ipc'
 import useStore from '@/store'
-import { computed, onBeforeMount } from 'vue'
-import { PrototypeActionTypes } from '@/store/modules/systems/prototype/actions'
+import { computed, } from 'vue'
+import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
+import CButton from '@/components/commons/Button/index.vue'
 import { useRouter } from 'vue-router'
-import { Manager } from '@main/types/models/Manager'
-import { ManagerConfig } from '@main/types/models/Manager/config'
-import useElectron from '@/mixins/useElectron'
-import { ApplicationActionTypes } from '@/store/modules/systems/application/actions'
-import { Snackbar } from '@/types/applications/Snackbar'
+import CRowDisplay from '@/components/commons/displays/Row/index.vue'
+import CCard from '@/components/commons/Card/index.vue'
 
-const { ipcRenderer } = useElectron()
 const store = useStore()
 const router = useRouter()
 
-const test = computed(() => store.state.prototype.test)
 const user = computed(() => store.state.current.user)
 
-const onClickTestBtn = async () => {
-  await store.dispatch(ApplicationActionTypes.ADD_SNACKBAR_TO_LIST, {
-    title: 'test title',
-    content: 'test content',
-    type: 'danger',
-  } as Snackbar)
+const onClickMoveToScheduleCard = async () => {
+  try {
+    await router.push({ name: 'BaseSchedule' })
+  } catch (e) {
+    console.error(e)
+  }
 }
 
-const onClickOpenMangerBtn = () => {
-  openManagerWindow()
+const onClickMoveToMangerCard = async () => {
+  try {
+    await router.push({ name: 'BaseManager' })
+  } catch (e) {
+    console.error(e)
+  }
 }
 
-const onClickCloseManagerBtn = () => {
-  closeManagerWindow()
+const onClickOpenMangerBtn = async () => {
+  await store.dispatch(ManagerActionTypes.OPEN_MANAGER_WINDOW)
 }
 
-const onClickTryToChangeBtn = async () => {
-  // await store.dispatch(PrototypeActionTypes.ADD_TEST, 'changed from home')
-}
-
-const onClickToOverlayManagerBtn = async () => {
-  await router.push({ name: 'FullManager' })
+const onClickCloseManagerBtn = async () => {
+  await store.dispatch(ManagerActionTypes.CLOSE_MANAGER_WINDOW)
 }
 
 </script>

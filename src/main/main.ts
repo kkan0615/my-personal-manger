@@ -58,15 +58,16 @@ app.whenReady()
 
 /* When app is ready to open */
 app.on('ready', () => {
-  // @TODO: For test
-  electronStore.set(StoreKeyEnum.MANAGER_ID, '13a6e982-f7c9-4f8a-b838-558740be6d7a')
-  // @TODO: For test
-  // electronStore.delete(StoreKeyEnum.USER)
+  // // @TODO: For test
+  // electronStore.set(StoreKeyEnum.MANAGER_ID, '13a6e982-f7c9-4f8a-b838-558740be6d7a')
+  // // @TODO: For test
+  // // electronStore.delete(StoreKeyEnum.USER)
   initJobSchedules()
 
   /* Open manager */
   ipcMain.on('open-manager-window', () => {
     createManagerWindow()
+    createTray()
   })
 
   ipcMain.handle('get-current-manager', getCurrentManager)

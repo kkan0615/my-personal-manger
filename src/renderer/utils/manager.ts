@@ -1,4 +1,5 @@
 import { Manager } from '@/types/models/Manager'
+import { ReplaceAllReservedWordPayload, ReservedWordEnum } from '@/types/models/Manager/reservedWord'
 
 const electron = window.require('electron')
 
@@ -35,4 +36,13 @@ export const getCircleImageFileAsBlob = async (manager: Manager) => {
     circleImg: manager.circleImg,
   })
   return new Blob([imageBuffer], { type: 'image/png' })
+}
+
+export const replaceAllReservedWords = (payload: ReplaceAllReservedWordPayload) => {
+  let result = payload.message
+  result = result.replaceAll(ReservedWordEnum.USER_NAME, payload.userName)
+  result = result.replaceAll(ReservedWordEnum.MANAGER_NAME, payload.managerName)
+  result = result.replaceAll(ReservedWordEnum.SCHEDULE_TITLE, payload.scheduleTitle)
+
+  return result
 }

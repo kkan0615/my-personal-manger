@@ -1,0 +1,27 @@
+.c-row-display {
+  @apply tw-flex tw-items-center;
+  container-type: inline-size;
+  container-name: c-row-dipslay-container;
+
+  &-label {
+    @apply tw-w-3/12;
+  }
+
+  &-content {
+    @apply tw-w-9/12;
+  }
+}
+
+@container c-row-dipslay-container (min-width: 400px) {
+  .c-row-display {
+    @apply tw-inline;
+
+    &-label {
+      @apply tw-w-12/12;
+    }
+
+    &-content {
+      @apply tw-w-12/12;
+    }
+  }
+}
