@@ -74,12 +74,12 @@ const onClickMoveToMangerCard = async () => {
   }
 }
 
-const onClickOpenMangerBtn = async () => {
-  await store.dispatch(ManagerActionTypes.OPEN_MANAGER_WINDOW)
+const onClickOpenMangerBtn = () => {
+  store.dispatch(ManagerActionTypes.OPEN_MANAGER_WINDOW)
 }
 
-const onClickCloseManagerBtn = async () => {
-  await store.dispatch(ManagerActionTypes.CLOSE_MANAGER_WINDOW)
+const onClickCloseManagerBtn = () => {
+  store.dispatch(ManagerActionTypes.CLOSE_MANAGER_WINDOW)
 }
 
 </script>

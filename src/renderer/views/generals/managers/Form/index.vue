@@ -9,7 +9,7 @@
       class="tw-flex"
     >
       <div
-        class="tw-p-2 tw-pr-2 md:tw-pr-12 lg:tw-w-6/12 tw-w-full lg:tw-border-r-2 tw-border-none"
+        class="tw-p-2 tw-pr-2 md:tw-pr-12 lg:tw-w-8/12 tw-w-full lg:tw-border-r-2 tw-border-none"
       >
         <c-form
           ref="formRef"

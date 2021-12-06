@@ -30,7 +30,7 @@ if (managerConfig.value && managerConfig.value.displayStyle === 'CIRCLE') {
 
 ipcRenderer.on('on-schedule-message', async (_, args) => {
   try {
-    await store.dispatch(ManagerActionTypes.SET_MESSAGE, args.title)
+    await store.dispatch(ManagerActionTypes.SCHEDULE_MANAGER, args.title)
   } catch (e) {
     console.error(e)
   }

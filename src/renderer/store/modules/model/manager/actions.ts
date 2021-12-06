@@ -269,7 +269,7 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
       commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
     }
     const message = replaceAllReservedWords({
-      message: state.manager.scheduleMessage || `{{ ${ReservedWordEnum.SCHEDULE_TITLE} is on! }}`,
+      message: state.manager.scheduleMessage ? state.manager.scheduleMessage.message : `${ReservedWordEnum.SCHEDULE_TITLE} is on!`,
       userName: rootState.current.user.name,
       managerName: rootState.current.manager.name,
       scheduleTitle: payload,
@@ -279,7 +279,7 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
   },
   [ManagerActionTypes.HAPPY_BIRTHDAY] ({ commit, state, rootState, dispatch }) {
     const message = replaceAllReservedWords({
-      message: state.manager.happyBirthdayMessage || `Happy Birthday ${ReservedWordEnum.USER_NAME}!`,
+      message: state.manager.happyBirthdayMessage ? state.manager.happyBirthdayMessage.message : `Happy Birthday ${ReservedWordEnum.USER_NAME}!`,
       userName: rootState.current.user.name,
       managerName: rootState.current.manager.name,
     })
@@ -296,10 +296,10 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
   [ManagerActionTypes.OFF_MESSAGE_TIMER] ({ commit }) {
     commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
   },
-  [ManagerActionTypes.OPEN_MANAGER_WINDOW] ({ commit }) {
-    commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
+  [ManagerActionTypes.OPEN_MANAGER_WINDOW] (_) {
+    electron.ipcRenderer.send('open-manager-window')
   },
-  [ManagerActionTypes.CLOSE_MANAGER_WINDOW] ({ commit }) {
-    commit(ManagerMutationTypes.SET_MESSAGE_TIMER, null)
+  [ManagerActionTypes.CLOSE_MANAGER_WINDOW] (_) {
+    electron.ipcRenderer.send('close-manager-window')
   },
 }

@@ -40,9 +40,9 @@ export const getCircleImageFileAsBlob = async (manager: Manager) => {
 
 export const replaceAllReservedWords = (payload: ReplaceAllReservedWordPayload) => {
   let result = payload.message
-  result = result.replaceAll(ReservedWordEnum.USER_NAME, payload.userName)
+  result = result.replaceAll(ReservedWordEnum.USER_NAME, payload.userName || '')
   result = result.replaceAll(ReservedWordEnum.MANAGER_NAME, payload.managerName)
-  result = result.replaceAll(ReservedWordEnum.SCHEDULE_TITLE, payload.scheduleTitle)
+  result = result.replaceAll(ReservedWordEnum.SCHEDULE_TITLE, payload.scheduleTitle || '')
 
   return result
 }

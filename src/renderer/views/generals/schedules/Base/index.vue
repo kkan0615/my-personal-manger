@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tw-h-full"
+    class="tw-h-full tw-flex tw-flex-col"
   >
     <c-header-layout
       class="tw-flex-grow-0 tw-flex-shrink"
@@ -8,30 +8,22 @@
       :breadcrumbs="breadcrumbs"
     />
     <div
-      class="tw-flex tw-justify-end tw-mb-2"
-    >
-      <base-schedule-create-dialog />
-      <base-schedule-filter />
-    </div>
-    <div
       class="tw-flex tw-h-full"
     >
       <div
+        class="tw-mr-2"
         :class="{
           'tw-w-full': route.name === 'BaseSchedule',
           'tw-w-9/12': route.name === 'DetailSchedule'
         }"
       >
-        <div>
-          {{ route.name }}
+        <div
+          class="tw-flex tw-justify-end tw-mb-2"
+        >
+          <base-schedule-create-dialog />
+          <base-schedule-filter />
         </div>
         <div>
-          <c-button
-            class="btn-danger"
-            @click="onClickTest"
-          >
-            test
-          </c-button>
           <div>
             <div
               class="tw-flex tw-items-center tw-mb-2"
@@ -63,25 +55,10 @@
             </div>
           </div>
         </div>
-        <div
-          v-if="route.name === 'DetailSchedule'"
-          class="tw-text-red-500"
-        >
-          <router-link :to="{ name: 'BaseSchedule' }">
-            BaseSchedule
-          </router-link>
-        </div>
-        <div
-          class="tw-text-red-500"
-        >
-          <router-link :to="{ name: 'DetailSchedule', params: { id: 'test' } }">
-            test
-          </router-link>
-        </div>
       </div>
       <c-card
         v-if="route.name ==='DetailSchedule'"
-        class="tw-w-3/12 tw-p-4 tw-h-full"
+        class="tw-w-3/12 tw-h-full tw-ml-2"
       >
         <base-schedule-detail />
       </c-card>
@@ -104,7 +81,6 @@ import { CBreadcrumb } from '@/types/libs/components/breadcrumb'
 import { computed, onMounted } from 'vue'
 import { ScheduleActionTypes } from '@/store/modules/model/schedule/actions'
 import BaseScheduleScheduleItem from '@/views/generals/schedules/Base/components/ScheduleItem.vue'
-import CButton from '@/components/commons/Button/index.vue'
 import useElectron from '@/mixins/useElectron'
 import BaseScheduleDetail from '@/views/generals/schedules/Base/components/Detail.vue'
 import CCard from '@/components/commons/Card/index.vue'
@@ -135,8 +111,4 @@ onMounted(async () => {
     console.error(e)
   }
 })
-
-const onClickTest = async () => {
-  await ipcRenderer.invoke('clear-all-schedule-list')
-}
 </script>

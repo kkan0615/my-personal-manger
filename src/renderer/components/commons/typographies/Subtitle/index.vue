@@ -1,6 +1,6 @@
 <template>
   <div
-    class="tw-text-gray-500 tw-text-sm"
+    class="tw-font-semibold tw-text-lg"
   >
     <slot />
   </div>

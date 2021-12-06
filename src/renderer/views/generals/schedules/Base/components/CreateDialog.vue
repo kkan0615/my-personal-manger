@@ -83,6 +83,7 @@
             <c-row-display-content>
               <c-textarea
                 id="content-input"
+                v-model="content"
               />
             </c-row-display-content>
           </c-row-display>
@@ -135,10 +136,12 @@ const formRef = ref<HTMLFormElement>()
 const modalRef = ref<any>()
 const title = ref('')
 const date = ref(dayjs().add(1, 'hour').toDate())
+const content = ref('')
 
 const initData = () => {
   title.value = ''
   date.value = dayjs().add(1, 'hour').toDate()
+  content.value = ''
 }
 
 const onClickCreateBtn = async () => {
@@ -146,6 +149,7 @@ const onClickCreateBtn = async () => {
     const params = {
       title: title.value,
       date: date.value,
+      content: content.value,
     } as ScheduleCreateForm
 
     /* Create schedule */
