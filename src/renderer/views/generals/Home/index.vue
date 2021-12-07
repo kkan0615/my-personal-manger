@@ -1,39 +1,75 @@
 <template>
-  <div>
-    <div>
-      Hello {{ user.name }}!
-    </div>
-    <c-row-display
-      class="tw-space-x-3"
-    >
-      <c-card
-        class="tw-w-1/2 hover:tw-bg-gray-500"
-        @click="onClickMoveToScheduleCard"
-      >
-        Schedule
-      </c-card>
-      <c-card
-        class="tw-w-1/2 hover:tw-bg-gray-500"
-        @click="onClickMoveToMangerCard"
-      >
-        Manager
-      </c-card>
-    </c-row-display>
+  <div
+    class="tw-h-full"
+  >
     <div
-      class="tw-flex tw-items-center tw-space-x-3"
+      class="tw-flex-grow-0 tw-flex-shrink"
     >
-      <c-button
-        class="btn-primary"
-        @click="onClickOpenMangerBtn"
+      <div
+        class="tw-flex tw-items-center tw-h-full"
       >
-        Open Manager
-      </c-button>
-      <c-button
-        class="btn-danger"
-        @click="onClickCloseManagerBtn"
+        <div>
+          Hello {{ user.name }}!
+        </div>
+        <div
+          class="tw-ml-auto tw-space-x-3"
+        >
+          <c-button
+            class="btn-primary"
+            @click="onClickOpenMangerBtn"
+          >
+            Open Manager
+          </c-button>
+          <c-button
+            class="btn-danger"
+            @click="onClickCloseManagerBtn"
+          >
+            Close Manager
+          </c-button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tw-h-full tw-flex-grow tw-flex-shrink-0 "
+    >
+      <c-row-display
+        class="tw-space-x-3 tw-h-full"
       >
-        Close Manager
-      </c-button>
+        <c-card
+          class="tw-w-1/2 hover:tw-bg-gray-300 hover:tw-shadow-2xl tw-h-1/2 tw-flex tw-justify-center tw-items-center tw-cursor-pointer"
+          @click="onClickMoveToScheduleCard"
+        >
+          <div
+            class="tw-text-3xl tw-text-center"
+          >
+            <c-material-icon
+              class="tw-text-7xl"
+            >
+              date_range
+            </c-material-icon>
+            <div>
+              Schedule
+            </div>
+          </div>
+        </c-card>
+        <c-card
+          class="tw-w-1/2 hover:tw-bg-gray-300 tw-h-1/2 hover:tw-shadow-2xl tw-flex tw-justify-center tw-items-center tw-cursor-pointer"
+          @click="onClickMoveToMangerCard"
+        >
+          <div
+            class="tw-text-3xl tw-text-center"
+          >
+            <c-material-icon
+              class="tw-text-7xl"
+            >
+              support_agent
+            </c-material-icon>
+            <div>
+              Manager
+            </div>
+          </div>
+        </c-card>
+      </c-row-display>
     </div>
   </div>
 </template>
@@ -52,6 +88,7 @@ import CButton from '@/components/commons/Button/index.vue'
 import { useRouter } from 'vue-router'
 import CRowDisplay from '@/components/commons/displays/Row/index.vue'
 import CCard from '@/components/commons/Card/index.vue'
+import CMaterialIcon from '@/components/commons/icons/Material/index.vue'
 
 const store = useStore()
 const router = useRouter()

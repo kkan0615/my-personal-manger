@@ -32,7 +32,6 @@ import { ManagerActionTypes } from '@/store/modules/model/manager/actions'
 import FullManagerManager from '@/views/managers/Full/components/Manager.vue'
 
 const store = useStore()
-const route = useRoute()
 const message = computed(() => store.state.manager.message)
 
 onMounted(async () => {

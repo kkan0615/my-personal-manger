@@ -27,6 +27,8 @@
       v-if="displayContextMenu"
       :top="contextmenuY"
       :left="contextmenuX"
+      @mouseenter="onMouseEnter"
+      @mouseleave="onMouseLeave"
       @close="displayContextMenu = false"
     />
   </div>

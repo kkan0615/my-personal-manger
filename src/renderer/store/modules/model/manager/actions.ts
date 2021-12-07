@@ -8,6 +8,8 @@ import { getRandomInArr } from '@/utils/commons/random'
 import { getCurrentTimesInDay } from '@/utils/commons/time'
 import { ReservedWordEnum } from '@/types/models/Manager/reservedWord'
 import { replaceAllReservedWords } from '@/utils/manager'
+import dayjs from 'dayjs'
+import schedule from 'node-schedule'
 
 const electron = window.require('electron')
 
@@ -30,6 +32,8 @@ export enum ManagerActionTypes {
   CLICK_MANAGER = 'manger/CLICK_MANAGER',
   SCHEDULE_MANAGER = 'manger/SCHEDULE_MANAGER',
   HAPPY_BIRTHDAY = 'manager/HAPPY_BIRTHDAY',
+  NEXT_SCHEDULE = 'manager/NEXT_SCHEDULE',
+  SCHEDULE_COUNTS = 'manager/SCHEDULE_COUNTS',
   ON_MASSAGE_TIMER = 'manger/ON_MASSAGE_TIMER',
   OFF_MESSAGE_TIMER = 'manager/OFF_MESSAGE_TIMER',
   OPEN_MANAGER_WINDOW = 'manager/OPEN_MANAGER_WINDOW',
@@ -105,6 +109,12 @@ export interface ManagerActions {
     payload: string
   ): void
   [ManagerActionTypes.HAPPY_BIRTHDAY](
+    { commit }: AugmentedActionContext,
+  ): void
+  [ManagerActionTypes.SCHEDULE_COUNTS](
+    { commit }: AugmentedActionContext,
+  ): void
+  [ManagerActionTypes.NEXT_SCHEDULE](
     { commit }: AugmentedActionContext,
   ): void
   [ManagerActionTypes.ON_MASSAGE_TIMER](
@@ -280,6 +290,28 @@ export const managerActions: ActionTree<ManagerState, RootState> & ManagerAction
   [ManagerActionTypes.HAPPY_BIRTHDAY] ({ commit, state, rootState, dispatch }) {
     const message = replaceAllReservedWords({
       message: state.manager.happyBirthdayMessage ? state.manager.happyBirthdayMessage.message : `Happy Birthday ${ReservedWordEnum.USER_NAME}!`,
+      userName: rootState.current.user.name,
+      managerName: rootState.current.manager.name,
+    })
+    commit(ManagerMutationTypes.SET_MESSAGE, message)
+    dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
+  },
+  [ManagerActionTypes.SCHEDULE_COUNTS] ({ commit, state, rootState, dispatch }) {
+    const todayScheduleList = rootState.schedule.scheduleList.filter(schedule => dayjs(schedule.date).isAfter(dayjs().hour(0).minute(0))
+      && dayjs(schedule.date).isBefore(dayjs().hour(23).minute(59)))
+    const message = replaceAllReservedWords({
+      message: todayScheduleList
+        ? `Total schedule is ${todayScheduleList.length}` : 'No schedule !',
+      userName: rootState.current.user.name,
+      managerName: rootState.current.manager.name,
+    })
+    commit(ManagerMutationTypes.SET_MESSAGE, message)
+    dispatch(ManagerActionTypes.ON_MASSAGE_TIMER)
+  },
+  [ManagerActionTypes.NEXT_SCHEDULE] ({ commit, rootState, dispatch }) {
+    const message = replaceAllReservedWords({
+      message: rootState.schedule.scheduleList && rootState.schedule.scheduleList.length
+        ? `Next Schedule is ${rootState.schedule.scheduleList[0].title} at ${dayjs(rootState.schedule.scheduleList[0].date).format('llll')}!` : 'No Schedule !',
       userName: rootState.current.user.name,
       managerName: rootState.current.manager.name,
     })
