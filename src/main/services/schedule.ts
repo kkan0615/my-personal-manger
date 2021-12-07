@@ -148,3 +148,7 @@ export const clearAllList = () => {
   for (const job in scheduledJobs) cancelJob(job)
 }
 
+export const clearDoneScheduleList = () => {
+  electronStore.set(StoreKeyEnum.DONE_SCHEDULE_LIST, [])
+}
+

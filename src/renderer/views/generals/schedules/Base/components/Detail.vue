@@ -11,6 +11,7 @@
       >
         <button>
           <base-schedule-update-dialog
+            v-if="schedule.jobName"
             :schedule="schedule"
           />
         </button>
@@ -18,6 +19,7 @@
           @click="onClickDeleteBtn"
         >
           <c-material-icon
+            v-if="schedule.jobName"
             class="tw-text-red-500"
           >
             delete

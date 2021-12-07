@@ -20,7 +20,7 @@ import { createMainWindow } from './windows/mainWindow'
 import { clearManagerConfig, getManagerConfig, updateManagerConfig } from './services/managerConfig'
 import { createTray } from './windows/tray'
 import {
-  clearAllList,
+  clearAllList, clearDoneScheduleList,
   createSchedule,
   deleteSchedule,
   getDoneScheduleList,
@@ -109,6 +109,7 @@ app.on('ready', () => {
   ipcMain.handle('get-saved-schedule-list', getSavedScheduleList)
   ipcMain.handle('get-done-schedule-list', getDoneScheduleList)
   ipcMain.handle('clear-all-schedule-list', clearAllList)
+  ipcMain.handle('clear-done-schedule-list', clearDoneScheduleList)
   ipcMain.handle('get-schedule', getSchedule)
   ipcMain.handle('create-schedule', createSchedule)
   ipcMain.handle('update-schedule', updateSchedule)

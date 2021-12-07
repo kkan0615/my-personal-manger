@@ -1,12 +1,12 @@
 <template>
   <div
-    class="tw-h-full"
+    class="tw-h-full tw-flex tw-flex-col"
   >
     <div
       class="tw-flex-grow-0 tw-flex-shrink"
     >
       <div
-        class="tw-flex tw-items-center tw-h-full"
+        class="tw-flex tw-items-center"
       >
         <div>
           Hello {{ user.name }}!
@@ -29,48 +29,44 @@
         </div>
       </div>
     </div>
-    <div
-      class="tw-h-full tw-flex-grow tw-flex-shrink-0 "
+    <c-row-display
+      class="tw-space-x-3 tw-flex-grow tw-flex-shrink-0"
     >
-      <c-row-display
-        class="tw-space-x-3 tw-h-full"
+      <c-card
+        class="tw-w-1/2 hover:tw-bg-gray-300 hover:tw-shadow-2xl tw-h-1/2 tw-flex tw-justify-center tw-items-center tw-cursor-pointer"
+        @click="onClickMoveToScheduleCard"
       >
-        <c-card
-          class="tw-w-1/2 hover:tw-bg-gray-300 hover:tw-shadow-2xl tw-h-1/2 tw-flex tw-justify-center tw-items-center tw-cursor-pointer"
-          @click="onClickMoveToScheduleCard"
+        <div
+          class="tw-text-3xl tw-text-center"
         >
-          <div
-            class="tw-text-3xl tw-text-center"
+          <c-material-icon
+            class="tw-text-7xl"
           >
-            <c-material-icon
-              class="tw-text-7xl"
-            >
-              date_range
-            </c-material-icon>
-            <div>
-              Schedule
-            </div>
+            date_range
+          </c-material-icon>
+          <div>
+            Schedule
           </div>
-        </c-card>
-        <c-card
-          class="tw-w-1/2 hover:tw-bg-gray-300 tw-h-1/2 hover:tw-shadow-2xl tw-flex tw-justify-center tw-items-center tw-cursor-pointer"
-          @click="onClickMoveToMangerCard"
+        </div>
+      </c-card>
+      <c-card
+        class="tw-w-1/2 hover:tw-bg-gray-300 tw-h-1/2 hover:tw-shadow-2xl tw-flex tw-justify-center tw-items-center tw-cursor-pointer"
+        @click="onClickMoveToMangerCard"
+      >
+        <div
+          class="tw-text-3xl tw-text-center"
         >
-          <div
-            class="tw-text-3xl tw-text-center"
+          <c-material-icon
+            class="tw-text-7xl"
           >
-            <c-material-icon
-              class="tw-text-7xl"
-            >
-              support_agent
-            </c-material-icon>
-            <div>
-              Manager
-            </div>
+            support_agent
+          </c-material-icon>
+          <div>
+            Manager
           </div>
-        </c-card>
-      </c-row-display>
-    </div>
+        </div>
+      </c-card>
+    </c-row-display>
   </div>
 </template>
 <script

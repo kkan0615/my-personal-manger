@@ -1,11 +1,11 @@
-import { Schedule } from '@/types/models/Schedule'
+import { Schedule, ScheduleInfo } from '@/types/models/Schedule'
 
 export interface ScheduleState {
-  scheduleList: Array<Schedule>
-  schedule: Schedule
+  scheduleList: Array<ScheduleInfo>
+  schedule: ScheduleInfo
 }
 
 export const scheduleState: ScheduleState = {
   scheduleList: [],
-  schedule: {} as Schedule
+  schedule: {} as ScheduleInfo
 }

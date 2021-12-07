@@ -12,6 +12,7 @@ export interface Schedule extends Attribute {
 
 export interface ScheduleInfo extends Schedule {
   jobName?: string
+  status: 'DONE' | 'SAVED'
 }
 
 export type ScheduleCreateForm = Omit<Schedule, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>

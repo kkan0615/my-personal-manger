@@ -6,9 +6,13 @@
       class="tw-w-6/12 tw-flex tw-items-center"
     >
       <div
-        class="badge tw-bg-bs-primary tw-mr-2"
+        class="badge tw-mr-2"
+        :class="{
+          'tw-bg-bs-primary': schedule.jobName,
+          'tw-bg-red-500': !schedule.jobName,
+        }"
       >
-        saved
+        {{ schedule.jobName ? 'saved' : 'done' }}
       </div>
       <div>
         {{ schedule.title }}
@@ -23,9 +27,11 @@
       class="tw-w-2/12 tw-flex tw-items-center tw-space-x-2"
     >
       <base-schedule-update-dialog
+        v-if="schedule.jobName"
         :schedule="schedule"
       />
       <button
+        v-if="schedule.jobName"
         @click="onClickDeleteBtn"
       >
         <c-material-icon
@@ -55,7 +61,7 @@ export default {
 import { computed, defineProps, PropType } from 'vue'
 import dayjs from 'dayjs'
 import CMaterialIcon from '@/components/commons/icons/Material/index.vue'
-import { Schedule } from '@/types/models/Schedule'
+import { ScheduleInfo } from '@/types/models/Schedule'
 import { useRouter } from 'vue-router'
 import useStore from '@/store'
 import { ScheduleActionTypes } from '@/store/modules/model/schedule/actions'
@@ -63,7 +69,7 @@ import BaseScheduleUpdateDialog from '@/views/generals/schedules/Base/components
 
 const props = defineProps({
   schedule: {
-    type: Object as PropType<Schedule>,
+    type: Object as PropType<ScheduleInfo>,
     required: false, // @TODO: CHANGE TO TRUE
     default: () => {}
   }
@@ -89,8 +95,9 @@ const onClickDeleteBtn = async () => {
 
 const onClickInfoBtn = async () => {
   try {
-    if (props.schedule)
+    if (props.schedule) {
       await router.push({ name: 'DetailSchedule', params: { id: props.schedule.id } })
+    }
   } catch (e) {
     console.error(e)
   }
