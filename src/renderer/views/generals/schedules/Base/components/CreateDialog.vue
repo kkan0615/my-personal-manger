@@ -38,7 +38,7 @@
             <c-row-display-label
               required
             >
-              title
+              {{ $t('Types.Models.Schedule.title') }}
             </c-row-display-label>
             <c-row-display-content>
               <c-base-input
@@ -52,7 +52,7 @@
             <c-row-display-label
               required
             >
-              date
+              {{ $t('Types.Models.Schedule.date') }}
             </c-row-display-label>
             <c-row-display-content>
               <v-date-picker
@@ -78,7 +78,7 @@
           <!-- content -->
           <c-row-display>
             <c-row-display-label>
-              content
+              {{ $t('Types.Models.Schedule.content') }}
             </c-row-display-label>
             <c-row-display-content>
               <c-textarea

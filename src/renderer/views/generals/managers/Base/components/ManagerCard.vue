@@ -86,7 +86,7 @@
                 class="tw-mb-4"
               >
                 <c-subtitle-typo>
-                  Full Manager
+                  {{ $t('Types.Models.Manager.img') }}
                 </c-subtitle-typo>
                 <div
                   class="manager-container"
@@ -101,7 +101,7 @@
               <!-- Circle manager -->
               <div>
                 <c-subtitle-typo>
-                  Circle Manager
+                  {{ $t('Types.Models.Manager.circleImg') }}
                 </c-subtitle-typo>
                 <div
                   class="circle-manager-container"
@@ -124,14 +124,14 @@
               <div>
                 <!-- Manger -->
                 <c-subtitle-typo>
-                  Manager
+                  {{ $t('Types.Models.Manager.Entity') }}
                 </c-subtitle-typo>
                 <!-- id -->
                 <c-row-display>
                   <c-row-display-label
                     class="tw-font-semibold"
                   >
-                    {{ $t('Types.Models.Attributes.id') }}
+                    {{ $t('Types.Models.Manager.id') }}
                   </c-row-display-label>
                   <c-row-display-content>
                     {{ manager.id }}
@@ -142,7 +142,7 @@
                   <c-row-display-label
                     class="tw-font-semibold"
                   >
-                    {{ $t('Types.Models.Attributes.name') }}
+                    {{ $t('Types.Models.Manager.name') }}
                   </c-row-display-label>
                   <c-row-display-content>
                     {{ manager.name }}
@@ -152,7 +152,7 @@
               <!-- Morning messages -->
               <div>
                 <c-subtitle-typo>
-                  Morning Messages
+                  {{ $t('Types.Models.Manager.morningMessages') }}
                 </c-subtitle-typo>
                 <div
                   v-for="(message, i) in manager.morningMessages"
@@ -172,7 +172,7 @@
               <!-- lunch messages -->
               <div>
                 <c-subtitle-typo>
-                  Lunch Messages
+                  {{ $t('Types.Models.Manager.lunchMessages') }}
                 </c-subtitle-typo>
                 <div
                   v-for="(message, i) in manager.lunchMessages"
@@ -192,7 +192,7 @@
               <!-- Night messages -->
               <div>
                 <c-subtitle-typo>
-                  Evening Messages
+                  {{ $t('Types.Models.Manager.eveningsMessages') }}
                 </c-subtitle-typo>
                 <div
                   v-for="(message, i) in manager.eveningsMessages"
@@ -213,7 +213,7 @@
               <!-- Night messages -->
               <div>
                 <c-subtitle-typo>
-                  Click Messages
+                  {{ $t('Types.Models.Manager.randClickMessages') }}
                 </c-subtitle-typo>
                 <div
                   v-for="(message, i) in manager.randClickMessages"

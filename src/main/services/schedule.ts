@@ -38,12 +38,11 @@ export const createSchedule = (event: IpcMainInvokeEvent, args: ScheduleCreateFo
     /* Remove job form job list */
     const savedScheduleList = <Array<any>>electronStore.get(StoreKeyEnum.SAVED_SCHEDULE_LIST)
     const foundSavedSchedule = savedScheduleList.find(schedule => schedule.id === data.id)
-    savedScheduleList.splice(savedScheduleList.indexOf(foundSavedSchedule), 1)
     foundSavedSchedule.jobName = undefined
-    electronStore.set(StoreKeyEnum.SAVED_SCHEDULE_LIST, savedScheduleList)
+    electronStore.set(StoreKeyEnum.SAVED_SCHEDULE_LIST, savedScheduleList.filter(schedule => schedule.id !== foundSavedSchedule.id))
 
     /* Add to done job*/
-    const doneScheduleList = <Array<any>>electronStore.get(StoreKeyEnum.SAVED_SCHEDULE_LIST)
+    const doneScheduleList = <Array<any>>electronStore.get(StoreKeyEnum.DONE_SCHEDULE_LIST)
     doneScheduleList.push(foundSavedSchedule)
     electronStore.set(StoreKeyEnum.DONE_SCHEDULE_LIST, doneScheduleList)
   }.bind(null, schedule))
@@ -71,12 +70,11 @@ export const updateSchedule = (event: IpcMainInvokeEvent, args: ScheduleUpdateFo
       /* Remove job form job list */
       const savedScheduleList = <Array<any>>electronStore.get(StoreKeyEnum.SAVED_SCHEDULE_LIST)
       const foundSavedSchedule = savedScheduleList.find(schedule => schedule.id === data.id)
-      savedScheduleList.splice(savedScheduleList.indexOf(foundSavedSchedule), 1)
       foundSavedSchedule.jobName = undefined
-      electronStore.set(StoreKeyEnum.SAVED_SCHEDULE_LIST, savedScheduleList)
+      electronStore.set(StoreKeyEnum.SAVED_SCHEDULE_LIST, savedScheduleList.filter(schedule => schedule.id !== foundSavedSchedule.id))
 
       /* Add to done job*/
-      const doneScheduleList = <Array<any>>electronStore.get(StoreKeyEnum.SAVED_SCHEDULE_LIST)
+      const doneScheduleList = <Array<any>>electronStore.get(StoreKeyEnum.DONE_SCHEDULE_LIST)
       doneScheduleList.push(foundSavedSchedule)
       electronStore.set(StoreKeyEnum.DONE_SCHEDULE_LIST, doneScheduleList)
     }.bind(null, schedule))

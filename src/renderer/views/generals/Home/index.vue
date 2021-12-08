@@ -18,13 +18,13 @@
             class="btn-primary"
             @click="onClickOpenMangerBtn"
           >
-            Open Manager
+            {{ $t('Types.Models.Manager.Actions.openManager') }}
           </c-button>
           <c-button
             class="btn-danger"
             @click="onClickCloseManagerBtn"
           >
-            Close Manager
+            {{ $t('Types.Models.Manager.Actions.closeManager') }}
           </c-button>
         </div>
       </div>
@@ -45,7 +45,7 @@
             date_range
           </c-material-icon>
           <div>
-            Schedule
+            {{ $t('router.ModuleSchedule') }}
           </div>
         </div>
       </c-card>
@@ -62,7 +62,7 @@
             support_agent
           </c-material-icon>
           <div>
-            Manager
+            {{ $t('router.ModuleManager') }}
           </div>
         </div>
       </c-card>

@@ -19,7 +19,7 @@
           <div
             class="tw-mr-auto"
           >
-            Current Manager
+            {{ $t('Types.Models.Manager.Titles.currentManager') }}
           </div>
           <base-manger-setting-dropdown />
         </c-card-title>
@@ -34,7 +34,7 @@
             <c-card-sub-title
               class="tw-mb-2"
             >
-              Full Manager
+              {{ $t('Types.Models.Manager.img') }}
             </c-card-sub-title>
             <div
               class="tw-flex"
@@ -47,7 +47,7 @@
             <c-card-sub-title
               class="tw-mb-2 "
             >
-              Circle Manager
+              {{ $t('Types.Models.Manager.circleImg') }}
             </c-card-sub-title>
             <div>
               <base-manger-circle-manager />
@@ -64,7 +64,7 @@
           <div
             class="tw-text-lg tw-font-bold"
           >
-            Manager list ({{ managerList.length }})
+            {{ $t('Types.Models.Manager.Titles.managerList') }} ({{ managerList.length }})
           </div>
           <c-base-input
             id="search-input"

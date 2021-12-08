@@ -10,7 +10,7 @@ export const koreanDictionary = {
       delete: '삭제',
       cancel: '취소',
       setToManager: '매니저로 설정',
-      filter: '검색조건'
+      filter: '검색조건',
     },
     Results: {
       Messages: {
@@ -39,15 +39,42 @@ export const koreanDictionary = {
   },
   Types: {
     Models: {
-      Attributes: {
+      Manager: {
+        Entity: '매니저',
         id: 'Key',
         name: '이름',
+        img: '이미지',
+        circleImg: '원형 이미지',
         randClickMessages: '클릭 메시지',
         morningMessages: '아침 인사 메시지',
         lunchMessages: '점심 인사 메시지',
         eveningsMessages: '저녁 인사 메시지',
         nightMessages: '새벽 인사 메시지',
-        displayStyle: '보이는 방식'
+        scheduleMessage: '스케쥴 메시지',
+        happyBirthdayMessage: '생일 축하 메시지',
+        displayStyle: '보이는 방식',
+        Titles: {
+          managerImages: '매니저 이미지 목록',
+          currentManager: '현재 매니저',
+          managerList: '매니저 목록'
+        },
+        Actions: {
+          openManager: '매니저 열기',
+          closeManager: '매니저 닫기',
+        }
+      },
+      Schedule: {
+        id: 'Key',
+        title: '제목',
+        date: '시간',
+        content: '내용',
+        Actions: {
+          clearDoneList: '완료목록 지우기'
+        },
+        States: {
+          saved: '저장',
+          done: '완료'
+        }
       },
       Extras: {
         fullManager: '전체 모드',

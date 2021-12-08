@@ -53,6 +53,7 @@
                     'btn-primary': includeSave,
                     'btn-outline-primary': !includeSave,
                   }"
+                  @click="includeSave = !includeSave"
                 >
                   Saved
                 </button>
@@ -63,6 +64,7 @@
                     'btn-primary': includeDone,
                     'btn-outline-primary': !includeDone,
                   }"
+                  @click="includeDone = !includeDone"
                 >
                   Done
                 </button>
@@ -157,18 +159,8 @@ const onClickSearchBtn = async () => {
     if (modalRef.value) {
       modalRef.value.closeModal()
     }
-    showToast({
-      title: 'Success',
-      content: 'Success to change',
-      type: 'success'
-    })
   } catch (e) {
     console.error(e)
-    showToast({
-      title: 'Fail',
-      content: 'Fail',
-      type: 'danger'
-    })
   }
 }
 </script>

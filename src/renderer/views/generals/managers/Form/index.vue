@@ -18,7 +18,7 @@
           <c-subtitle-typo
             class="form-subtitle"
           >
-            Manager Images
+            {{ $t('Types.Models.Manager.Titles.managerImages') }}
           </c-subtitle-typo>
           <div
             id="manager-image-list"
@@ -26,7 +26,7 @@
           >
             <div>
               <div>
-                Full manager
+                {{ $t('Types.Models.Manager.img') }}
               </div>
               <c-image-input
                 v-model="mainImg"
@@ -36,7 +36,7 @@
               class="tw-flex tw-flex-col tw-justify-end"
             >
               <div>
-                Circle manager
+                {{ $t('Types.Models.Manager.circleImg') }}
               </div>
               <c-image-input
                 v-model="circleImg"
@@ -50,11 +50,11 @@
             class="tw-my-2"
           >
             <c-subtitle-typo>
-              Manager
+              {{ $t('Types.Models.Manager.Entity') }}
             </c-subtitle-typo>
             <c-row-display>
               <c-row-display-label>
-                Name
+                {{ $t('Types.Models.Manager.name') }}
               </c-row-display-label>
               <c-row-display-content>
                 <c-base-input
@@ -68,7 +68,7 @@
           <c-subtitle-typo
             id="random-click-message-list"
           >
-            Random click messages
+            {{ $t('Types.Models.Manager.randClickMessages') }}
           </c-subtitle-typo>
           <c-card
             class="tw-p-2 tw-shadow-none tw-mb-3"
@@ -108,7 +108,7 @@
           <c-subtitle-typo
             id="morning-message-list"
           >
-            Morning messages
+            {{ $t('Types.Models.Manager.morningMessages') }}
           </c-subtitle-typo>
           <c-card
             class="tw-p-2 tw-shadow-none tw-mb-3"
@@ -148,7 +148,7 @@
           <c-subtitle-typo
             id="lunch-message-list"
           >
-            Lunch messages
+            {{ $t('Types.Models.Manager.lunchMessages') }}
           </c-subtitle-typo>
           <c-card
             class="tw-p-2 tw-shadow-none tw-mb-3"
@@ -188,7 +188,7 @@
           <c-subtitle-typo
             id="evening-message-list"
           >
-            Evening messages
+            {{ $t('Types.Models.Manager.eveningsMessages') }}
           </c-subtitle-typo>
           <c-card
             class="tw-p-2 tw-shadow-none tw-mb-3"
@@ -228,7 +228,7 @@
           <c-subtitle-typo
             id="night-message-list"
           >
-            Night messages
+            {{ $t('Types.Models.Manager.nightMessages') }}
           </c-subtitle-typo>
           <c-card
             class="tw-p-2 tw-shadow-none"

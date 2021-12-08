@@ -94,6 +94,7 @@ export const scheduleActions: ActionTree<ScheduleState, RootState> & ScheduleAct
     /* Include done schedule list */
     if (payload.includeDone) {
       const doneScheduleListRes: Array<ScheduleInfo> = await electron.ipcRenderer.invoke('get-done-schedule-list')
+      console.log('doneScheduleListRes', doneScheduleListRes)
       scheduleList = scheduleList.concat(doneScheduleListRes)
     }
     commit(ScheduleMutationTypes.SET_SCHEDULE_LIST, scheduleList)
@@ -118,6 +119,6 @@ export const scheduleActions: ActionTree<ScheduleState, RootState> & ScheduleAct
     await electron.ipcRenderer.invoke('delete-schedule', payload)
   },
   async [ScheduleActionTypes.CLEAR_DONE_SCHEDULE_LIST] (_) {
-    await electron.ipcRenderer.invoke('CLEAR-DONE-LIST')
+    await electron.ipcRenderer.invoke('clear-done-schedule-list')
   },
 }

@@ -41,7 +41,7 @@
             <span
               class="c-sidebar-menu-item--title"
             >
-              Schedule
+              {{ $t('router.ModuleSchedule') }}
             </span>
           </c-sidebar-layout-menu-item>
         </router-link>
@@ -60,7 +60,7 @@
             <span
               class="c-sidebar-menu-item--title"
             >
-              manager
+              {{ $t('router.ModuleManager') }}
             </span>
           </c-sidebar-layout-menu-item>
         </router-link>

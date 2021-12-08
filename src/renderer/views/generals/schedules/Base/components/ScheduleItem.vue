@@ -12,7 +12,7 @@
           'tw-bg-red-500': !schedule.jobName,
         }"
       >
-        {{ schedule.jobName ? 'saved' : 'done' }}
+        {{ schedule.jobName ? $t('Types.Models.Schedule.States.saved') : $t('Types.Models.Schedule.States.done') }}
       </div>
       <div>
         {{ schedule.title }}
@@ -62,7 +62,7 @@ import { computed, defineProps, PropType } from 'vue'
 import dayjs from 'dayjs'
 import CMaterialIcon from '@/components/commons/icons/Material/index.vue'
 import { ScheduleInfo } from '@/types/models/Schedule'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import useStore from '@/store'
 import { ScheduleActionTypes } from '@/store/modules/model/schedule/actions'
 import BaseScheduleUpdateDialog from '@/views/generals/schedules/Base/components/UpdateDialog.vue'
@@ -76,6 +76,7 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const route = useRoute()
 const store = useStore()
 
 const date = computed(() => (props.schedule && props.schedule.date ?
@@ -96,7 +97,11 @@ const onClickDeleteBtn = async () => {
 const onClickInfoBtn = async () => {
   try {
     if (props.schedule) {
-      await router.push({ name: 'DetailSchedule', params: { id: props.schedule.id } })
+      if (route.name === 'DetailSchedule') {
+        await store.dispatch(ScheduleActionTypes.LOAD_SCHEDULE, props.schedule.id)
+      } else {
+        await router.push({ name: 'DetailSchedule', params: { id: props.schedule.id } })
+      }
     }
   } catch (e) {
     console.error(e)
