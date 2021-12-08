@@ -2,11 +2,14 @@ import { ActionContext, ActionTree } from 'vuex'
 import { RootState } from '@/store'
 import { PrototypeMutations, ScheduleMutationTypes } from './mutations'
 import { ScheduleState } from './state'
-import { Schedule, ScheduleCreateForm, ScheduleInfo, ScheduleUpdateForm } from '@/types/models/Schedule'
+import { ScheduleCreateForm, ScheduleInfo, ScheduleUpdateForm } from '@/types/models/Schedule'
+import { ScheduleSelectListQuery } from '@/types/models/Schedule/filter'
 
 const electron = window.require('electron')
 
 export enum ScheduleActionTypes {
+  SET_SCHEDULE_LIST_OPTION = 'schedule/SET_SCHEDULE_LIST_OPTION',
+  RESET_SCHEDULE_LIST_OPTION = 'schedule/RESET_SCHEDULE_LIST_OPTION',
   LOAD_SCHEDULE_LIST = 'schedule/LOAD_SCHEDULE_LIST',
   RESET_SCHEDULE_LIST = 'schedule/RESET_SCHEDULE_LIST',
   LOAD_SCHEDULE = 'schedule/LOAD_SCHEDULE',
@@ -25,9 +28,16 @@ export type AugmentedActionContext = {
 } & Omit<ActionContext<ScheduleState, RootState>, 'commit'>
 
 export interface ScheduleActions {
+  [ScheduleActionTypes.SET_SCHEDULE_LIST_OPTION](
+    { commit }: AugmentedActionContext,
+    payload: ScheduleSelectListQuery
+  ): void
+  [ScheduleActionTypes.RESET_SCHEDULE_LIST_OPTION](
+    { commit }: AugmentedActionContext,
+  ): void
   [ScheduleActionTypes.LOAD_SCHEDULE_LIST](
     { commit }: AugmentedActionContext,
-    payload: { saved: true; done: false }
+    payload?: ScheduleSelectListQuery
   ): void
   [ScheduleActionTypes.RESET_SCHEDULE_LIST](
     { commit }: AugmentedActionContext,
@@ -62,19 +72,27 @@ export interface ScheduleActions {
 }
 
 export const scheduleActions: ActionTree<ScheduleState, RootState> & ScheduleActions = {
-  async [ScheduleActionTypes.LOAD_SCHEDULE_LIST] ({ commit }, payload: { saved: boolean; done: boolean }) {
+  [ScheduleActionTypes.SET_SCHEDULE_LIST_OPTION] ({ commit }, payload) {
+    commit(ScheduleMutationTypes.SET_SCHEDULE_LIST_OPTION, payload)
+  },
+  [ScheduleActionTypes.RESET_SCHEDULE_LIST_OPTION] ({ commit },) {
+    commit(ScheduleMutationTypes.SET_SCHEDULE_LIST_OPTION, {
+      includeSave: true,
+      includeDone: false,
+    } as ScheduleSelectListQuery)
+  },
+  async [ScheduleActionTypes.LOAD_SCHEDULE_LIST] ({ commit, state }, payload) {
     if (!payload) {
-      payload = {
-        saved: true,
-        done: false,
-      }
+      payload = state.scheduleListOption || {} as ScheduleSelectListQuery
     }
     let scheduleList: Array<ScheduleInfo> = []
-    if (payload.saved) {
+    /* Include saved schedule list */
+    if (payload.includeSave) {
       const savedScheduleListRes: Array<ScheduleInfo> = await electron.ipcRenderer.invoke('get-saved-schedule-list')
       scheduleList = scheduleList.concat(savedScheduleListRes)
     }
-    if (payload.done) {
+    /* Include done schedule list */
+    if (payload.includeDone) {
       const doneScheduleListRes: Array<ScheduleInfo> = await electron.ipcRenderer.invoke('get-done-schedule-list')
       scheduleList = scheduleList.concat(doneScheduleListRes)
     }
