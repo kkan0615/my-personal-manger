@@ -17,7 +17,7 @@
 ![plot](./screenshots/ManagerBase1.PNG)
 ### Manager
 ![plot](./screenshots/Manager.PNG)
-![plot](./screenshots/Manager1.PNG)
+![plot](./screenshots/Manager2.PNG)
 
 
 ## Version history
