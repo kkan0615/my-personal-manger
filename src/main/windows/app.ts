@@ -32,9 +32,9 @@ export const createAppWindow = () => {
     }
   })
 
-  if (isDev) {
-    appWindow.webContents.openDevTools()
-  }
+  // if (isDev) {
+  appWindow.webContents.openDevTools()
+  // }
 
   appWindow.on('closed', () => {
     appWindow = undefined
