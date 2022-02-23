@@ -1,15 +1,11 @@
-import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { generalRoutes } from '@/router/modules/generals'
-import { managerRoutes } from '@/router/modules/managers'
-import { authRoutes } from '@/router/modules/auths'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { appRoutes } from './modules/apps/'
 
 export const routes: Array<RouteRecordRaw> = [
-  ...authRoutes,
-  ...generalRoutes,
-  ...managerRoutes,
+  appRoutes,
 ]
 
 export const router = createRouter({
-  history: process.env.IS_DEV === 'true' ? createWebHistory('/') : createWebHashHistory('/'),
+  history: createWebHistory(''),
   routes,
 })

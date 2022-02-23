@@ -47,7 +47,6 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': [ 'warn', { 'functions': false, 'classes': true, 'variables': false } ],
     'no-use-before-define': [ 'error', { 'functions': false, 'classes': true, 'variables': false } ],
     'no-empty': 'error',
-    // 'no-duplicate-imports': 'error',
     'semi': ['error', 'never'],
     'no-irregular-whitespace': 'error',
     'no-mixed-spaces-and-tabs': 'error',
