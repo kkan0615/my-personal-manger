@@ -24,7 +24,7 @@ export const createAppWindow = () => {
     }
   })
 
-  appWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${__dirname}/../../../../../../../dist/index.html`)
+  appWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../../../../../../../dist/index.html')}`)
 
   appWindow.webContents.on('did-frame-finish-load', () => {
     if (appWindow) {
