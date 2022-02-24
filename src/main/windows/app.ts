@@ -1,4 +1,4 @@
-import { BrowserWindow, screen } from 'electron'
+import { BrowserWindow } from 'electron'
 import path from 'path'
 import isDev from 'electron-is-dev'
 
@@ -6,15 +6,11 @@ import isDev from 'electron-is-dev'
 export let appWindow: BrowserWindow | undefined
 
 export const createAppWindow = () => {
-  const displayScreen = screen.getPrimaryDisplay()
-  const dimensions = displayScreen.workAreaSize
-
   appWindow = new BrowserWindow({
-    width: parseInt((dimensions.width * 0.8).toString()),
-    height: parseInt((dimensions.height * 0.8).toString()),
+    title: 'App',
+    width: 960,
+    height: 540,
     autoHideMenuBar: true,
-    minWidth: 1024,
-    minHeight: 576,
     maximizable: true,
     resizable: true,
     webPreferences: {
@@ -23,12 +19,13 @@ export const createAppWindow = () => {
       contextIsolation: false,
     }
   })
-
+  console.log(__dirname)
+  // `file://${path.join(__dirname, '../../../../../../../dist/index.html')}`
   appWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../../../../../../../dist/index.html')}`)
 
-  appWindow.webContents.on('did-frame-finish-load', () => {
+  appWindow.webContents.once('did-finish-load', () => {
     if (appWindow) {
-      appWindow.webContents.send('move-home')
+      appWindow.webContents.send('redirect-to-app')
     }
   })
 

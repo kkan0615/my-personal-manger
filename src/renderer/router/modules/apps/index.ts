@@ -2,14 +2,14 @@ import { RouteRecordRaw } from 'vue-router'
 import AppLayout from '@/views/apps/index.vue'
 
 export const appRoutes: RouteRecordRaw = {
-  path: '/',
+  path: '/app',
   name: 'AppLayout',
   component: AppLayout,
-  redirect: { name: 'HomeApp' },
+  redirect: { name: 'AppHome' },
   children: [
     {
-      path: '/',
-      name: 'HomeApp',
+      path: 'home',
+      name: 'AppHome',
       component: () => import('@/views/apps/Home/index.vue'),
     },
   //

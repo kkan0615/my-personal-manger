@@ -1,15 +1,32 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
   <router-view />
 </template>
+<script lang="ts">
+export default {
+  name: 'App',
+}
+</script>
+<script setup lang="ts">
+import { ipcRenderer } from '@/utils/electron'
+import { useRouter } from 'vue-router'
 
-<style>
-#app {
+const router = useRouter()
 
+const redirectToApp = () => {
+  router.push({ name: 'AppHome' })
+}
+
+const redirectToManger = () => {
+  router.push({ name: 'ManagerMain' })
+}
+
+ipcRenderer.on('redirect-to-app', redirectToApp)
+ipcRenderer.on('redirect-to-manager', redirectToManger)
+</script>
+<style
+    lang="scss"
+>
+body {
+  margin: 0;
 }
 </style>
