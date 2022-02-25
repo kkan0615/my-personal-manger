@@ -1,11 +1,12 @@
 <template>
   <div>
     Home !
-    <button
+    <q-btn
+      color="primary"
       @click="onClickTestBtn"
     >
       test
-    </button>
+    </q-btn>
   </div>
 </template>
 <script lang="ts">

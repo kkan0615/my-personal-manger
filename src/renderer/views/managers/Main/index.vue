@@ -1,16 +1,18 @@
 <template>
   <div
+    class="relative-position window-height"
     style="height: 100vh"
   >
     <div
       style="height: 4%"
       @mouseenter="onMouseenter"
     >
-      <button
+      <q-btn
+        color="primary"
         @click="onMouseleave"
       >
         test
-      </button>
+      </q-btn>
       <button
         @click="onMouseenter"
       >
