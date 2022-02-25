@@ -8,8 +8,8 @@ export let managerWindow: BrowserWindow | undefined
 export const createManagerWindow = () => {
   managerWindow = new BrowserWindow({
     title: 'Manager',
-    width: 960,
-    height: 540,
+    width: 300,
+    height: 350,
     alwaysOnTop: true,
     autoHideMenuBar: true,
     maximizable: true,

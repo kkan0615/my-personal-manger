@@ -1,29 +1,42 @@
 <template>
   <div
-    class="relative-position window-height"
+    class="relative-position window-height draggable-region"
     style="height: 100vh"
   >
     <div
-      style="height: 4%"
-      @mouseenter="onMouseenter"
+      style="position: absolute; top: 0; left: 0; z-index: 3"
+      class="non-draggable-region"
     >
       <q-btn
         color="primary"
-        @click="onMouseleave"
+        @mouseenter="throughOff"
+        @click="throughOn"
       >
-        test
+        throughOn
       </q-btn>
-      <button
-        @click="onMouseenter"
-      >
-        test2
-      </button>
     </div>
-    <img
-      class="draggable-region"
-      src="https://www.pngplay.com/wp-content/uploads/13/New-Year-Kyaru-Transparent-PNG.png"
-      style="height: 95%"
+    <div
+      style="position: absolute; top: 0; right: 0; z-index: 3"
+      class="non-draggable-region"
     >
+      <q-btn
+        color="accent"
+        @mouseenter="throughOff"
+        @click="throughOff"
+      >
+        throughOff
+      </q-btn>
+    </div>
+    <div
+      class="full-height full-width"
+    >
+      <q-img
+        fit="contain"
+        src="https://www.pngplay.com/wp-content/uploads/13/New-Year-Kyaru-Transparent-PNG.png"
+        height="100%"
+        width="100%"
+      />
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -37,11 +50,11 @@ import { ipcRenderer } from '@/utils/electron'
 
 const isThrough = ref(false)
 
-const onMouseenter = () => {
+const throughOff = () => {
   ipcRenderer.send('through-off-manager-window')
 }
 
-const onMouseleave = () => {
+const throughOn = () => {
   ipcRenderer.send('through-on-manager-window')
 }
 </script>
