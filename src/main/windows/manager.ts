@@ -18,6 +18,7 @@ export const createManagerWindow = () => {
     backgroundColor: undefined,
     hasShadow: true,
     frame: false,
+
     webPreferences: {
       preload: path.join(__dirname, '../preload.js'),
       nodeIntegration: true,
@@ -32,7 +33,7 @@ export const createManagerWindow = () => {
       managerWindow.webContents.send('redirect-to-manager')
     }
   })
-
+  // managerWindow.maximize()
   // if (isDev) {
   managerWindow.webContents.openDevTools()
   // }
@@ -45,7 +46,7 @@ export const createManagerWindow = () => {
     ipcMain.off('through-off-manager-window', throughOffManagerWindow)
     managerWindow = undefined
   })
-
+  // managerWindow.setIgnoreMouseEvents(true, { forward: true })
 }
 
 export const openManagerWindow = () => {

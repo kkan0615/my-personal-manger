@@ -14,6 +14,17 @@ export default defineConfig({
       sassVariables: 'src/renderer/styles/quasar-variables.sass'
     })
   ],
+  server: {
+    proxy: {
+      '/testApi': {
+        target: 'https://www.pngplay.com/',
+        ws: true,
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/testApi/, '')
+      },
+    }
+  },
   resolve: {
     alias: [
       { find: '@', replacement: path.resolve(__dirname, 'src/renderer') },

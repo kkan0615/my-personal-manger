@@ -4,7 +4,7 @@ import { createManagerWindow, destroyManagerWindow, openManagerWindow } from './
 
 app.whenReady()
   .then(() => {
-    createAppWindow()
+    // createAppWindow()
     createManagerWindow()
 
     ipcMain.on('open-manager-window', openManagerWindow)
