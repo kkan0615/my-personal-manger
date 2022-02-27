@@ -54,8 +54,11 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { onBeforeMount, onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { ipcRenderer } from '@/utils/electron'
+import { useSettingStore } from '@/stores/setting'
+
+const settingStore = useSettingStore()
 
 const canMove = ref(false)
 const managerCanvasRef = ref<HTMLCanvasElement>()
@@ -104,14 +107,17 @@ const onMouseMove = (e: MouseEvent) => {
     }
   }
 }
-
-const initCanvas = () => {
+const initCanvas = async () => {
+  console.log(settingStore.SavedManagerPath)
   const img = new Image()
   // img.crossOrigin = 'anonymous'
-  // // img.src = 'https://picjumbo.com/wp-content/uploads/the-golden-gate-bridge-sunset-1080x720.jpg'
   // img.src = 'https://www.w3schools.com/tags/img_the_scream.jpg'
-  img.src = '/testApi/wp-content/uploads/13/New-Year-Kyaru-Transparent-PNG.png'
+  // img.src = '/testApi/princess-connect/images/1/1c/Nozomi-idolastrum-sprite-normal.png'
+  // img.src = '/testApi/wp-content/uploads/13/New-Year-Kyaru-Transparent-PNG.png'
   // img.src = 'http://localhost:3000/src/renderer/views/managers/Main/test.png'
+  const file = (await ipcRenderer.invoke('get-manager-images')).main
+  console.log(file)
+  img.src = window.URL.createObjectURL(new Blob([file]))
   img.onload = () => {
     const ctx = managerCanvasRef.value?.getContext('2d')
     if (ctx && img && managerCanvasRef.value) {
@@ -128,6 +134,5 @@ const initCanvas = () => {
 
 const onClickManger = () => {
   isDisplayMessageCard.value = !isDisplayMessageCard.value
-  console.log('test')
 }
 </script>

@@ -9,8 +9,12 @@ export default {
 <script setup lang="ts">
 import { ipcRenderer } from '@/utils/electron'
 import { useRouter } from 'vue-router'
+import { useSettingStore } from '@/stores/setting'
 
+const settingStore = useSettingStore()
 const router = useRouter()
+
+settingStore.loadAppSetting()
 
 const redirectToApp = () => {
   router.push({ name: 'AppHome' })

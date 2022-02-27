@@ -17,7 +17,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/testApi': {
-        target: 'https://www.pngplay.com/',
+        target: 'https://static.wikia.nocookie.net',
         ws: true,
         changeOrigin: true,
         secure: false,
