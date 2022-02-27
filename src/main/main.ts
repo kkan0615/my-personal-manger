@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import { createAppWindow } from './windows/app'
 import { createManagerWindow, destroyManagerWindow, openManagerWindow } from './windows/manager'
 import fs from 'fs/promises'
+import { getManagerImages } from './services/manager'
 
 const checkMangerDir = async () => {
   try {
@@ -24,11 +25,7 @@ app.whenReady()
         savedManagerPath: `${app.getPath('documents')}/${app.getName()}`
       }
     })
-    ipcMain.handle('get-manager-images', async () => {
-      return {
-        main: await fs.readFile(`${app.getPath('documents')}/${app.getName()}/test2/main.png`)
-      }
-    })
+    ipcMain.handle('get-manager-images', getManagerImages)
     ipcMain.on('open-manager-window', openManagerWindow)
     ipcMain.on('destroy-manager-window', destroyManagerWindow)
 

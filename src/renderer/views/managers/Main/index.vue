@@ -93,13 +93,11 @@ const rgbToHex = (r:any, g:any, b:any) => {
 }
 
 const onMouseMove = (e: MouseEvent) => {
-  // console.log(e)
   const ctx = managerCanvasRef.value?.getContext('2d')
   if (ctx) {
     const imgd = ctx.getImageData(e.offsetX, e.offsetY, 1, 1)
     const pix = imgd.data
-    const hex = '#' + ('000000' + rgbToHex(pix[0], pix[1], pix[2])).slice(-6)
-    // console.log('pix', pix)
+    // const hex = '#' + ('000000' + rgbToHex(pix[0], pix[1], pix[2])).slice(-6)
     if (pix.every(pixel => !pixel)) {
       ipcRenderer.send('through-on-manager-window')
     } else {
@@ -108,20 +106,12 @@ const onMouseMove = (e: MouseEvent) => {
   }
 }
 const initCanvas = async () => {
-  console.log(settingStore.SavedManagerPath)
   const img = new Image()
-  // img.crossOrigin = 'anonymous'
-  // img.src = 'https://www.w3schools.com/tags/img_the_scream.jpg'
-  // img.src = '/testApi/princess-connect/images/1/1c/Nozomi-idolastrum-sprite-normal.png'
-  // img.src = '/testApi/wp-content/uploads/13/New-Year-Kyaru-Transparent-PNG.png'
-  // img.src = 'http://localhost:3000/src/renderer/views/managers/Main/test.png'
-  const file = (await ipcRenderer.invoke('get-manager-images')).main
-  console.log(file)
+  const file = (await ipcRenderer.invoke('get-manager-images', { id: 'test1' })).main
   img.src = window.URL.createObjectURL(new Blob([file]))
   img.onload = () => {
     const ctx = managerCanvasRef.value?.getContext('2d')
     if (ctx && img && managerCanvasRef.value) {
-      // ctx.imageSmoothingEnabled = false
       img.width = managerCanvasRef.value?.width || 0
       img.height = managerCanvasRef.value?.height || 0
       // managerCanvasRef.value.width = img.width
