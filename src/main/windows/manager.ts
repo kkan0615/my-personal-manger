@@ -1,15 +1,20 @@
 import { BrowserWindow, ipcMain } from 'electron'
 import path from 'path'
 import isDev from 'electron-is-dev'
+import { electronStore } from '../store'
+import { ManagerWindowConfig } from '../types/configs/managerWindow'
 
 /* Manager */
 export let managerWindow: BrowserWindow | undefined
 
 export const createManagerWindow = () => {
+  const managerWindowConfig = electronStore.get('managerWindow') as ManagerWindowConfig
   managerWindow = new BrowserWindow({
     title: 'Manager',
     width: 300,
     height: 350,
+    x: managerWindowConfig.x,
+    y: managerWindowConfig.y,
     alwaysOnTop: true,
     autoHideMenuBar: true,
     maximizable: true,
@@ -45,6 +50,15 @@ export const createManagerWindow = () => {
     ipcMain.off('through-on-manager-window', throughOnManagerWindow)
     ipcMain.off('through-off-manager-window', throughOffManagerWindow)
     managerWindow = undefined
+  })
+
+  managerWindow.on('moved', () => {
+    if (managerWindow) {
+      // Save the last moved position
+      const [x, y] = managerWindow.getPosition()
+      electronStore.set('managerWindow.x', x)
+      electronStore.set('managerWindow.y', y)
+    }
   })
   // managerWindow.setIgnoreMouseEvents(true, { forward: true })
 }

@@ -86,18 +86,11 @@ const test = () => {
   canMove.value = !canMove.value
 }
 
-const rgbToHex = (r:any, g:any, b:any) => {
-  if (r > 255 || g > 255 || b > 255)
-    throw 'Invalid color component'
-  return ((r << 16) | (g << 8) | b).toString(16)
-}
-
 const onMouseMove = (e: MouseEvent) => {
   const ctx = managerCanvasRef.value?.getContext('2d')
   if (ctx) {
     const imgd = ctx.getImageData(e.offsetX, e.offsetY, 1, 1)
     const pix = imgd.data
-    // const hex = '#' + ('000000' + rgbToHex(pix[0], pix[1], pix[2])).slice(-6)
     if (pix.every(pixel => !pixel)) {
       ipcRenderer.send('through-on-manager-window')
     } else {
