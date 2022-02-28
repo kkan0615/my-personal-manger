@@ -8,7 +8,7 @@ import '@/router/beforeRoute'
 import '@/styles/index.scss'
 /* quasar */
 import 'quasar/src/css/index.sass'
-
+import 'animate.css'
 
 const app = createApp(App)
 app

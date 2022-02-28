@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
+import { IpcRendererEvent } from 'electron'
 import { ipcRenderer } from '@/utils/electron'
 
 export interface ManagerState {
   currentManager: any
   currentManagerSetting: any
   isShowMessageBox: boolean
+  message: string
   messageTimer: any
   managerListFilter: any
   managerList: any[]
@@ -18,6 +20,7 @@ export const useManagerStore = defineStore('manager', {
       currentManager: {},
       currentManagerSetting: {},
       isShowMessageBox: false,
+      message: '',
       messageTimer: null,
       managerListFilter: {},
       managerList: [],
@@ -46,6 +49,13 @@ export const useManagerStore = defineStore('manager', {
      */
     IsShowMessageBox (state) {
       return state.isShowMessageBox
+    },
+    /**
+     * Message
+     * @param state
+     */
+    Message (state) {
+      return state.message
     },
     /**
      * message timer
@@ -97,6 +107,29 @@ export const useManagerStore = defineStore('manager', {
      */
     closeManagerWindow () {
       ipcRenderer.send('open-manager-window')
+    },
+    /**
+     * Open manger app window
+     */
+    subscribeManageEvents () {
+      ipcRenderer.on('listen-schedule', this.listenSchedule)
+    },
+    /**
+     * Open manger app window
+     */
+    unsubscribeManageEvents () {
+      ipcRenderer.off('listen-schedule', this.listenSchedule)
+    },
+    /**
+     * Open manger app window
+     */
+    listenSchedule (event: IpcRendererEvent, payload: string) {
+      this.isShowMessageBox = true
+      this.message = payload
+      this.messageTimer = setTimeout(() => {
+        this.isShowMessageBox = false
+        this.messageTimer = null
+      }, 2000)
     },
     /**
      * Load current manager <br>

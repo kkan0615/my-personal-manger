@@ -37,15 +37,21 @@
         height="300"
       />
     </div>
-    <q-card
-      v-if="managerStore.IsShowMessageBox"
-      class="absolute z-fab full-width"
-      style="bottom: 25%;"
+    <transition
+      appear
+      enter-active-class="animate__animated animate__fadeInDown animate__fast"
+      leave-active-class="animate__animated animate__fadeOutUp animate__faster"
     >
-      <q-card-section>
-        test meesage
-      </q-card-section>
-    </q-card>
+      <q-card
+        v-if="managerStore.IsShowMessageBox"
+        class="absolute z-fab full-width "
+        style="bottom: 25%;"
+      >
+        <q-card-section>
+          {{ managerStore.Message }}
+        </q-card-section>
+      </q-card>
+    </transition>
   </div>
 </template>
 <script lang="ts">
@@ -68,6 +74,7 @@ const isDisplayMessageCard = ref(false)
 
 onMounted(() => {
   initCanvas()
+  managerStore.listenSchedule({} as any, 'on mounted')
 })
 
 onBeforeUnmount(() => {
@@ -118,6 +125,6 @@ const initCanvas = async () => {
 }
 
 const onClickManger = () => {
-  managerStore.setIsDisplayMessageBox(true)
+  managerStore.listenSchedule({} as any, 'test')
 }
 </script>
