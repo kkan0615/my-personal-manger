@@ -27,7 +27,6 @@ export const useSettingStore = defineStore('setting', {
      */
     async loadAppSetting () {
       const res = await ipcRenderer.invoke('get-app-setting') as any
-      console.log(res)
       this.savedManagerPath = res.savedManagerPath
     },
   }

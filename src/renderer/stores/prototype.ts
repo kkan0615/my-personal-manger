@@ -18,14 +18,14 @@ export const usePrototypeStore = defineStore('prototype', {
   },
   getters: {
     /**
-     * Prototype List filter
+     * prototype List filter
      * @param state
      */
     PrototypeListFilter (state) {
       return state.prototypeListFilter
     },
     /**
-     * List of Prototype
+     * List of prototype
      * @param state
      * @constructor
      */
@@ -33,7 +33,7 @@ export const usePrototypeStore = defineStore('prototype', {
       return state.prototypeList
     },
     /**
-     * Count of Prototype list
+     * Count of prototype list
      * @param state
      * @constructor
      */
@@ -41,7 +41,7 @@ export const usePrototypeStore = defineStore('prototype', {
       return state.prototypeListCount
     },
     /**
-     * Prototype
+     * prototype
      * @param state
      */
     Prototype (state) {
@@ -57,13 +57,13 @@ export const usePrototypeStore = defineStore('prototype', {
       this.prototypeListFilter = payload
     },
     /**
-     * Reset Prototype list filter
+     * Reset prototype list filter
      */
     resetPrototypeListFilter () {
       this.prototypeListFilter = {}
     },
     /**
-     * Load list of PrototypeList
+     * Load list of prototype
      * @param payload - List Filter
      */
     loadPrototypeList (payload: any) {
@@ -71,40 +71,41 @@ export const usePrototypeStore = defineStore('prototype', {
       this.prototypeListCount = 0
     },
     /**
-     * Reset Prototype list
+     * Reset prototype list
      */
     resetPrototypeList () {
       this.prototypeList = []
       this.prototypeListCount = 0
     },
     /**
-     * Load Prototype
+     * Load prototype
+     * @param payload - id
      */
-    loadPrototype () {
+    loadPrototype (payload: any) {
       this.prototype = {}
     },
     /**
-     * Reset Prototype
+     * Reset prototype
      */
     resetPrototype () {
       this.prototype = {}
     },
     /**
-     * Create Prototype
+     * Create prototype
      * @param payload - create form
      */
     createPrototype (payload: any) {
       return 0
     },
     /**
-     * Update Prototype by id
+     * Update prototype by id
      * @param payload - update form
      */
     updatePrototype (payload: any) {
       return 0
     },
     /**
-     * Delete Prototype by id
+     * Delete prototype by id
      * @param payload - target id
      */
     deletePrototype (payload: number) {

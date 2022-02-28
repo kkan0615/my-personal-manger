@@ -3,6 +3,7 @@ import { Quasar } from 'quasar'
 import App from './App.vue'
 import { createPinia } from 'pinia'
 import { router } from './router'
+import '@/router/beforeRoute'
 /* Styles */
 import '@/styles/index.scss'
 /* quasar */
@@ -14,7 +15,7 @@ app
   .use(Quasar, {
     plugins: {}
   })
-  .use(router)
   .use(createPinia())
+  .use(router)
   .mount('#app')
 

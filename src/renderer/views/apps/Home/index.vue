@@ -15,12 +15,11 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useManagerStore } from '@/stores/manager'
 
 const managerStore = useManagerStore()
 
 const onClickTestBtn = () => {
-  managerStore.openManagerApp()
+  managerStore.openManagerWindow()
 }
 </script>

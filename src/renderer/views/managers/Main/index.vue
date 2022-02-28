@@ -38,7 +38,7 @@
       />
     </div>
     <q-card
-      v-if="isDisplayMessageCard"
+      v-if="managerStore.IsShowMessageBox"
       class="absolute z-fab full-width"
       style="bottom: 25%;"
     >
@@ -57,8 +57,10 @@ export default {
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { ipcRenderer } from '@/utils/electron'
 import { useSettingStore } from '@/stores/setting'
+import { useManagerStore } from '@/stores/manager'
 
 const settingStore = useSettingStore()
+const managerStore = useManagerStore()
 
 const canMove = ref(false)
 const managerCanvasRef = ref<HTMLCanvasElement>()
@@ -89,9 +91,9 @@ const test = () => {
 const onMouseMove = (e: MouseEvent) => {
   const ctx = managerCanvasRef.value?.getContext('2d')
   if (ctx) {
-    const imgd = ctx.getImageData(e.offsetX, e.offsetY, 1, 1)
-    const pix = imgd.data
-    if (pix.every(pixel => !pixel)) {
+    const img = ctx.getImageData(e.offsetX, e.offsetY, 1, 1)
+    const pixBytes = img.data
+    if (pixBytes.every(byte => !byte)) {
       ipcRenderer.send('through-on-manager-window')
     } else {
       ipcRenderer.send('through-off-manager-window')
@@ -101,7 +103,7 @@ const onMouseMove = (e: MouseEvent) => {
 const initCanvas = async () => {
   const img = new Image()
   const file = (await ipcRenderer.invoke('get-manager-images', { id: 'test1' })).main
-  img.src = window.URL.createObjectURL(new Blob([file]))
+  img.src = window.URL.createObjectURL(new Blob([managerStore.CurrentManger.main]))
   img.onload = () => {
     const ctx = managerCanvasRef.value?.getContext('2d')
     if (ctx && img && managerCanvasRef.value) {
@@ -116,6 +118,6 @@ const initCanvas = async () => {
 }
 
 const onClickManger = () => {
-  isDisplayMessageCard.value = !isDisplayMessageCard.value
+  managerStore.setIsDisplayMessageBox(true)
 }
 </script>

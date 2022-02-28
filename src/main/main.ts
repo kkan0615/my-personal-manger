@@ -2,7 +2,8 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import { createAppWindow } from './windows/app'
 import { createManagerWindow, destroyManagerWindow, openManagerWindow } from './windows/manager'
 import fs from 'fs/promises'
-import { getManagerImages } from './services/manager'
+import { getCurrentManager, getManagerImages } from './services/manager'
+import { electronStore } from './store'
 
 const checkMangerDir = async () => {
   try {
@@ -15,8 +16,11 @@ const checkMangerDir = async () => {
 }
 
 app.whenReady()
-  .then(() => {
-    checkMangerDir()
+  .then(async () => {
+    await checkMangerDir()
+    if (!electronStore.get('currentManagerId')) {
+      electronStore.set('currentManagerId', 'default')
+    }
     // createAppWindow()
     createManagerWindow()
 
@@ -25,6 +29,7 @@ app.whenReady()
         savedManagerPath: `${app.getPath('documents')}/${app.getName()}`
       }
     })
+    ipcMain.handle('get-current-manager', getCurrentManager)
     ipcMain.handle('get-manager-images', getManagerImages)
     ipcMain.on('open-manager-window', openManagerWindow)
     ipcMain.on('destroy-manager-window', destroyManagerWindow)
@@ -38,7 +43,7 @@ app.whenReady()
 
 /* When app is ready to open */
 app.on('ready', () => {
-  // console.log('test')
+  //
 })
 
 /* When all windows are closed */
