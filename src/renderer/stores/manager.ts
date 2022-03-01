@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { IpcRendererEvent } from 'electron'
 import { ipcRenderer } from '@/utils/electron'
+import { DEFAULT_MANAGER_MESSAGE_TIMEOUT } from '@/types/managers'
+import { getRandElInArr, getRandInt } from '@/utils/commons'
 
 export interface ManagerState {
   currentManager: any
@@ -121,6 +123,17 @@ export const useManagerStore = defineStore('manager', {
       ipcRenderer.off('listen-schedule', this.listenSchedule)
     },
     /**
+     * Set message
+     */
+    setMessage (payload: string) {
+      this.isShowMessageBox = true
+      this.message = payload
+      this.messageTimer = setTimeout(() => {
+        this.isShowMessageBox = false
+        this.messageTimer = null
+      }, DEFAULT_MANAGER_MESSAGE_TIMEOUT)
+    },
+    /**
      * Open manger app window
      */
     listenSchedule (event: IpcRendererEvent, payload: string) {
@@ -129,7 +142,15 @@ export const useManagerStore = defineStore('manager', {
       this.messageTimer = setTimeout(() => {
         this.isShowMessageBox = false
         this.messageTimer = null
-      }, 2000)
+      }, DEFAULT_MANAGER_MESSAGE_TIMEOUT)
+    },
+    clickManager () {
+      this.isShowMessageBox = true
+      this.message = getRandElInArr(this.currentManager.randClickMessages).message
+      this.messageTimer = setTimeout(() => {
+        this.isShowMessageBox = false
+        this.messageTimer = null
+      }, DEFAULT_MANAGER_MESSAGE_TIMEOUT)
     },
     /**
      * Load current manager <br>

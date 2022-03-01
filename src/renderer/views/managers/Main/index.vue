@@ -74,7 +74,7 @@ const isDisplayMessageCard = ref(false)
 
 onMounted(() => {
   initCanvas()
-  managerStore.listenSchedule({} as any, 'on mounted')
+  managerStore.setMessage('on mounted')
 })
 
 onBeforeUnmount(() => {
@@ -125,6 +125,6 @@ const initCanvas = async () => {
 }
 
 const onClickManger = () => {
-  managerStore.listenSchedule({} as any, 'test')
+  managerStore.clickManager()
 }
 </script>
