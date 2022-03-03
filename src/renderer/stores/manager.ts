@@ -155,11 +155,14 @@ export const useManagerStore = defineStore('manager', {
       }, payload)
     },
     resetTimer () {
+      /* Hide message box */
       this.isShowMessageBox = false
+      /* Remove timer */
       if (this.messageTimer) {
         clearTimeout(this.messageTimer)
         this.messageTimer = null
       }
+      /* Remove audio */
       if (this.messageAudio) {
         this.messageAudio.pause()
       }
