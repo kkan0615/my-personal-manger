@@ -74,7 +74,7 @@ const isDisplayMessageCard = ref(false)
 
 onMounted(() => {
   initCanvas()
-  managerStore.setMessage('on mounted')
+  managerStore.setMessageStr('on mounted')
 })
 
 onBeforeUnmount(() => {

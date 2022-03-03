@@ -7,6 +7,13 @@ export const getCurrentManager = async () => {
   const currentManagerId = electronStore.get('currentManagerId') || 'default'
   const filePath = `${app.getPath('documents')}/${app.getName()}/${currentManagerId}`
   const managerJson = JSON.parse((await fs.readFile(`${filePath}/manager.json`, 'utf-8'))) as Manager
+  // Set the sound
+  managerJson.randClickMessages = await Promise.all(managerJson.randClickMessages.map(async (message) => {
+    return {
+      ...message,
+      soundFile: message.sound ? await fs.readFile(`${filePath}/audio/${message.sound}`) : undefined,
+    }
+  }))
 
   return {
     data: {

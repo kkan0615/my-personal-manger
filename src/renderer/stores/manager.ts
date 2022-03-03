@@ -10,6 +10,7 @@ export interface ManagerState {
   isShowMessageBox: boolean
   message: string
   messageTimer: any
+  messageAudio: HTMLAudioElement | null
   managerListFilter: any
   managerList: any[]
   managerListCount: number
@@ -24,6 +25,7 @@ export const useManagerStore = defineStore('manager', {
       isShowMessageBox: false,
       message: '',
       messageTimer: null,
+      messageAudio: null,
       managerListFilter: {},
       managerList: [],
       managerListCount: 0,
@@ -125,13 +127,43 @@ export const useManagerStore = defineStore('manager', {
     /**
      * Set message
      */
-    setMessage (payload: string) {
+    setMessageStr (payload: string) {
       this.isShowMessageBox = true
       this.message = payload
+      this.setTimer()
+    },
+    setMessage (payload: any) {
+      this.isShowMessageBox = true
+      let timerMs = DEFAULT_MANAGER_MESSAGE_TIMEOUT
+      if (payload.sound) {
+        this.messageAudio = new Audio(window.URL.createObjectURL(new Blob([payload.soundFile])))
+        this.messageAudio.addEventListener('canplaythrough', async () => {
+          if (this.messageAudio) {
+            this.messageAudio.play()
+            timerMs = this.messageAudio.duration * 1000
+            this.setTimer(timerMs)
+          }
+        })
+      } else {
+        this.setTimer(DEFAULT_MANAGER_MESSAGE_TIMEOUT)
+      }
+      this.message = payload.message
+    },
+    setTimer (payload = DEFAULT_MANAGER_MESSAGE_TIMEOUT) {
       this.messageTimer = setTimeout(() => {
-        this.isShowMessageBox = false
+        this.resetTimer()
+      }, payload)
+    },
+    resetTimer () {
+      this.isShowMessageBox = false
+      if (this.messageTimer) {
+        clearTimeout(this.messageTimer)
         this.messageTimer = null
-      }, DEFAULT_MANAGER_MESSAGE_TIMEOUT)
+      }
+      if (this.messageAudio) {
+        this.messageAudio.pause()
+      }
+      this.messageAudio = null
     },
     /**
      * Open manger app window
@@ -139,18 +171,14 @@ export const useManagerStore = defineStore('manager', {
     listenSchedule (event: IpcRendererEvent, payload: string) {
       this.isShowMessageBox = true
       this.message = payload
-      this.messageTimer = setTimeout(() => {
-        this.isShowMessageBox = false
-        this.messageTimer = null
-      }, DEFAULT_MANAGER_MESSAGE_TIMEOUT)
+      this.setTimer()
     },
     clickManager () {
-      this.isShowMessageBox = true
-      this.message = getRandElInArr(this.currentManager.randClickMessages).message
-      this.messageTimer = setTimeout(() => {
-        this.isShowMessageBox = false
-        this.messageTimer = null
-      }, DEFAULT_MANAGER_MESSAGE_TIMEOUT)
+      if (this.messageTimer) {
+        this.resetTimer()
+      }
+      const randClickMsg = getRandElInArr(this.currentManager.randClickMessages)
+      this.setMessage(randClickMsg)
     },
     /**
      * Load current manager <br>
