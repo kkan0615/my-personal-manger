@@ -11,8 +11,8 @@ export const createManagerWindow = () => {
   const managerWindowConfig = electronStore.get('managerWindow') as ManagerWindowConfig
   managerWindow = new BrowserWindow({
     title: 'Manager',
-    width: 300,
-    height: 350,
+    width: 350,
+    height: 450,
     x: managerWindowConfig ? managerWindowConfig.x : undefined,
     y: managerWindowConfig ? managerWindowConfig.y : undefined,
     alwaysOnTop: true,

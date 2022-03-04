@@ -34,7 +34,8 @@
       <canvas
         id="manager-canvas"
         ref="managerCanvasRef"
-        height="300"
+        height="400"
+        width="350"
       />
     </div>
     <transition
@@ -44,8 +45,8 @@
     >
       <q-card
         v-if="managerStore.IsShowMessageBox"
-        class="absolute z-fab full-width "
-        style="bottom: 25%;"
+        class="absolute z-fab"
+        style="bottom: 35%; width: 80%; left: 10%;"
       >
         <q-card-section>
           {{ managerStore.Message }}
@@ -118,7 +119,7 @@ const initCanvas = async () => {
       img.height = managerCanvasRef.value?.height || 0
       // managerCanvasRef.value.width = img.width
       // managerCanvasRef.value.height = img.height
-      ctx.drawImage(img, 10, 10, img.width, img.height)
+      ctx.drawImage(img, 0, 0, img.width, img.height)
     }
     managerCanvasRef.value?.addEventListener('mousemove', onMouseMove)
   }

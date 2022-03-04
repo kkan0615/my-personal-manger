@@ -140,7 +140,7 @@ export const useManagerStore = defineStore('manager', {
         this.messageAudio.addEventListener('canplaythrough', async () => {
           if (this.messageAudio) {
             this.messageAudio.play()
-            timerMs = this.messageAudio.duration * 1000
+            timerMs = (this.messageAudio.duration * 1000) + 250
             this.setTimer(timerMs)
           }
         })
