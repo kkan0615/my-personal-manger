@@ -4,6 +4,8 @@ import { createManagerWindow, destroyManagerWindow, openManagerWindow } from './
 import fs from 'fs/promises'
 import { getCurrentManager, getManagerImages } from './services/manager'
 import { electronStore } from './store'
+import isDev from 'electron-is-dev'
+import { testSchedule } from './services/scehdule'
 
 const checkMangerDir = async () => {
   try {
@@ -21,7 +23,11 @@ app.whenReady()
     if (!electronStore.get('currentManagerId')) {
       electronStore.set('currentManagerId', 'default')
     }
-    // createAppWindow()
+    if (isDev) {
+      testSchedule()
+    } else {
+      createAppWindow()
+    }
     createManagerWindow()
 
     ipcMain.handle('get-app-setting', () => {

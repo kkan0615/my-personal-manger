@@ -7,7 +7,18 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useManagerStore } from '@/stores/manager'
+import { onBeforeUnmount } from 'vue'
+
+const managerStore = useManagerStore()
+
+/* created life cycles */
+managerStore.subscribeManageEvents()
+
+onBeforeUnmount(() => {
+  managerStore.unsubscribeManageEvents()
+})
+
 </script>
 <style
   lang="scss"

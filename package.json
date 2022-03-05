@@ -63,8 +63,10 @@
   "dependencies": {
     "@quasar/extras": "^1.12.5",
     "animate.css": "^4.1.1",
+    "dayjs": "^1.10.8",
     "electron-is-dev": "^2.0.0",
     "electron-store": "^8.0.1",
+    "node-schedule": "^2.1.0",
     "pinia": "^2.0.11",
     "quasar": "^2.5.5",
     "sass": "^1.49.8",
@@ -73,6 +75,7 @@
   },
   "devDependencies": {
     "@quasar/vite-plugin": "^1.0.5",
+    "@types/node-schedule": "^1.3.2",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
     "@vitejs/plugin-vue": "^2.2.0",

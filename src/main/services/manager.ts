@@ -8,7 +8,13 @@ export const getCurrentManager = async () => {
   const filePath = `${app.getPath('documents')}/${app.getName()}/${currentManagerId}`
   const managerJson = JSON.parse((await fs.readFile(`${filePath}/manager.json`, 'utf-8'))) as Manager
   // Set the sound
-  managerJson.randClickMessages = await Promise.all(managerJson.randClickMessages.map(async (message) => {
+  managerJson.randScheduleScriptList = await Promise.all(managerJson.randScheduleScriptList.map(async (message) => {
+    return {
+      ...message,
+      soundFile: message.sound ? await fs.readFile(`${filePath}/audio/${message.sound}`) : undefined,
+    }
+  }))
+  managerJson.randClickScriptList = await Promise.all(managerJson.randClickScriptList.map(async (message) => {
     return {
       ...message,
       soundFile: message.sound ? await fs.readFile(`${filePath}/audio/${message.sound}`) : undefined,

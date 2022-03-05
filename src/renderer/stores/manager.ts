@@ -113,13 +113,13 @@ export const useManagerStore = defineStore('manager', {
       ipcRenderer.send('open-manager-window')
     },
     /**
-     * Open manger app window
+     * subscribe events relative with manager
      */
     subscribeManageEvents () {
       ipcRenderer.on('listen-schedule', this.listenSchedule)
     },
     /**
-     * Open manger app window
+     * unsubscribe events relative with manager
      */
     unsubscribeManageEvents () {
       ipcRenderer.off('listen-schedule', this.listenSchedule)
@@ -132,6 +132,10 @@ export const useManagerStore = defineStore('manager', {
       this.message = payload
       this.setTimer()
     },
+    /**
+     *
+     * @param payload
+     */
     setMessage (payload: any) {
       this.isShowMessageBox = true
       let timerMs = DEFAULT_MANAGER_MESSAGE_TIMEOUT
@@ -170,18 +174,32 @@ export const useManagerStore = defineStore('manager', {
     },
     /**
      * Open manger app window
+     * @param payload - message
      */
     listenSchedule (event: IpcRendererEvent, payload: string) {
-      this.isShowMessageBox = true
-      this.message = payload
-      this.setTimer()
+      const randScheduleScript = getRandElInArr(this.currentManager.randScheduleScriptList)
+      console.log(randScheduleScript)
+      this.setMessage({
+        //@schedule
+        ...randScheduleScript,
+        message: randScheduleScript.message.replaceAll('@schedule', payload),
+      })
     },
+    /**
+     * When touch or click the manager
+     */
     clickManager () {
       if (this.messageTimer) {
         this.resetTimer()
       }
-      const randClickMsg = getRandElInArr(this.currentManager.randClickMessages)
+      const randClickMsg = getRandElInArr(this.currentManager.randClickScriptList)
       this.setMessage(randClickMsg)
+    },
+    /**
+     * When manger is opened
+     */
+    helloManager () {
+    // @TODO: Create hello manager script
     },
     /**
      * Load current manager <br>
