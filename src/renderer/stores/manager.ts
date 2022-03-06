@@ -21,7 +21,9 @@ export const useManagerStore = defineStore('manager', {
   state: (): ManagerState => {
     return {
       currentManager: {},
-      currentManagerSetting: {},
+      currentManagerSetting: {
+        canMove: false,
+      },
       isShowMessageBox: false,
       message: '',
       messageTimer: null,
@@ -215,6 +217,13 @@ export const useManagerStore = defineStore('manager', {
      */
     resetCurrentManager () {
       this.currentManager = {}
+    },
+    /**
+     *
+     * @param payload
+     */
+    setCurrentManagerSetting (payload: any) {
+      this.currentManagerSetting = payload
     },
     /**
      * Set message box status

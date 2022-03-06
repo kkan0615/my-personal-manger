@@ -3,56 +3,36 @@
     class="relative-position window-height"
     style="height: 100vh"
     :class="{
-      'draggable-region': canMove,
+      'draggable-region': managerStore.CurrentMangerSetting.canMove,
     }"
   >
     <div
+      v-if="managerStore.CurrentMangerSetting.canMove"
       style="position: absolute; top: 0; z-index: 4"
       class="non-draggable-region"
     >
       <q-btn
         color="accent"
         @mouseenter="throughOff"
-        @click="test"
+        @click="onClickFixBtn"
       >
-        test
+        Fix
       </q-btn>
     </div>
     <div
       class="full-height full-width"
       @click="onClickManger"
     >
-      <!--      <q-img-->
-      <!--        id="manager-image"-->
-      <!--        ref="managerImgRef"-->
-      <!--        fit="contain"-->
-      <!--        src="./test.png"-->
-      <!--        height="100%"-->
-      <!--        width="100%"-->
-      <!--        @load="onLoadTest"-->
-      <!--      />-->
       <canvas
         id="manager-canvas"
         ref="managerCanvasRef"
         height="400"
         width="350"
       />
+      <manager-main-context-menu />
     </div>
-    <transition
-      appear
-      enter-active-class="animate__animated animate__fadeInDown animate__fast"
-      leave-active-class="animate__animated animate__fadeOutUp animate__faster"
-    >
-      <q-card
-        v-if="managerStore.IsShowMessageBox"
-        class="absolute z-fab"
-        style="bottom: 35%; width: 80%; left: 10%;"
-      >
-        <q-card-section>
-          {{ managerStore.Message }}
-        </q-card-section>
-      </q-card>
-    </transition>
+    <!--  Message boxes  -->
+    <manager-main-message-box-default />
   </div>
 </template>
 <script lang="ts">
@@ -63,15 +43,14 @@ export default {
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { ipcRenderer } from '@/utils/electron'
-import { useSettingStore } from '@/stores/setting'
 import { useManagerStore } from '@/stores/manager'
+import ManagerMainMessageBoxDefault from '@/views/managers/Main/components/messageBoxes/default.vue'
+import ManagerMainContextMenu from '@/views/managers/Main/components/ContextMenu.vue'
 
-const settingStore = useSettingStore()
 const managerStore = useManagerStore()
 
 const canMove = ref(false)
 const managerCanvasRef = ref<HTMLCanvasElement>()
-const isDisplayMessageCard = ref(false)
 
 onMounted(() => {
   initCanvas()
@@ -92,8 +71,11 @@ const throughOn = () => {
   ipcRenderer.send('through-on-manager-window')
 }
 
-const test = () => {
-  canMove.value = !canMove.value
+const onClickFixBtn = () => {
+  managerStore.setCurrentManagerSetting({
+    ...managerStore.CurrentMangerSetting,
+    canMove: !managerStore.CurrentMangerSetting.canMove,
+  })
 }
 
 const onMouseMove = (e: MouseEvent) => {
