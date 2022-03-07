@@ -3,6 +3,7 @@ import { IpcRendererEvent } from 'electron'
 import { ipcRenderer } from '@/utils/electron'
 import { DEFAULT_MANAGER_MESSAGE_TIMEOUT } from '@/types/managers'
 import { getRandElInArr, getRandInt } from '@/utils/commons'
+import { useSettingStore } from '@/stores/setting'
 
 export interface ManagerState {
   currentManager: any
@@ -139,10 +140,16 @@ export const useManagerStore = defineStore('manager', {
      * @param payload
      */
     setMessage (payload: any) {
+      /* use setting store */
+      const settingStore = useSettingStore()
+      /*  Display message box */
       this.isShowMessageBox = true
+      /* Set the time for timer */
       let timerMs = DEFAULT_MANAGER_MESSAGE_TIMEOUT
+      /* If there is sound */
       if (payload.sound) {
         this.messageAudio = new Audio(window.URL.createObjectURL(new Blob([payload.soundFile])))
+        this.messageAudio.volume = settingStore.Volume * 0.01
         this.messageAudio.addEventListener('canplaythrough', async () => {
           if (this.messageAudio) {
             this.messageAudio.play()
@@ -179,8 +186,10 @@ export const useManagerStore = defineStore('manager', {
      * @param payload - message
      */
     listenSchedule (event: IpcRendererEvent, payload: string) {
+      if (this.messageTimer) {
+        this.resetTimer()
+      }
       const randScheduleScript = getRandElInArr(this.currentManager.randScheduleScriptList)
-      console.log(randScheduleScript)
       this.setMessage({
         //@schedule
         ...randScheduleScript,

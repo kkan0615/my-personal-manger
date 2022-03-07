@@ -2,16 +2,25 @@ import { defineStore } from 'pinia'
 import { ipcRenderer } from '@/utils/electron'
 
 export interface SettingState {
+  volume: number
   savedManagerPath: string
 }
 
 export const useSettingStore = defineStore('setting', {
   state: (): SettingState => {
     return {
+      volume: 70,
       savedManagerPath: ''
     }
   },
   getters: {
+    /**
+     * Volume
+     * @param state
+     */
+    Volume (state) {
+      return state.volume
+    },
     /**
      * Setting List filter
      * @param state
@@ -23,7 +32,6 @@ export const useSettingStore = defineStore('setting', {
   actions: {
     /**
      * set Setting list filter
-     * @param payload - List Filter to set
      */
     async loadAppSetting () {
       const res = await ipcRenderer.invoke('get-app-setting') as any

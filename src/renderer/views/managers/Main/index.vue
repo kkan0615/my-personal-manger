@@ -44,12 +44,11 @@ export default {
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { ipcRenderer } from '@/utils/electron'
 import { useManagerStore } from '@/stores/manager'
-import ManagerMainMessageBoxDefault from '@/views/managers/Main/components/messageBoxes/default.vue'
+import ManagerMainMessageBoxDefault from '@/views/managers/Main/components/messageBoxes/Default.vue'
 import ManagerMainContextMenu from '@/views/managers/Main/components/ContextMenu.vue'
 
 const managerStore = useManagerStore()
 
-const canMove = ref(false)
 const managerCanvasRef = ref<HTMLCanvasElement>()
 
 onMounted(() => {

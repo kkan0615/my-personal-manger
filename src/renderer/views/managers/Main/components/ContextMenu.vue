@@ -19,7 +19,7 @@
         v-close-popup
         clickable
       >
-        <q-item-section>New</q-item-section>
+        <q-item-section>New Todo</q-item-section>
       </q-item>
       <q-separator />
       <q-item clickable>
