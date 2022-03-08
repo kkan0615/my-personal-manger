@@ -2,12 +2,13 @@ import { defineStore } from 'pinia'
 import { IpcRendererEvent } from 'electron'
 import { ipcRenderer } from '@/utils/electron'
 import { DEFAULT_MANAGER_MESSAGE_TIMEOUT } from '@/types/managers'
-import { getRandElInArr, getRandInt } from '@/utils/commons'
+import { getRandElInArr } from '@/utils/commons'
 import { useSettingStore } from '@/stores/setting'
+import { ManagerConfig } from '@/types/managers/config'
 
 export interface ManagerState {
   currentManager: any
-  currentManagerSetting: any
+  currentManagerSetting: ManagerConfig
   isShowMessageBox: boolean
   message: string
   messageTimer: any
@@ -23,7 +24,8 @@ export const useManagerStore = defineStore('manager', {
     return {
       currentManager: {},
       currentManagerSetting: {
-        canMove: false,
+        isPossibleMove: false,
+        isOnlyDisplayEvent: false
       },
       isShowMessageBox: false,
       message: '',

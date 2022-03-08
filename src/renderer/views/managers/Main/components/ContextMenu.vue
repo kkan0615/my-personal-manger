@@ -86,7 +86,7 @@ const managerStore = useManagerStore()
 const onClickMoveItem = () => {
   managerStore.setCurrentManagerSetting({
     ...managerStore.CurrentMangerSetting,
-    canMove: true,
+    isPossibleMove: true,
   })
 }
 </script>

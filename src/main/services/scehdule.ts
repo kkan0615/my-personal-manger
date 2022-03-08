@@ -3,39 +3,40 @@ import { managerWindow, } from '../windows/manager'
 import { scheduleJob, Job } from 'node-schedule'
 import dayjs from 'dayjs'
 import { electronStore } from '../store'
+import { Schedule, ScheduleCreateForm, ScheduleUpdateForm } from '../types/schedules'
 
-export const createSchedule = (event: IpcMainInvokeEvent, payload: any) => {
-  const scheduledJobs = electronStore.get('scheduledJobs') as any[]
+export const createSchedule = (event: IpcMainInvokeEvent, payload: ScheduleCreateForm) => {
+  const scheduledJobs = electronStore.get('scheduledJobs') as Schedule[]
   const job = scheduleJob(payload.isLoop ? payload.date : dayjs(payload.date).toDate(), () => {
     if (managerWindow) {
-      managerWindow.webContents.send('setting-schedule', 'test from schedule')
+      managerWindow.webContents.send('setting-schedule', payload.content)
       deleteSchedule(event, job.name)
     }
   })
 
-  const scheduledJob: Job  = {
+  const scheduledJob = {
     ...payload,
     ...job,
-  }
+  } as Schedule
 
   scheduledJobs.push(scheduledJob)
   electronStore.set('scheduledJobs', scheduledJobs)
   return scheduledJob
 }
 
-export const updateSchedule = (event: IpcMainInvokeEvent, payload: any) => {
+export const updateSchedule = (event: IpcMainInvokeEvent, payload: ScheduleUpdateForm) => {
   if (deleteSchedule(event, payload.name)) {
-    const scheduledJobs = electronStore.get('scheduledJobs') as any[]
+    const scheduledJobs = electronStore.get('scheduledJobs') as Schedule[]
     const job = scheduleJob(payload.isLoop ? payload.date : dayjs(payload.date).toDate(), () => {
       if (managerWindow) {
-        managerWindow.webContents.send('setting-schedule', 'test from schedule')
+        managerWindow.webContents.send('setting-schedule', payload.content)
       }
     })
 
-    const scheduledJob: Job  = {
+    const scheduledJob = {
       ...payload,
       ...job,
-    }
+    } as Schedule
 
     scheduledJobs.push(scheduledJob)
     electronStore.set('scheduledJobs', scheduledJobs)
@@ -46,8 +47,8 @@ export const updateSchedule = (event: IpcMainInvokeEvent, payload: any) => {
 }
 
 export const deleteSchedule = (event: IpcMainInvokeEvent, payload: string) => {
-  const scheduledJobs = electronStore.get('scheduledJobs') as any[]
-  const foundJob: Job = scheduledJobs.find(scheduledJob => scheduledJob.name === payload)
+  const scheduledJobs = electronStore.get('scheduledJobs') as Schedule[]
+  const foundJob = scheduledJobs.find(scheduledJob => scheduledJob.name === payload)
   if (foundJob) {
     foundJob.cancel()
     scheduledJobs.splice(scheduledJobs.indexOf(foundJob), 1)

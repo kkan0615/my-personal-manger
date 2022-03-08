@@ -3,11 +3,11 @@
     class="relative-position window-height"
     style="height: 100vh"
     :class="{
-      'draggable-region': managerStore.CurrentMangerSetting.canMove,
+      'draggable-region': managerStore.CurrentMangerSetting.isPossibleMove,
     }"
   >
     <div
-      v-if="managerStore.CurrentMangerSetting.canMove"
+      v-if="managerStore.CurrentMangerSetting.isPossibleMove"
       style="position: absolute; top: 0; z-index: 4"
       class="non-draggable-region"
     >
@@ -73,7 +73,7 @@ const throughOn = () => {
 const onClickFixBtn = () => {
   managerStore.setCurrentManagerSetting({
     ...managerStore.CurrentMangerSetting,
-    canMove: !managerStore.CurrentMangerSetting.canMove,
+    canMove: !managerStore.CurrentMangerSetting.isPossibleMove,
   })
 }
 
