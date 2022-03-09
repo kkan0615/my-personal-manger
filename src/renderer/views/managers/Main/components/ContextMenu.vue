@@ -1,11 +1,12 @@
 <template>
   <q-menu
-    class="non-draggable-region"
     touch-position
     context-menu
   >
     <q-list
       dense
+      @mouseenter="throughOff"
+      @mousemove="throughOff"
     >
       <q-item
         v-close-popup
@@ -15,12 +16,8 @@
         <q-item-section>Move</q-item-section>
       </q-item>
       <q-separator />
-      <q-item
-        v-close-popup
-        clickable
-      >
-        <q-item-section>New Todo</q-item-section>
-      </q-item>
+      <!-- Create schedule -->
+      <schedule-form-dialog />
       <q-separator />
       <q-item clickable>
         <q-item-section>Preferences</q-item-section>
@@ -80,6 +77,8 @@ export default {
 </script>
 <script setup lang="ts">
 import { useManagerStore } from '@/stores/manager'
+import ScheduleFormDialog from '@/components/ScheduleFormDialog/index.vue'
+import { ipcRenderer } from '@/utils/electron'
 
 const managerStore = useManagerStore()
 
@@ -88,5 +87,9 @@ const onClickMoveItem = () => {
     ...managerStore.CurrentMangerSetting,
     isPossibleMove: true,
   })
+}
+
+const throughOff = () => {
+  ipcRenderer.send('through-off-manager-window')
 }
 </script>

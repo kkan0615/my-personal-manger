@@ -9,7 +9,7 @@ export interface SettingState {
 export const useSettingStore = defineStore('setting', {
   state: (): SettingState => {
     return {
-      volume: 70,
+      volume: 50,
       savedManagerPath: ''
     }
   },

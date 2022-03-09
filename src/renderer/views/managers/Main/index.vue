@@ -73,7 +73,7 @@ const throughOn = () => {
 const onClickFixBtn = () => {
   managerStore.setCurrentManagerSetting({
     ...managerStore.CurrentMangerSetting,
-    canMove: !managerStore.CurrentMangerSetting.isPossibleMove,
+    isPossibleMove: !managerStore.CurrentMangerSetting.isPossibleMove,
   })
 }
 
