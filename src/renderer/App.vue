@@ -24,8 +24,14 @@ const redirectToManger = () => {
   router.push({ name: 'ManagerMain' })
 }
 
+const redirectToSchedule = () => {
+  router.push({ name: 'ScheduleMain' })
+}
+
 ipcRenderer.on('redirect-to-app', redirectToApp)
 ipcRenderer.on('redirect-to-manager', redirectToManger)
+ipcRenderer.on('redirect-to-schedule', redirectToSchedule)
+
 </script>
 <style
     lang="scss"

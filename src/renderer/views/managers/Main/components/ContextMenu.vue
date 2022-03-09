@@ -16,8 +16,14 @@
         <q-item-section>Move</q-item-section>
       </q-item>
       <q-separator />
+      <q-item
+        clickable
+        @click="onClickTodoItem"
+      >
+        <q-item-section>New Todo</q-item-section>
+      </q-item>
       <!-- Create schedule -->
-      <schedule-form-dialog />
+      <!--      <schedule-form-dialog />-->
       <q-separator />
       <q-item clickable>
         <q-item-section>Preferences</q-item-section>
@@ -83,13 +89,17 @@ import { ipcRenderer } from '@/utils/electron'
 const managerStore = useManagerStore()
 
 const onClickMoveItem = () => {
-  managerStore.setCurrentManagerSetting({
-    ...managerStore.CurrentMangerSetting,
+  managerStore.setCurrentManagerConfig({
+    ...managerStore.CurrentMangerConfig,
     isPossibleMove: true,
   })
 }
 
 const throughOff = () => {
   ipcRenderer.send('through-off-manager-window')
+}
+
+const onClickTodoItem = () => {
+  ipcRenderer.send('open-schedule-window')
 }
 </script>

@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { appRoutes } from './modules/apps/'
 import { managerRoutes } from '@/router/modules/managers'
+import { scheduleRoutes } from '@/router/modules/schdules'
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -10,6 +11,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   managerRoutes,
   appRoutes,
+  scheduleRoutes,
 ]
 
 export const router = createRouter({

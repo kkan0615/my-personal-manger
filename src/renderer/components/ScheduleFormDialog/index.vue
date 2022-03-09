@@ -38,24 +38,40 @@
           <div
             class="q-mb-sm"
           >
-            <q-btn-toggle
-              v-model="loopDay"
-              dense
-              toggle-color="primary"
-              flat
-              :options="[
-                {label: 'sun', value: 'sunday'},
-                {label: 'mon', value: 'monday'},
-                {label: 'tue', value: 'tuesday'},
-                {label: 'wed', value: 'wednesday'},
-                {label: 'fri', value: 'friday'},
-                {label: 'thu', value: 'thursday'},
-                {label: 'sat', value: 'saturday'},
-              ]"
-            />
+            <!--            <q-btn-toggle-->
+            <!--              v-model="loopDay"-->
+            <!--              dense-->
+            <!--              clearable-->
+            <!--              spread-->
+            <!--              unelevated-->
+            <!--              :options="[-->
+            <!--                {label: 'sun', value: 'sunday'},-->
+            <!--                {label: 'mon', value: 'monday'},-->
+            <!--                {label: 'tue', value: 'tuesday'},-->
+            <!--                {label: 'wed', value: 'wednesday'},-->
+            <!--                {label: 'fri', value: 'friday'},-->
+            <!--                {label: 'thu', value: 'thursday'},-->
+            <!--                {label: 'sat', value: 'saturday'},-->
+            <!--              ]"-->
+            <!--            />-->
+            <q-btn-group
+              spread
+            >
+              <q-btn
+                v-for="option in dayOptions"
+                :key="option.value"
+                dense
+                :color="loopDays.includes(option.value) ? 'primary' : undefined"
+                class="text-center text-caption"
+                @click="onClickDayOptionBtn(option)"
+              >
+                {{ option.label }}
+              </q-btn>
+            </q-btn-group>
           </div>
           <!-- date -->
           <q-input
+            v-if="!loopDays.length"
             v-model="date"
             class="full-width"
             dense
@@ -87,22 +103,58 @@
           >
             <q-select
               v-model="hour"
+              class="col-grow"
               dense
               options-dense
               :options="hourOptions"
-            />
+              popup-content-style="height: 200px;"
+            >
+              <template
+                #append
+              >
+                <span
+                  class="text-subtitle1"
+                >
+                  H
+                </span>
+              </template>
+            </q-select>
             <q-select
               v-model="minute"
+              class="col-grow"
               dense
               options-dense
               :options="minuteOptions"
-            />
+              popup-content-style="height: 200px;"
+            >
+              <template
+                #append
+              >
+                <span
+                  class="text-subtitle1"
+                >
+                  M
+                </span>
+              </template>
+            </q-select>
             <q-select
               v-model="second"
+              class="col-grow"
               dense
               options-dense
               :options="secondOptions"
-            />
+              popup-content-style="height: 200px;"
+            >
+              <template
+                #append
+              >
+                <span
+                  class="text-subtitle1"
+                >
+                  S
+                </span>
+              </template>
+            </q-select>
           </div>
           <q-input
             v-model="content"
@@ -110,27 +162,27 @@
             dense
             autogrow
           />
+          <div
+            class="q-mt-sm"
+          >
+            <q-btn
+              type="submit"
+              size="sm"
+              color="primary"
+            >
+              save
+            </q-btn>
+            <q-btn
+              type="reset"
+              size="sm"
+              color="primary"
+              flat
+              class="q-ml-sm"
+            >
+              reset
+            </q-btn>
+          </div>
         </q-form>
-        <div
-          class="q-mt-sm"
-        >
-          <q-btn
-            type="submit"
-            size="sm"
-            color="primary"
-          >
-            save
-          </q-btn>
-          <q-btn
-            type="reset"
-            size="sm"
-            color="primary"
-            flat
-            class="q-ml-sm"
-          >
-            reset
-          </q-btn>
-        </div>
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -145,17 +197,26 @@ import { ref } from 'vue'
 import dayjs from 'dayjs'
 import { ipcRenderer } from '@/utils/electron'
 
+const dayOptions = [
+  { label: 'sun', value: 0 },
+  { label: 'mon', value: 1 },
+  { label: 'tue', value: 2 },
+  { label: 'wed', value: 3 },
+  { label: 'fri', value: 4 },
+  { label: 'thu', value: 5 },
+  { label: 'sat', value: 6 },
+]
+const hourOptions = Array.from(Array(24).keys())
+const minuteOptions = Array.from(Array(60).keys())
+const secondOptions = Array.from(Array(60).keys())
+
 const isOpen = ref(false)
-const loopDay = ref('sunday')
-const date = ref(dayjs().format('yyyy-MM-dd'))
+const loopDays = ref<number[]>([])
+const date = ref(dayjs())
 const hour = ref(dayjs().hour())
 const minute = ref(dayjs().minute())
 const second = ref(dayjs().second())
 const content = ref('')
-
-const hourOptions = Array.from(Array(24).keys())
-const minuteOptions = Array.from(Array(60).keys())
-const secondOptions = Array.from(Array(60).keys())
 
 const onClickTodoItem = () => {
   isOpen.value = true
@@ -167,6 +228,21 @@ const throughOff = () => {
 
 const onSubmit = () => {
   console.log('onSubmit')
+  if (loopDays.value.length) {
+    Promise.all(loopDays.value.map(loopDay => {
+      const date = `${second.value} ${minute.value} ${hour.value} * * ${loopDay}`
+      console.log(date)
+    }))
+  }
+}
+
+const onClickDayOptionBtn = (option: { label: string; value: number }) => {
+  const foundIndex = loopDays.value.findIndex(loopDay => loopDay === option.value)
+  if (foundIndex >= 0) {
+    loopDays.value.splice(foundIndex, 1)
+  } else {
+    loopDays.value.push(option.value)
+  }
 }
 
 </script>

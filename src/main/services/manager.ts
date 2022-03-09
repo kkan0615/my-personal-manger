@@ -2,6 +2,7 @@ import { app, IpcMainInvokeEvent } from 'electron'
 import fs from 'fs/promises'
 import { electronStore } from '../store'
 import { Manager } from '../types/managers'
+import { ManagerWindowConfig } from '../types/configs/managerWindow'
 
 export const getCurrentManager = async () => {
   const currentManagerId = electronStore.get('currentManagerId') || 'default'
@@ -35,4 +36,14 @@ export const getManagerImages = async (event: IpcMainInvokeEvent, args: { id: st
   return {
     main: await fs.readFile(`${path}/${args.id}/main.png`)
   }
+}
+
+export const getCurrentManagerConfig = async () => {
+  return electronStore.get('managerWindow')
+}
+
+export const setCurrentManagerConfig = async (event: IpcMainInvokeEvent, args: any) => {
+  electronStore.set('managerWindow', {
+    volume: args.volume
+  })
 }

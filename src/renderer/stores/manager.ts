@@ -8,7 +8,7 @@ import { ManagerConfig } from '@/types/managers/config'
 
 export interface ManagerState {
   currentManager: any
-  currentManagerSetting: ManagerConfig
+  currentManagerConfig: ManagerConfig
   isShowMessageBox: boolean
   message: string
   messageTimer: any
@@ -23,9 +23,10 @@ export const useManagerStore = defineStore('manager', {
   state: (): ManagerState => {
     return {
       currentManager: {},
-      currentManagerSetting: {
+      currentManagerConfig: {
         isPossibleMove: false,
-        isOnlyDisplayEvent: false
+        isOnlyDisplayEvent: false,
+        volume: 10
       },
       isShowMessageBox: false,
       message: '',
@@ -49,8 +50,8 @@ export const useManagerStore = defineStore('manager', {
      * Current manager setting
      * @param state
      */
-    CurrentMangerSetting (state) {
-      return state.currentManagerSetting
+    CurrentMangerConfig (state) {
+      return state.currentManagerConfig
     },
     /**
      * Is show message box
@@ -142,16 +143,15 @@ export const useManagerStore = defineStore('manager', {
      * @param payload
      */
     setMessage (payload: any) {
-      /* use setting store */
-      const settingStore = useSettingStore()
       /*  Display message box */
       this.isShowMessageBox = true
       /* Set the time for timer */
       let timerMs = DEFAULT_MANAGER_MESSAGE_TIMEOUT
       /* If there is sound */
       if (payload.sound) {
+        /* Set audio */
         this.messageAudio = new Audio(window.URL.createObjectURL(new Blob([payload.soundFile])))
-        this.messageAudio.volume = settingStore.Volume * 0.01
+        this.messageAudio.volume = this.currentManagerConfig.volume * 0.01
         this.messageAudio.addEventListener('canplaythrough', async () => {
           if (this.messageAudio) {
             this.messageAudio.play()
@@ -233,8 +233,9 @@ export const useManagerStore = defineStore('manager', {
      *
      * @param payload
      */
-    setCurrentManagerSetting (payload: any) {
-      this.currentManagerSetting = payload
+    async setCurrentManagerConfig (payload: any) {
+      this.currentManagerConfig = payload
+      await ipcRenderer.invoke('set-current-manager-config')
     },
     /**
      * Set message box status
