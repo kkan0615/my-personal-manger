@@ -1,6 +1,7 @@
 import { Job } from 'node-schedule'
 
-export interface Schedule extends Job {
+export interface Schedule {
+  name: string
   isLoop: boolean
   date: string
   content: string

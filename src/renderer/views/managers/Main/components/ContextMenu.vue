@@ -17,6 +17,7 @@
       </q-item>
       <q-separator />
       <q-item
+        v-close-popup
         clickable
         @click="onClickTodoItem"
       >

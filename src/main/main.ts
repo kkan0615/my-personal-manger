@@ -10,7 +10,7 @@ import {
 } from './services/manager'
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
-import { testSchedule } from './services/scehdule'
+import { createSchedule, deleteSchedule, initSchedule, testSchedule, updateSchedule } from './services/scehdule'
 import { destroyScheduleWindow, openScheduleWindow } from './windows/schedule'
 
 const checkMangerDir = async () => {
@@ -34,6 +34,7 @@ app.whenReady()
     } else {
       createAppWindow()
     }
+    initSchedule()
     createManagerWindow()
 
     ipcMain.handle('get-app-setting', () => {
@@ -45,6 +46,9 @@ app.whenReady()
     ipcMain.handle('get-manager-images', getManagerImages)
     ipcMain.handle('get-current-manager-config', getCurrentManagerConfig)
     ipcMain.handle('set-current-manager-config', setCurrentManagerConfig)
+    ipcMain.handle('create-schedule', createSchedule)
+    ipcMain.handle('update-schedule', updateSchedule)
+    ipcMain.handle('delete-schedule', deleteSchedule)
     ipcMain.on('open-manager-window', openManagerWindow)
     ipcMain.on('destroy-manager-window', destroyManagerWindow)
     ipcMain.on('open-schedule-window', openScheduleWindow)

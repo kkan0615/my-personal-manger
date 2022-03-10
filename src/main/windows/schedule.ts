@@ -11,7 +11,7 @@ export const createScheduleWindow = () => {
     title: 'Schedule',
     width: 350,
     height: 450,
-    // alwaysOnTop: true,
+    alwaysOnTop: isDev,
     autoHideMenuBar: true,
     maximizable: true,
     resizable: true,

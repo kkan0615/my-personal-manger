@@ -2,7 +2,6 @@ import { app, IpcMainInvokeEvent } from 'electron'
 import fs from 'fs/promises'
 import { electronStore } from '../store'
 import { Manager } from '../types/managers'
-import { ManagerWindowConfig } from '../types/configs/managerWindow'
 
 export const getCurrentManager = async () => {
   const currentManagerId = electronStore.get('currentManagerId') || 'default'
