@@ -2,7 +2,7 @@ import { Job } from 'node-schedule'
 
 export interface Schedule extends Job {
   isLoop: boolean
-  date: string
+  date: string | Date
   content: string
 }
 

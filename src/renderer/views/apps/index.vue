@@ -13,7 +13,9 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title
+          @click="onClickTitle"
+        >
           <q-avatar>
             <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
           </q-avatar>
@@ -23,7 +25,6 @@
     </q-header>
     <app-drawer />
     <q-page-container>
-      123
       <router-view />
     </q-page-container>
   </q-layout>
@@ -34,10 +35,22 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref } from 'vue'
+
 import AppDrawer from '@/views/apps/components/Drawer.vue'
+import { useWindowStore } from '@/stores/windwos'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const windowStore = useWindowStore()
 
 const toggleLeftDrawer = () => {
-  console.log('toggleLeftDrawer')
+  windowStore.setIsOpenAppWindowDrawer(!windowStore.IsOpenAppWindowDrawer)
 }
+
+const onClickTitle = () => {
+  router.push({
+    name: 'AppHome'
+  })
+}
+
 </script>

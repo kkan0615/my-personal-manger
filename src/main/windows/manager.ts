@@ -13,6 +13,7 @@ export const createManagerWindow = () => {
     title: 'Manager',
     width: 350,
     height: 450,
+    skipTaskbar: true,
     x: managerWindowConfig ? managerWindowConfig.x : undefined,
     y: managerWindowConfig ? managerWindowConfig.y : undefined,
     alwaysOnTop: true,

@@ -31,13 +31,11 @@
       </c-row-input>
       <!-- date -->
       <c-row-input>
-        <c-row-input-label>
-          label
-        </c-row-input-label>
         <c-row-input-content>
           <q-input
             v-if="!loopDays.length"
             v-model="date"
+            placeholder="Date"
             class="full-width"
             dense
             mask="date"
@@ -78,6 +76,7 @@
               <q-select
                 v-model="hour"
                 class="col-grow q-pr-sm"
+                placeholder="Hour"
                 dense
                 hide-dropdown-icon
                 options-dense
@@ -97,6 +96,7 @@
               <q-select
                 v-model="minute"
                 class="col-grow q-px-sm"
+                placeholder="Minute"
                 dense
                 hide-dropdown-icon
                 options-dense
@@ -116,6 +116,7 @@
               <q-select
                 v-model="second"
                 class="col-grow q-pl-sm"
+                placeholder="Second"
                 hide-dropdown-icon
                 dense
                 options-dense
@@ -178,13 +179,11 @@
         </q-btn>
       </q-btn-group>
       <c-row-input>
-        <c-row-input-label>
-          content
-        </c-row-input-label>
         <c-row-input-content>
           <q-input
             v-model="content"
             dense
+            placeholder="Content"
             autogrow
           />
         </c-row-input-content>
@@ -193,6 +192,7 @@
         class="q-mt-sm q-mt-auto"
       >
         <q-btn
+          :loading="isSaveBtnLoading"
           type="submit"
           color="primary"
         >
@@ -240,36 +240,56 @@ const secondOptions = Array.from(Array(60).keys())
 
 const scheduleStore = useScheduleStore()
 
-const isOpen = ref(false)
+const isSaveBtnLoading = ref(false)
 const loopDays = ref<number[]>([])
-const date = ref(dayjs().format('YYYY/MM/DD'))
-const hour = ref(dayjs().hour())
-const minute = ref(dayjs().minute())
+const date = ref('')
+const hour = ref(0)
+const minute = ref(0)
 const second = ref(0)
 const content = ref('')
 
+const initData = () => {
+  loopDays.value = []
+  date.value = dayjs().format('YYYY/MM/DD')
+  hour.value = dayjs().hour()
+  minute.value = dayjs().minute()
+  second.value = 0
+  content.value = ''
+}
+
+initData()
+
 const onSubmit = () => {
-  console.log('onSubmit')
-  if (loopDays.value.length) {
-    Promise.all(loopDays.value.map(loopDay => {
-      const date = `${second.value} ${minute.value} ${hour.value} * * ${loopDay}`
-      console.log(date)
+  try {
+    isSaveBtnLoading.value = true
+    /* if it's loop */
+    if (loopDays.value.length) {
+      Promise.all(loopDays.value.map(loopDay => {
+        const date = `${second.value} ${minute.value} ${hour.value} * * ${loopDay}`
+        console.log(date)
+        scheduleStore.createSchedule({
+          isLoop: true,
+          date,
+          content: content.value
+        } as ScheduleCreateForm)
+      }))
+    } else {
       scheduleStore.createSchedule({
-        isLoop: true,
-        date,
+        isLoop: false,
+        date: dayjs(date.value)
+          .set('hours', hour.value)
+          .set('minutes', minute.value)
+          .set('seconds', second.value)
+          .toDate(),
         content: content.value
       } as ScheduleCreateForm)
-    }))
-  } else {
-    scheduleStore.createSchedule({
-      isLoop: false,
-      date: dayjs(date.value)
-        .set('hours', hour.value)
-        .set('minutes', minute.value)
-        .set('seconds', second.value)
-        .toDate(),
-      content: content.value
-    } as ScheduleCreateForm)
+    }
+    isSaveBtnLoading.value = false
+    alert('Success to Save')
+    /* If success, off the schedule window */
+    ipcRenderer.send('destroy-schedule-window')
+  } catch (e) {
+    console.error(e)
   }
 }
 
@@ -289,12 +309,4 @@ const onClickIncBtn = (value:  number, type: 'hour' | 'minute') => {
     minute.value = (dayjs().minute() + value) >= 60 ? 59 : dayjs().minute() + value
   }
 }
-
 </script>
-<style
-    lang="scss"
->
-.q-dialog__backdrop {
-  display: none;
-}
-</style>

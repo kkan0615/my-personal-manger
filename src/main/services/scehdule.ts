@@ -10,18 +10,20 @@ export const initSchedule = () => {
     const scheduledJobs = electronStore.get('scheduledJobs') as Schedule[]
     const foundJob = scheduledJobs.find(scheduledJob => scheduledJob.name === nodeScheduledJobs[jobName].name)
     if (foundJob) {
-      console.log('test', foundJob)
       deleteSchedule(null, nodeScheduledJobs[jobName].name)
       createSchedule(null, foundJob)
     }
   }
 }
 
+export const getScheduleList = () => {
+  return electronStore.get('scheduledJobs') as Schedule[] || [] as Schedule[]
+}
+
 export const createSchedule = (event: IpcMainInvokeEvent | null, payload: ScheduleCreateForm) => {
   const scheduledJobs = electronStore.get('scheduledJobs') as Schedule[] || [] as Schedule[]
   const job = scheduleJob(payload.isLoop ? payload.date : dayjs(payload.date).toDate(), () => {
     if (managerWindow) {
-      console.log('how about me?')
       managerWindow.webContents.send('listen-schedule', payload.content)
       if (!payload.isLoop)
         deleteSchedule(event, job.name)
@@ -32,7 +34,6 @@ export const createSchedule = (event: IpcMainInvokeEvent | null, payload: Schedu
     ...payload,
     name: job.name,
   } as Schedule
-  console.log(scheduledJob)
 
   scheduledJobs.push(scheduledJob)
   electronStore.set('scheduledJobs', scheduledJobs)

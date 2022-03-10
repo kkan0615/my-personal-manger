@@ -1,12 +1,47 @@
 <template>
   <q-drawer
-    v-model="leftDrawerOpen"
+    :width="250"
+    :model-value="windowStore.IsOpenAppWindowDrawer"
     show-if-above
     side="left"
     bordered
+    @update:model-value="onUpdateModelValue"
   >
-    drawer content will be here
-    <!-- drawer content -->
+    <q-list
+      bordered
+      separator
+    >
+      <q-item
+        :to="{ name: 'AppManagerMain' }"
+        clickable
+        exact
+      >
+        <q-item-section avatar>
+          <q-icon name="manage_accounts" />
+        </q-item-section>
+        <q-item-section>Manager</q-item-section>
+      </q-item>
+      <q-item
+        :to="{ name: 'AppScheduleMain' }"
+        clickable
+        exact
+      >
+        <q-item-section avatar>
+          <q-icon name="schedule" />
+        </q-item-section>
+        <q-item-section>Schedule</q-item-section>
+      </q-item>
+      <q-item
+        :to="{ name: 'AppSettingMain' }"
+        clickable
+        exact
+      >
+        <q-item-section avatar>
+          <q-icon name="settings" />
+        </q-item-section>
+        <q-item-section>Setting</q-item-section>
+      </q-item>
+    </q-list>
   </q-drawer>
 </template>
 <script lang="ts">
@@ -15,7 +50,11 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useWindowStore } from '@/stores/windwos'
 
-const leftDrawerOpen = ref(true)
+const windowStore = useWindowStore()
+
+const onUpdateModelValue = (isOpen: boolean) => {
+  windowStore.setIsOpenAppWindowDrawer(isOpen)
+}
 </script>

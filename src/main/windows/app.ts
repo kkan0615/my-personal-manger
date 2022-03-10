@@ -37,3 +37,18 @@ export const createAppWindow = () => {
     appWindow = undefined
   })
 }
+
+
+export const openAppWindow = () => {
+  if (!appWindow) {
+    createAppWindow()
+  } else {
+    appWindow.focus()
+  }
+}
+
+export const destroyAppWindow = () => {
+  if (appWindow) {
+    appWindow.destroy()
+  }
+}

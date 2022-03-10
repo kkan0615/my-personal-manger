@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
-import { createAppWindow } from './windows/app'
+import { createAppWindow, destroyAppWindow, openAppWindow } from './windows/app'
 import { createManagerWindow, destroyManagerWindow, openManagerWindow } from './windows/manager'
 import fs from 'fs/promises'
 import {
@@ -12,6 +12,7 @@ import { electronStore } from './store'
 import isDev from 'electron-is-dev'
 import { createSchedule, deleteSchedule, initSchedule, testSchedule, updateSchedule } from './services/scehdule'
 import { destroyScheduleWindow, openScheduleWindow } from './windows/schedule'
+import { createTray } from './windows/tray'
 
 const checkMangerDir = async () => {
   try {
@@ -34,8 +35,12 @@ app.whenReady()
     } else {
       createAppWindow()
     }
+    /* Init all schedules */
     initSchedule()
+    /* Open manager window */
     createManagerWindow()
+    // Create tray
+    createTray()
 
     ipcMain.handle('get-app-setting', () => {
       return {
@@ -49,6 +54,8 @@ app.whenReady()
     ipcMain.handle('create-schedule', createSchedule)
     ipcMain.handle('update-schedule', updateSchedule)
     ipcMain.handle('delete-schedule', deleteSchedule)
+    ipcMain.on('open-app-window', openAppWindow)
+    ipcMain.on('destroy-app-window', destroyAppWindow)
     ipcMain.on('open-manager-window', openManagerWindow)
     ipcMain.on('destroy-manager-window', destroyManagerWindow)
     ipcMain.on('open-schedule-window', openScheduleWindow)
@@ -58,11 +65,11 @@ app.whenReady()
         createAppWindow()
       }
     })
+
   })
 
 /* When app is ready to open */
 app.on('ready', () => {
-  //
 })
 
 /* When all windows are closed */
