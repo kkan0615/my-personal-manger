@@ -16,7 +16,7 @@ export const initSchedule = () => {
   }
 }
 
-export const getScheduleList = () => {
+export const loadScheduleList = () => {
   return electronStore.get('scheduledJobs') as Schedule[] || [] as Schedule[]
 }
 

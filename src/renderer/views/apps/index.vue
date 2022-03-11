@@ -1,8 +1,8 @@
 <template>
-  <q-layout view="hHh lpR lff">
+  <q-layout view="lHh lpR fFf">
     <q-header
       elevated
-      class="bg-primary text-white"
+      class="bg-white text-black"
     >
       <q-toolbar>
         <q-btn

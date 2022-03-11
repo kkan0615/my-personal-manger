@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
-import { ScheduleCreateForm } from '@/types/schedules'
+import { Schedule, ScheduleCreateForm } from '@/types/schedules'
 import { ipcRenderer } from '@/utils/electron'
 
 export interface ScheduleState {
   scheduleListFilter: any
-  scheduleList: any[]
+  scheduleList: Schedule[]
   scheduleListCount: number
   schedule: any
 }
@@ -66,11 +66,18 @@ export const useScheduleStore = defineStore('schedule', {
     },
     /**
      * Load list of schedule
-     * @param payload - List Filter
+     // * @param payload - List Filter
      */
-    loadScheduleList (payload: any) {
-      this.scheduleList = []
-      this.scheduleListCount = 0
+    async loadScheduleList () {
+      try {
+        const res = (await ipcRenderer.invoke('load-schedule-list')) as Schedule[]
+        console.log(res)
+        this.scheduleList = res
+        this.scheduleListCount = res.length
+      } catch (e) {
+        console.error(e)
+        throw e
+      }
     },
     /**
      * Reset schedule list
@@ -116,8 +123,14 @@ export const useScheduleStore = defineStore('schedule', {
      * Delete schedule by id
      * @param payload - target id
      */
-    deleteSchedule (payload: number) {
-      return 0
+    async deleteSchedule (payload: string) {
+      try {
+        const res = await ipcRenderer.invoke('delete-schedule', payload)
+        return res
+      } catch (e) {
+        console.error(e)
+        throw e
+      }
     }
   }
 })

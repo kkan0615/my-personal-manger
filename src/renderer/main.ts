@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { Quasar } from 'quasar'
+import { Quasar, Notify } from 'quasar'
 import App from './App.vue'
 import { createPinia } from 'pinia'
 import { router } from './router'
@@ -17,11 +17,15 @@ import '@quasar/extras/material-icons-round/material-icons-round.css'
 /* Font awesome v6 */
 import '@/utils/libs/fontAwesomeIcon'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { initDayjsPlugins } from '@/utils/libs/dayjs'
+initDayjsPlugins()
 
 const app = createApp(App)
 app
   .use(Quasar, {
-    plugins: {}
+    plugins: {
+      Notify
+    }
   })
   .use(createPinia())
   .use(router)

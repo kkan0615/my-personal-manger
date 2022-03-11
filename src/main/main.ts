@@ -10,7 +10,14 @@ import {
 } from './services/manager'
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
-import { createSchedule, deleteSchedule, initSchedule, testSchedule, updateSchedule } from './services/scehdule'
+import {
+  createSchedule,
+  deleteSchedule,
+  initSchedule,
+  loadScheduleList,
+  testSchedule,
+  updateSchedule
+} from './services/scehdule'
 import { destroyScheduleWindow, openScheduleWindow } from './windows/schedule'
 import { createTray } from './windows/tray'
 
@@ -32,14 +39,12 @@ app.whenReady()
     }
     if (isDev) {
       testSchedule()
-    } else {
-      createAppWindow()
+      openAppWindow()
     }
     /* Init all schedules */
     initSchedule()
     /* Open manager window */
     createManagerWindow()
-    // Create tray
     createTray()
 
     ipcMain.handle('get-app-setting', () => {
@@ -51,6 +56,7 @@ app.whenReady()
     ipcMain.handle('get-manager-images', getManagerImages)
     ipcMain.handle('get-current-manager-config', getCurrentManagerConfig)
     ipcMain.handle('set-current-manager-config', setCurrentManagerConfig)
+    ipcMain.handle('load-schedule-list', loadScheduleList)
     ipcMain.handle('create-schedule', createSchedule)
     ipcMain.handle('update-schedule', updateSchedule)
     ipcMain.handle('delete-schedule', deleteSchedule)

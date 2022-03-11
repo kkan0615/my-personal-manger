@@ -5,6 +5,7 @@
     show-if-above
     side="left"
     bordered
+    class="bg-grey-10 text-white"
     @update:model-value="onUpdateModelValue"
   >
     <q-list
