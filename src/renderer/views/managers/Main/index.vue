@@ -12,11 +12,17 @@
       class="non-draggable-region"
     >
       <q-btn
-        color="accent"
+        flat
+        rounded
+        color="primary"
+        icon="save"
+        size="lg"
         @mouseenter="throughOff"
         @click="onClickFixBtn"
       >
-        Fix
+        <q-tooltip>
+          Save position
+        </q-tooltip>
       </q-btn>
     </div>
     <div

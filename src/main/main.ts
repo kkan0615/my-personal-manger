@@ -12,7 +12,7 @@ import { electronStore } from './store'
 import isDev from 'electron-is-dev'
 import {
   createSchedule,
-  deleteSchedule,
+  deleteSchedule, deleteSchedulePermanently,
   initSchedule,
   loadScheduleList,
   testSchedule,
@@ -60,6 +60,7 @@ app.whenReady()
     ipcMain.handle('create-schedule', createSchedule)
     ipcMain.handle('update-schedule', updateSchedule)
     ipcMain.handle('delete-schedule', deleteSchedule)
+    ipcMain.handle('delete-schedule-permanently', deleteSchedulePermanently)
     ipcMain.on('open-app-window', openAppWindow)
     ipcMain.on('destroy-app-window', destroyAppWindow)
     ipcMain.on('open-manager-window', openManagerWindow)

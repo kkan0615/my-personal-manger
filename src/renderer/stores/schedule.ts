@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { Schedule, ScheduleCreateForm } from '@/types/schedules'
 import { ipcRenderer } from '@/utils/electron'
+import { deleteSchedulePermanently } from '@main/services/scehdule'
 
 export interface ScheduleState {
   scheduleListFilter: any
@@ -126,6 +127,15 @@ export const useScheduleStore = defineStore('schedule', {
     async deleteSchedule (payload: string) {
       try {
         const res = await ipcRenderer.invoke('delete-schedule', payload)
+        return res
+      } catch (e) {
+        console.error(e)
+        throw e
+      }
+    },
+    async deleteSchedulePermanently (payload: string) {
+      try {
+        const res = await ipcRenderer.invoke('delete-schedule-permanently', payload)
         return res
       } catch (e) {
         console.error(e)

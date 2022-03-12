@@ -2,6 +2,7 @@
   <q-menu
     touch-position
     context-menu
+    @update:model-value="onUpdateModelValue"
   >
     <q-list
       dense
@@ -9,22 +10,87 @@
       @mousemove="throughOff"
     >
       <q-item
-        v-close-popup
         clickable
-        @click="onClickMoveItem"
       >
-        <q-item-section>Move</q-item-section>
-      </q-item>
-      <q-separator />
-      <q-item
-        v-close-popup
-        clickable
-        @click="onClickTodoItem"
-      >
-        <q-item-section>New Todo</q-item-section>
+        <q-item-section>Todo</q-item-section>
+        <q-item-section side>
+          <q-icon name="keyboard_arrow_right" />
+        </q-item-section>
+
+        <q-menu
+          anchor="top end"
+          self="top start"
+        >
+          <q-list
+            dense
+          >
+            <q-item
+              dense
+              clickable
+              @click="onClickTodoItem"
+            >
+              <q-item-section>New Todo</q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item
+              v-close-popup
+              clickable
+              @click="onClickMoveItem"
+            >
+              <q-item-section>Previous Todo</q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item
+              v-close-popup
+              clickable
+            >
+              <q-item-section>Next Todo</q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
       </q-item>
       <!-- Create schedule -->
       <!--      <schedule-form-dialog />-->
+      <q-separator />
+      <q-item
+        clickable
+      >
+        <q-item-section>Config</q-item-section>
+        <q-item-section side>
+          <q-icon name="keyboard_arrow_right" />
+        </q-item-section>
+
+        <q-menu
+          anchor="top end"
+          self="top start"
+        >
+          <q-list
+            dense
+          >
+            <q-item
+              v-close-popup
+              clickable
+            >
+              <q-item-section>Only Event</q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item
+              v-close-popup
+              clickable
+              @click="onClickMoveItem"
+            >
+              <q-item-section>Move Position</q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item
+              v-close-popup
+              clickable
+            >
+              <q-item-section>Volume</q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </q-item>
       <q-separator />
       <q-item clickable>
         <q-item-section>Preferences</q-item-section>
@@ -88,6 +154,10 @@ import ScheduleFormDialog from '@/components/ScheduleFormDialog/index.vue'
 import { ipcRenderer } from '@/utils/electron'
 
 const managerStore = useManagerStore()
+
+const onUpdateModelValue = (value: any) => {
+  console.log(value)
+}
 
 const onClickMoveItem = () => {
   managerStore.setCurrentManagerConfig({

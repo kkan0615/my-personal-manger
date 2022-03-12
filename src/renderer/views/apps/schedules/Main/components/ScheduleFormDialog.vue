@@ -12,10 +12,9 @@
   </q-btn>
   <q-dialog
     v-model="isOpen"
-    full-width
   >
     <q-card
-      class="full-height"
+      style="width: 350px; height: 450px;"
     >
       <q-card-section
         class="full-height"

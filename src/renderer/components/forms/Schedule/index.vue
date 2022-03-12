@@ -215,7 +215,6 @@ export default {
 <script setup lang="ts">
 import { defineEmits, ref } from 'vue'
 import dayjs from 'dayjs'
-import { ipcRenderer } from '@/utils/electron'
 import { useScheduleStore } from '@/stores/schedule'
 import { ScheduleCreateForm } from '@/types/schedules'
 import CRowInput from '@/components/commons/inputs/Row/index.vue'
@@ -264,22 +263,32 @@ const onSubmit = () => {
     /* if it's loop */
     if (loopDays.value.length) {
       Promise.all(loopDays.value.map(loopDay => {
-        const date = `${second.value} ${minute.value} ${hour.value} * * ${loopDay}`
+        const loopStr = `${second.value} ${minute.value} ${hour.value} * * ${loopDay}`
         console.log(date)
         scheduleStore.createSchedule({
           isLoop: true,
-          date,
+          loopStr: loopStr,
+          day: loopDay,
+          hours: hour.value,
+          minutes: minute.value,
+          seconds: second.value,
+          date: dayjs().toDate(),
           content: content.value
         } as ScheduleCreateForm)
       }))
     } else {
+      const formatDate = dayjs(date.value)
+        .set('hours', hour.value)
+        .set('minutes', minute.value)
+        .set('seconds', second.value)
       scheduleStore.createSchedule({
         isLoop: false,
-        date: dayjs(date.value)
-          .set('hours', hour.value)
-          .set('minutes', minute.value)
-          .set('seconds', second.value)
-          .toDate(),
+        loopStr: '',
+        day: formatDate.day(),
+        hours: formatDate.hour(),
+        minutes: formatDate.minute(),
+        seconds: formatDate.second(),
+        date: formatDate.toDate(),
         content: content.value
       } as ScheduleCreateForm)
     }

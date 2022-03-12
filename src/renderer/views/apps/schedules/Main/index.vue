@@ -23,7 +23,6 @@
     </div>
     <q-table
       style="height: 85vh"
-      title="Schedule list"
       :rows="dataRows"
       :columns="columns"
       :visible-columns="visibleColumns"
@@ -50,6 +49,23 @@
           </q-btn>
         </q-td>
       </template>
+      <template
+        #top
+      >
+        <div
+          class="row items-center full-width"
+        >
+          <div>
+            Schedule list
+          </div>
+          <q-toggle
+            v-model="isIncludeDelete"
+            class="q-ml-auto"
+            label="Display Deleted"
+            color="pink"
+          />
+        </div>
+      </template>
     </q-table>
   </q-page>
 </template>
@@ -64,6 +80,7 @@ import CLayoutMenubar from '@/components/commons/layouts/Menubar/index.vue'
 import { useScheduleStore } from '@/stores/schedule'
 import dayjs from 'dayjs'
 import AppScheduleMainScheduleFormDialog from '@/views/apps/schedules/Main/components/ScheduleFormDialog.vue'
+import { Schedule } from '@/types/schedules'
 
 const scheduleStore = useScheduleStore()
 
@@ -94,12 +111,18 @@ const columns = ref([
   },
 ])
 const visibleColumns = ref(['date', 'content', 'action'])
+const isIncludeDelete = ref(false)
 
 const dataRows = computed(() => {
-  return scheduleStore.ScheduleList.map(schedule => {
+  let scheduleList: Schedule[] = scheduleStore.ScheduleList
+  console.log('test', isIncludeDelete.value)
+  if (!isIncludeDelete.value) {
+    scheduleList = scheduleList.filter(schedule => !schedule.deletedAt)
+  }
+  return scheduleList.map(schedule => {
     let date = ''
     if (schedule.isLoop) {
-      const splitDate = schedule.date.split(' ')
+      const splitDate = schedule.date.toString().split(' ')
       date += 'Every '
       switch (parseInt(splitDate[5])) {
         case 0:
@@ -127,7 +150,11 @@ const dataRows = computed(() => {
 
       date += ` ${splitDate[2].toString().padStart(2, '0')}:${splitDate[1].toString().padStart(2, '0')}:${splitDate[0].toString().padStart(2, '0')}`
     } else {
-      date = dayjs(schedule.date).fromNow()
+      if (!schedule.deletedAt)
+        date = dayjs(schedule.date).fromNow()
+      else {
+        date = dayjs(schedule.date).format('lll')
+      }
     }
 
     return {
@@ -159,7 +186,7 @@ const initPage = async () => {
 const onClickDeleteBtn = async (props: any) => {
   if (confirm('Would you like to delete?')) {
     try {
-      await scheduleStore.deleteSchedule(props.key)
+      await scheduleStore.deleteSchedulePermanently(props.key)
       alert('success to delete')
       await initPage()
     } catch (e) {

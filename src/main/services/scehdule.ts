@@ -17,12 +17,12 @@ export const initSchedule = () => {
 }
 
 export const loadScheduleList = () => {
-  return electronStore.get('scheduledJobs') as Schedule[] || [] as Schedule[]
+  return  electronStore.get('scheduledJobs') as Schedule[] || [] as Schedule[]
 }
 
 export const createSchedule = (event: IpcMainInvokeEvent | null, payload: ScheduleCreateForm) => {
   const scheduledJobs = electronStore.get('scheduledJobs') as Schedule[] || [] as Schedule[]
-  const job = scheduleJob(payload.isLoop ? payload.date : dayjs(payload.date).toDate(), () => {
+  const job = scheduleJob(payload.isLoop ? payload.loopStr : payload.date, () => {
     if (managerWindow) {
       managerWindow.webContents.send('listen-schedule', payload.content)
       if (!payload.isLoop)
@@ -33,6 +33,8 @@ export const createSchedule = (event: IpcMainInvokeEvent | null, payload: Schedu
   const scheduledJob = {
     ...payload,
     name: job.name,
+    createdAt: dayjs().toISOString(),
+    updatedAt: dayjs().toISOString(),
   } as Schedule
 
   scheduledJobs.push(scheduledJob)
@@ -53,7 +55,25 @@ export const deleteSchedule = (event: IpcMainInvokeEvent | null, payload: string
   const foundJob = scheduledJobs.find(scheduledJob => scheduledJob.name === payload)
   if (foundJob) {
     const foundByName = nodeScheduledJobs[foundJob.name]
-    foundByName.cancel()
+    if (foundByName)
+      foundByName.cancel()
+    scheduledJobs.splice(scheduledJobs.indexOf(foundJob), 1)
+    foundJob.updatedAt = dayjs().toISOString()
+    foundJob.deletedAt = dayjs().toISOString()
+    scheduledJobs.push(foundJob)
+  }
+
+  electronStore.set('scheduledJobs', scheduledJobs)
+  return foundJob
+}
+
+export const deleteSchedulePermanently = (event: IpcMainInvokeEvent | null, payload: string) => {
+  const scheduledJobs = electronStore.get('scheduledJobs') as Schedule[]
+  const foundJob = scheduledJobs.find(scheduledJob => scheduledJob.name === payload)
+  if (foundJob) {
+    const foundByName = nodeScheduledJobs[foundJob.name]
+    if (foundByName)
+      foundByName.cancel()
     scheduledJobs.splice(scheduledJobs.indexOf(foundJob), 1)
   }
 
