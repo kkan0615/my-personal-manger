@@ -272,7 +272,7 @@ const onSubmit = () => {
           hours: hour.value,
           minutes: minute.value,
           seconds: second.value,
-          date: dayjs().toDate(),
+          date: dayjs().startOf('date').toDate(),
           content: content.value
         } as ScheduleCreateForm)
       }))
@@ -288,7 +288,7 @@ const onSubmit = () => {
         hours: formatDate.hour(),
         minutes: formatDate.minute(),
         seconds: formatDate.second(),
-        date: formatDate.toDate(),
+        date: formatDate.startOf('date').toDate(),
         content: content.value
       } as ScheduleCreateForm)
     }
