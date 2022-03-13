@@ -28,10 +28,14 @@
     </c-row-input>
     <!-- date -->
     <c-row-input>
+      <c-row-input-label>
+        Date
+      </c-row-input-label>
       <c-row-input-content>
         <q-input
           v-if="!loopDays.length"
           v-model="date"
+          outlined
           placeholder="Date"
           class="full-width"
           dense
@@ -65,13 +69,14 @@
       </c-row-input-label>
       <c-row-input-content>
         <q-field
-          class="full-width q-pb-sm"
+          class="full-width q-pb-sm q-px-none"
         >
           <div
-            class="full-width row justify-center items-center q-mb-sm"
+            class="full-width row justify-center items-center q-pa-none"
           >
             <q-select
               v-model="hour"
+              outlined
               class="col-grow q-pr-sm"
               placeholder="Hour"
               dense
@@ -92,6 +97,7 @@
             </q-select>
             <q-select
               v-model="minute"
+              outlined
               class="col-grow q-px-sm"
               placeholder="Minute"
               dense
@@ -112,11 +118,12 @@
             </q-select>
             <q-select
               v-model="second"
+              outlined
               class="col-grow q-pl-sm"
               placeholder="Second"
               hide-dropdown-icon
-              dense
               options-dense
+              dense
               :options="secondOptions"
               popup-content-style="height: 200px;"
             >
@@ -176,9 +183,13 @@
       </q-btn>
     </q-btn-group>
     <c-row-input>
+      <c-row-input-label>
+        Content
+      </c-row-input-label>
       <c-row-input-content>
         <q-input
           v-model="content"
+          outlined
           dense
           placeholder="Content"
           autogrow
@@ -220,6 +231,7 @@ import { ScheduleCreateForm } from '@/types/schedules'
 import CRowInput from '@/components/commons/inputs/Row/index.vue'
 import CRowInputContent from '@/components/commons/inputs/Row/components/Content.vue'
 import CRowInputLabel from '@/components/commons/inputs/Row/components/Label.vue'
+import { useQuasar } from 'quasar'
 
 const dayOptions = [
   { label: 'sun', value: 0 },
@@ -236,6 +248,7 @@ const secondOptions = Array.from(Array(60).keys())
 
 const emits = defineEmits(['finish:save'])
 
+const $q = useQuasar()
 const scheduleStore = useScheduleStore()
 
 const isSaveBtnLoading = ref(false)
@@ -257,15 +270,15 @@ const initData = () => {
 
 initData()
 
-const onSubmit = () => {
+const onSubmit = async () => {
   try {
     isSaveBtnLoading.value = true
     /* if it's loop */
     if (loopDays.value.length) {
-      Promise.all(loopDays.value.map(loopDay => {
+      await Promise.all(loopDays.value.map(async loopDay => {
         const loopStr = `${second.value} ${minute.value} ${hour.value} * * ${loopDay}`
         console.log(date)
-        scheduleStore.createSchedule({
+        await scheduleStore.createSchedule({
           isLoop: true,
           loopStr: loopStr,
           day: loopDay,
@@ -281,22 +294,29 @@ const onSubmit = () => {
         .set('hours', hour.value)
         .set('minutes', minute.value)
         .set('seconds', second.value)
-      scheduleStore.createSchedule({
+      await scheduleStore.createSchedule({
         isLoop: false,
         loopStr: '',
         day: formatDate.day(),
         hours: formatDate.hour(),
         minutes: formatDate.minute(),
         seconds: formatDate.second(),
-        date: formatDate.startOf('date').toDate(),
+        date: formatDate.toDate(),
         content: content.value
       } as ScheduleCreateForm)
     }
-    isSaveBtnLoading.value = false
     /* If success, off the schedule window */
     emits('finish:save')
   } catch (e) {
     console.error(e)
+    $q.notify({
+      icon: 'report_problem',
+      color: 'negative',
+      message: 'Fail to save',
+      position: 'bottom-right'
+    })
+  } finally {
+    isSaveBtnLoading.value = false
   }
 }
 

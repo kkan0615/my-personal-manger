@@ -10,7 +10,7 @@ export const createScheduleWindow = () => {
   scheduleWindow = new BrowserWindow({
     title: 'Schedule',
     width: 350,
-    height: 450,
+    height: 500,
     alwaysOnTop: isDev,
     autoHideMenuBar: true,
     maximizable: true,

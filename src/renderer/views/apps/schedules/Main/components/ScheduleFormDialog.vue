@@ -13,11 +13,24 @@
   <q-dialog
     v-model="isOpen"
   >
-    <q-card
-      style="width: 350px; height: 450px;"
-    >
+    <q-card>
+      <!-- Header -->
+      <q-card-section class="row items-center q-py-sm bg-primary text-white">
+        <div class="text-h6">
+          New Schedule
+        </div>
+        <q-space />
+        <q-btn
+          v-close-popup
+          icon="close"
+          flat
+          round
+          dense
+        />
+      </q-card-section>
+      <q-separator />
       <q-card-section
-        class="full-height"
+        style="width: 350px; height: 500px;"
       >
         <form-schedule
           @finish:save="onFinishSave"
@@ -43,7 +56,10 @@ const scheduleStore = useScheduleStore()
 const isOpen = ref(false)
 
 const onFinishSave = async () => {
-  $q.notify('success to save')
+  $q.notify({
+    message: 'success to save',
+    position: 'bottom-right'
+  })
   await scheduleStore.loadScheduleList()
   isOpen.value = false
 }

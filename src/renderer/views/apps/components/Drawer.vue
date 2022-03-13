@@ -12,7 +12,11 @@
       bordered
       separator
     >
+      <q-item-label header>
+        Menu
+      </q-item-label>
       <q-item
+        active-class="bg-primary text-white"
         :to="{ name: 'AppManagerMain' }"
         clickable
         exact
@@ -23,6 +27,7 @@
         <q-item-section>Manager</q-item-section>
       </q-item>
       <q-item
+        active-class="bg-primary text-white"
         :to="{ name: 'AppScheduleMain' }"
         clickable
         exact
@@ -33,6 +38,7 @@
         <q-item-section>Schedule</q-item-section>
       </q-item>
       <q-item
+        active-class="bg-primary text-white"
         :to="{ name: 'AppSettingMain' }"
         clickable
         exact

@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { Schedule, ScheduleCreateForm } from '@/types/schedules'
 import { ipcRenderer } from '@/utils/electron'
-import { deleteSchedulePermanently } from '@main/services/scehdule'
 
 export interface ScheduleState {
   scheduleListFilter: any

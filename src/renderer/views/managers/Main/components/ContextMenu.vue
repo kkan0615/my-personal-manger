@@ -12,7 +12,7 @@
       <q-item
         clickable
       >
-        <q-item-section>Todo</q-item-section>
+        <q-item-section>Schedule</q-item-section>
         <q-item-section side>
           <q-icon name="keyboard_arrow_right" />
         </q-item-section>
@@ -29,7 +29,7 @@
               clickable
               @click="onClickTodoItem"
             >
-              <q-item-section>New Todo</q-item-section>
+              <q-item-section>New Schedule</q-item-section>
             </q-item>
             <q-separator />
             <q-item
@@ -37,14 +37,14 @@
               clickable
               @click="onClickMoveItem"
             >
-              <q-item-section>Previous Todo</q-item-section>
+              <q-item-section>Previous Schedule</q-item-section>
             </q-item>
             <q-separator />
             <q-item
               v-close-popup
               clickable
             >
-              <q-item-section>Next Todo</q-item-section>
+              <q-item-section>Next Schedule</q-item-section>
             </q-item>
           </q-list>
         </q-menu>

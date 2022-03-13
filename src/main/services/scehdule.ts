@@ -22,13 +22,16 @@ export const loadScheduleList = () => {
 
 export const createSchedule = (event: IpcMainInvokeEvent | null, payload: ScheduleCreateForm) => {
   const scheduledJobs = electronStore.get('scheduledJobs') as Schedule[] || [] as Schedule[]
-  const job = scheduleJob(payload.isLoop ? payload.loopStr : payload.date, () => {
+  const job = scheduleJob(payload.isLoop ? payload.loopStr : dayjs(payload.date).toDate(), () => {
     if (managerWindow) {
       managerWindow.webContents.send('listen-schedule', payload.content)
       if (!payload.isLoop)
         deleteSchedule(event, job.name)
     }
   })
+  if (!job) {
+    throw 'fail to assign job'
+  }
 
   const scheduledJob = {
     ...payload,

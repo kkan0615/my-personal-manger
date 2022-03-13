@@ -22,7 +22,7 @@
       <app-schedule-main-schedule-form-dialog />
     </div>
     <q-table
-      style="height: 85vh"
+      style="height: 81vh"
       :rows="dataRows"
       :columns="columns"
       :visible-columns="visibleColumns"
@@ -81,7 +81,9 @@ import { useScheduleStore } from '@/stores/schedule'
 import dayjs from 'dayjs'
 import AppScheduleMainScheduleFormDialog from '@/views/apps/schedules/Main/components/ScheduleFormDialog.vue'
 import { Schedule } from '@/types/schedules'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const scheduleStore = useScheduleStore()
 
 const isTableLoading = ref(false)
@@ -96,6 +98,7 @@ const columns = ref([
     label: 'date',
     field: 'date',
     align: 'left',
+    style: 'width: 200px;'
   },
   {
     name: 'content',
@@ -104,25 +107,35 @@ const columns = ref([
     align: 'left',
   },
   {
+    name: 'updatedAt',
+    label: 'last Updated At',
+    field: 'updatedAt',
+    align: 'left',
+    style: 'width: 100px;',
+    format: (val: string) => {
+      return dayjs(val).format('ll')
+    }
+  },
+  {
     name: 'action',
     label: 'action',
     field: 'action',
     align: 'center',
+    style: 'width: 80px;'
   },
 ])
-const visibleColumns = ref(['date', 'content', 'action'])
+const visibleColumns = ref(['date', 'content', 'updatedAt', 'action'])
 const isIncludeDelete = ref(false)
 
 const dataRows = computed(() => {
   let scheduleList: Schedule[] = scheduleStore.ScheduleList
-  console.log('test', isIncludeDelete.value)
   if (!isIncludeDelete.value) {
     scheduleList = scheduleList.filter(schedule => !schedule.deletedAt)
   }
   return scheduleList.map(schedule => {
     let date = ''
     if (schedule.isLoop) {
-      const splitDate = schedule.date.toString().split(' ')
+      const splitDate = schedule.loopStr.split(' ')
       date += 'Every '
       switch (parseInt(splitDate[5])) {
         case 0:
@@ -150,11 +163,11 @@ const dataRows = computed(() => {
 
       date += ` ${splitDate[2].toString().padStart(2, '0')}:${splitDate[1].toString().padStart(2, '0')}:${splitDate[0].toString().padStart(2, '0')}`
     } else {
-      if (!schedule.deletedAt)
-        date = dayjs(schedule.date).fromNow()
-      else {
-        date = dayjs(schedule.date).format('lll')
-      }
+      // if (!schedule.deletedAt)
+      //   date = dayjs(schedule.date).fromNow()
+      // else {
+      date = dayjs(schedule.date).format('lll')
+      // }
     }
 
     return {
@@ -166,7 +179,6 @@ const dataRows = computed(() => {
   })
 })
 
-/* Load schedule list */
 onBeforeMount(async () => {
   await initPage()
 })
@@ -186,8 +198,12 @@ const initPage = async () => {
 const onClickDeleteBtn = async (props: any) => {
   if (confirm('Would you like to delete?')) {
     try {
+      /* Delete permanently */
       await scheduleStore.deleteSchedulePermanently(props.key)
-      alert('success to delete')
+      $q.notify({
+        message: 'Success to delete Permanently',
+        position: 'bottom-right'
+      })
       await initPage()
     } catch (e) {
       console.error(e)
