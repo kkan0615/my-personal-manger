@@ -191,12 +191,23 @@ export const useManagerStore = defineStore('manager', {
       if (this.messageTimer) {
         this.resetTimer()
       }
-      const randScheduleScript = getRandElInArr(this.currentManager.randScheduleScriptList)
+      const randScheduleScript = getRandElInArr(this.currentManager.scheduleScriptList)
       this.setMessage({
         //@schedule
         ...randScheduleScript,
         message: randScheduleScript.message.replaceAll('@schedule', payload),
       })
+    },
+    /**
+     * When manger is opened
+     */
+    helloManager () {
+      if (this.messageTimer) {
+        this.resetTimer()
+      }
+      // @TODO: Add logic for birthday
+      const randHelloScript = getRandElInArr(this.currentManager.helloScriptList)
+      this.setMessage(randHelloScript)
     },
     /**
      * When touch or click the manager
@@ -205,14 +216,8 @@ export const useManagerStore = defineStore('manager', {
       if (this.messageTimer) {
         this.resetTimer()
       }
-      const randClickMsg = getRandElInArr(this.currentManager.randClickScriptList)
+      const randClickMsg = getRandElInArr(this.currentManager.clickScriptList)
       this.setMessage(randClickMsg)
-    },
-    /**
-     * When manger is opened
-     */
-    helloManager () {
-    // @TODO: Create hello manager script
     },
     /**
      * Load current manager <br>

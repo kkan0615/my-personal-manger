@@ -6,6 +6,8 @@ export interface Manager {
   color?: string
   gender: 'male' | 'female' | 'unknown'
   age?: number
-  randScheduleScriptList: ManagerScript[]
-  randClickScriptList: ManagerScript[]
+  birthdayScript: ManagerScript
+  helloScriptList: ManagerScript[]
+  scheduleScriptList: ManagerScript[]
+  clickScriptList: ManagerScript[]
 }

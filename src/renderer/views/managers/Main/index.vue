@@ -1,7 +1,6 @@
 <template>
   <div
     class="relative-position window-height"
-    style="height: 100vh"
     :class="{
       'draggable-region': managerStore.CurrentMangerConfig.isPossibleMove,
     }"
@@ -59,7 +58,7 @@ const managerCanvasRef = ref<HTMLCanvasElement>()
 
 onMounted(() => {
   initCanvas()
-  managerStore.setMessageStr('on mounted')
+  managerStore.helloManager()
 })
 
 onBeforeUnmount(() => {
