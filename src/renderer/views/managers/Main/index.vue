@@ -96,7 +96,6 @@ const onMouseMove = (e: MouseEvent) => {
 }
 const initCanvas = async () => {
   const img = new Image()
-  const file = (await ipcRenderer.invoke('get-manager-images', { id: 'test1' })).main
   img.src = window.URL.createObjectURL(new Blob([managerStore.CurrentManger.main]))
   img.onload = () => {
     const ctx = managerCanvasRef.value?.getContext('2d')

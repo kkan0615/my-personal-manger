@@ -25,6 +25,7 @@
             dense
           >
             <q-item
+              v-close-popup
               dense
               clickable
               @click="onClickTodoItem"

@@ -16,7 +16,8 @@
         Menu
       </q-item-label>
       <q-item
-        active-class="bg-primary text-white"
+        class="q-mx-sm"
+        active-class="bg-grey-8 text-white q-mx-sm q-badge--rounded app-item--active"
         :to="{ name: 'AppManagerMain' }"
         clickable
         exact
@@ -27,7 +28,8 @@
         <q-item-section>Manager</q-item-section>
       </q-item>
       <q-item
-        active-class="bg-primary text-white"
+        class="q-mx-sm"
+        active-class="bg-grey-8 text-white q-mx-sm q-badge--rounded app-item--active"
         :to="{ name: 'AppScheduleMain' }"
         clickable
         exact
@@ -38,7 +40,8 @@
         <q-item-section>Schedule</q-item-section>
       </q-item>
       <q-item
-        active-class="bg-primary text-white"
+        class="q-mx-sm"
+        active-class="bg-grey-8 text-white q-mx-sm q-badge--rounded app-item--active"
         :to="{ name: 'AppSettingMain' }"
         clickable
         exact
@@ -65,3 +68,11 @@ const onUpdateModelValue = (isOpen: boolean) => {
   windowStore.setIsOpenAppWindowDrawer(isOpen)
 }
 </script>
+<style
+  lang="scss"
+  scoped
+>
+.app-item--active {
+  min-height: 40px !important;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="col-lg-2 col-sm-12"
+    class="col-3 text-caption"
   >
     <slot />
   </div>

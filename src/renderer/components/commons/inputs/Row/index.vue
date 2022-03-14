@@ -1,6 +1,6 @@
 <template>
   <div
-    class="row-lg"
+    class="row"
   >
     <slot />
   </div>
