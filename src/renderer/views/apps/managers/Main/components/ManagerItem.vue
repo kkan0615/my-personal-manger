@@ -1,5 +1,29 @@
 <template>
-  <q-card>
+  <q-card
+    @click="onClickCard"
+  >
+    <q-dialog
+      v-model="isOpenDetail"
+    >
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">
+            {{ manager.name }}
+          </div>
+          <q-space />
+          <q-btn
+            v-close-popup
+            icon="close"
+            flat
+            round
+            dense
+          />
+        </q-card-section>
+        <app-manager-main-manager-detail
+          :manager="manager"
+        />
+      </q-card>
+    </q-dialog>
     <q-card-section>
       <div>
         <q-img
@@ -82,6 +106,7 @@ import CRowInput from '@/components/commons/inputs/Row/index.vue'
 import CRowInputLabel from '@/components/commons/inputs/Row/components/Label.vue'
 import CRowInputContent from '@/components/commons/inputs/Row/components/Content.vue'
 import { useManagerStore } from '@/stores/manager'
+import AppManagerMainManagerDetail from '@/views/apps/managers/Main/components/ManagerDetail.vue'
 
 const props = defineProps({
   manager: {
@@ -93,10 +118,15 @@ const props = defineProps({
 
 const managerStore = useManagerStore()
 
-const src = computed(() => props.manager ? window.URL.createObjectURL(new Blob([props.manager.main])) : '')
+const isOpenDetail = ref(false)
 
+const src = computed(() => props.manager ? window.URL.createObjectURL(new Blob([props.manager.main])) : '')
 
 const onClickSetManagerBtn = () => {
   console.log('onClickSetManagerBtn')
+}
+
+const onClickCard = () => {
+  isOpenDetail.value = true
 }
 </script>
