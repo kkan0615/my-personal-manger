@@ -15,21 +15,7 @@ const setMessageSound = async (managerId: string, script: ManagerScript) => {
 
 export const getCurrentManager = async () => {
   const currentManagerId = electronStore.get('currentManagerId') as string || 'default'
-  const filePath = `${app.getPath('documents')}/${app.getName()}/${currentManagerId}`
-  const managerJson = JSON.parse((await fs.readFile(`${filePath}/manager.json`, 'utf-8'))) as Manager
-  /* Set the sound file */
-  managerJson.birthdayScript = await setMessageSound(currentManagerId, managerJson.birthdayScript)
-  managerJson.helloScriptList = await Promise.all(managerJson.helloScriptList.map(async (script) => setMessageSound(currentManagerId, script)))
-  managerJson.scheduleScriptList = await Promise.all(managerJson.scheduleScriptList.map(async (script) => setMessageSound(currentManagerId, script)))
-  managerJson.clickScriptList = await Promise.all(managerJson.clickScriptList.map(async (script) => setMessageSound(currentManagerId, script)))
-
-  return {
-    data: {
-      ...managerJson,
-      id: currentManagerId,
-      main: await fs.readFile(`${filePath}/${managerJson.mainImg}`),
-    }
-  }
+  return findManagerById(null, currentManagerId)
 }
 
 export const getManagerImages = async (event: IpcMainInvokeEvent, args: { id: string }) => {
@@ -47,4 +33,33 @@ export const setCurrentManagerConfig = async (event: IpcMainInvokeEvent, args: a
   electronStore.set('managerWindow', {
     volume: args.volume
   })
+}
+
+export const finaManagerAll =  async (event: IpcMainInvokeEvent | null) => {
+  const directoryList = await fs.readdir(`${app.getPath('documents')}/${app.getName()}/`)
+  console.log(directoryList)
+  return {
+    rows: await Promise.all(directoryList.map(async dirName => {
+      return (await findManagerById(event, dirName)).data
+    })),
+    count: directoryList.length
+  }
+}
+
+export const findManagerById = async (event: IpcMainInvokeEvent | null, payload: string) => {
+  const filePath = `${app.getPath('documents')}/${app.getName()}/${payload}`
+  const managerJson = JSON.parse((await fs.readFile(`${filePath}/manager.json`, 'utf-8'))) as Manager
+  /* Set the sound file */
+  managerJson.birthdayScript = await setMessageSound(payload, managerJson.birthdayScript)
+  managerJson.helloScriptList = await Promise.all(managerJson.helloScriptList.map(async (script) => setMessageSound(payload, script)))
+  managerJson.scheduleScriptList = await Promise.all(managerJson.scheduleScriptList.map(async (script) => setMessageSound(payload, script)))
+  managerJson.clickScriptList = await Promise.all(managerJson.clickScriptList.map(async (script) => setMessageSound(payload, script)))
+
+  return {
+    data: {
+      ...managerJson,
+      id: payload,
+      main: await fs.readFile(`${filePath}/${managerJson.mainImg}`),
+    }
+  }
 }

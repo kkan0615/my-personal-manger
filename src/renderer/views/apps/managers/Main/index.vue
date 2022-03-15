@@ -21,6 +21,18 @@
           Manager List
         </q-card-section>
         <q-separator />
+        <q-card-section>
+          <div
+            class="row q-gutter-sm"
+          >
+            <app-manager-main-manager-item
+              v-for="manager in managerStore.ManagerList"
+              :key="manager.id"
+              class="col-xs-12 col-sm-12 col-md-4 col-lg-3"
+              :manager="manager"
+            />
+          </div>
+        </q-card-section>
       </q-card>
     </div>
   </q-page>
@@ -35,11 +47,14 @@ import { computed, ref } from 'vue'
 import CLayoutMenubar from '@/components/commons/layouts/Menubar/index.vue'
 import { useManagerStore } from '@/stores/manager'
 import AppManagerMainCurrentManager from '@/views/apps/managers/Main/components/CurrentManager.vue'
+import AppManagerMainManagerItem from '@/views/apps/managers/Main/components/ManagerItem.vue'
 
 const managerStore = useManagerStore()
 
 const src = computed(() => window.URL.createObjectURL(new Blob([managerStore.CurrentManger.main])))
 
+/* Created */
+managerStore.loadManagerList({})
 
 const onClickEditBtn = () => {
   console.log('onClickEditBtn')

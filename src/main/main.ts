@@ -3,6 +3,8 @@ import { createAppWindow, destroyAppWindow, openAppWindow } from './windows/app'
 import { createManagerWindow, destroyManagerWindow, openManagerWindow } from './windows/manager'
 import fs from 'fs/promises'
 import {
+  finaManagerAll,
+  findManagerById,
   getCurrentManager,
   getCurrentManagerConfig,
   getManagerImages,
@@ -56,6 +58,8 @@ app.whenReady()
     ipcMain.handle('get-manager-images', getManagerImages)
     ipcMain.handle('get-current-manager-config', getCurrentManagerConfig)
     ipcMain.handle('set-current-manager-config', setCurrentManagerConfig)
+    ipcMain.handle('find-manager-by-id', findManagerById)
+    ipcMain.handle('find-manager-all', finaManagerAll)
     ipcMain.handle('load-schedule-list', loadScheduleList)
     ipcMain.handle('create-schedule', createSchedule)
     ipcMain.handle('update-schedule', updateSchedule)

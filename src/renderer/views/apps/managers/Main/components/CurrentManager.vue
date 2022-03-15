@@ -14,10 +14,9 @@
       class="q-py-sm"
     >
       <div
-        class="text-right"
+        class="text-right q-gutter-sm"
       >
         <q-btn
-          class="q-mr-sm"
           round
           color="primary"
           icon="edit"

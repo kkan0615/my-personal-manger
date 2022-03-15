@@ -5,6 +5,8 @@ import { DEFAULT_MANAGER_MESSAGE_TIMEOUT } from '@/types/managers'
 import { getRandElInArr } from '@/utils/commons'
 import { useSettingStore } from '@/stores/setting'
 import { ManagerConfig } from '@/types/managers/config'
+import { SelectListResult } from '@/types/commons/server'
+import { Manager } from '@main/types/managers'
 
 export interface ManagerState {
   currentManager: any
@@ -265,9 +267,11 @@ export const useManagerStore = defineStore('manager', {
      * Load list of manager
      * @param payload - List Filter
      */
-    loadManagerList (payload: any) {
-      this.managerList = []
-      this.managerListCount = 0
+    async loadManagerList (payload: any) {
+      const res = await ipcRenderer.invoke('find-manager-all') as SelectListResult<Manager>
+      console.log('res', res)
+      this.managerList = res.rows
+      this.managerListCount = res.count
     },
     /**
      * Reset Manager list
