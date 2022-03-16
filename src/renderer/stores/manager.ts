@@ -312,6 +312,13 @@ export const useManagerStore = defineStore('manager', {
      */
     deleteManager (payload: number) {
       return 0
+    },
+    /**
+     * Change current manager
+     * @param payload - id of manager
+     */
+    async changeCurrentManager (payload: string) {
+      await ipcRenderer.invoke('update-current-manager', payload)
     }
   }
 })

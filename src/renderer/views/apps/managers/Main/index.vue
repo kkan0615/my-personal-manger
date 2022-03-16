@@ -12,7 +12,7 @@
         class="q-mr-sm"
         style="width: 350px;"
       />
-      <q-card
+      <div
         class="col-grow q-ml-sm"
       >
         <q-card-section
@@ -21,19 +21,24 @@
           Manager List
         </q-card-section>
         <q-separator />
-        <q-card-section>
+        <q-card-section
+          class="q-pa-sm"
+        >
           <div
-            class="row q-gutter-sm"
+            class="row q-col-gutter-sm"
           >
-            <app-manager-main-manager-item
+            <div
               v-for="manager in managerStore.ManagerList"
               :key="manager.id"
-              class="col-xs-12 col-sm-12 col-md-4 col-lg-3"
-              :manager="manager"
-            />
+              class="col-xs-12 col-sm-12 col-md-6 col-lg-3"
+            >
+              <app-manager-main-manager-item
+                :manager="manager"
+              />
+            </div>
           </div>
         </q-card-section>
-      </q-card>
+      </div>
     </div>
   </q-page>
 </template>

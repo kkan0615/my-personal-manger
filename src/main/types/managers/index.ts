@@ -1,6 +1,7 @@
 import { ManagerScript } from './script'
 
 export interface Manager {
+  id: string
   mainImg: string
   name: string
   color?: string
@@ -10,4 +11,8 @@ export interface Manager {
   helloScriptList: ManagerScript[]
   scheduleScriptList: ManagerScript[]
   clickScriptList: ManagerScript[]
+}
+
+export interface ManagerInfo extends Manager{
+  main: Blob
 }

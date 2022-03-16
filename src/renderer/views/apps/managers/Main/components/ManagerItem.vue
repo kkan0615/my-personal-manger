@@ -5,7 +5,9 @@
     <q-dialog
       v-model="isOpenDetail"
     >
-      <q-card>
+      <q-card
+        style="width: 700px; max-width: 80vw;"
+      >
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">
             {{ manager.name }}
@@ -66,31 +68,40 @@
     </q-card-section>
     <q-separator />
     <q-card-section
-      class="text-right q-gutter-sm q-py-sm"
+      class="q-pa-sm row"
     >
-      <q-btn
-        round
-        color="primary"
-        icon="edit"
-        size="sm"
-        @click="onClickSetManagerBtn"
+      <q-badge
+        v-if="managerStore.CurrentManger.id === manager.id"
       >
-        <q-tooltip>
-          Edit manager
-        </q-tooltip>
-      </q-btn>
-      <q-btn
-        round
-        :disable="managerStore.CurrentManger.id === manager.id"
-        color="primary"
-        icon="published_with_changes"
-        size="sm"
-        @click="onClickSetManagerBtn"
+        current
+      </q-badge>
+      <div
+        class="q-ml-auto q-gutter-sm "
       >
-        <q-tooltip>
-          Set manager
-        </q-tooltip>
-      </q-btn>
+        <q-btn
+          round
+          color="primary"
+          icon="edit"
+          size="sm"
+          @click="onClickEditBtn"
+        >
+          <q-tooltip>
+            Edit manager
+          </q-tooltip>
+        </q-btn>
+        <q-btn
+          round
+          :disable="managerStore.CurrentManger.id === manager.id"
+          color="primary"
+          icon="published_with_changes"
+          size="sm"
+          @click.stop="onClickSetManagerBtn"
+        >
+          <q-tooltip>
+            Set manager
+          </q-tooltip>
+        </q-btn>
+      </div>
     </q-card-section>
   </q-card>
 </template>
@@ -101,29 +112,52 @@ export default {
 </script>
 <script setup lang="ts">
 import { computed, defineProps, PropType, ref } from 'vue'
-import { Manager } from '@main/types/managers'
+import { ManagerInfo } from '@main/types/managers'
 import CRowInput from '@/components/commons/inputs/Row/index.vue'
 import CRowInputLabel from '@/components/commons/inputs/Row/components/Label.vue'
 import CRowInputContent from '@/components/commons/inputs/Row/components/Content.vue'
 import { useManagerStore } from '@/stores/manager'
 import AppManagerMainManagerDetail from '@/views/apps/managers/Main/components/ManagerDetail.vue'
+import { useQuasar } from 'quasar'
 
 const props = defineProps({
   manager: {
-    type: Object as PropType<Manager>,
+    type: Object as PropType<ManagerInfo>,
     required: true,
     default: () => {}
   }
 })
 
+const $q = useQuasar()
 const managerStore = useManagerStore()
 
 const isOpenDetail = ref(false)
 
 const src = computed(() => props.manager ? window.URL.createObjectURL(new Blob([props.manager.main])) : '')
 
-const onClickSetManagerBtn = () => {
-  console.log('onClickSetManagerBtn')
+const onClickEditBtn = () => {
+  console.log('onClickEditBtn')
+}
+
+const onClickSetManagerBtn = async () => {
+  try {
+    if (props.manager) {
+      await managerStore.changeCurrentManager(props.manager.id)
+      await managerStore.loadCurrentManager()
+      $q.notify({
+        message: 'Success to change current manager',
+        position: 'bottom-right'
+      })
+    }
+  } catch (e) {
+    console.error(e)
+    $q.notify({
+      icon: 'report_problem',
+      color: 'negative',
+      message: 'Fail to change',
+      position: 'bottom-right'
+    })
+  }
 }
 
 const onClickCard = () => {

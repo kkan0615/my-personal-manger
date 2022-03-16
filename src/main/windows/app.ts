@@ -8,8 +8,8 @@ export let appWindow: BrowserWindow | undefined
 export const createAppWindow = () => {
   appWindow = new BrowserWindow({
     title: 'App',
-    width: 1024,
-    height: 768,
+    width: 1280,
+    height: 720,
     autoHideMenuBar: true,
     maximizable: true,
     resizable: true,

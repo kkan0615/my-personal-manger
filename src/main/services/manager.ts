@@ -18,6 +18,10 @@ export const getCurrentManager = async () => {
   return findManagerById(null, currentManagerId)
 }
 
+export const updateCurrentManager = async (event: IpcMainInvokeEvent, payload: string) => {
+  electronStore.set('currentManagerId', payload)
+}
+
 export const getManagerImages = async (event: IpcMainInvokeEvent, args: { id: string }) => {
   const path = `${app.getPath('documents')}/${app.getName()}`
   return {
@@ -37,7 +41,6 @@ export const setCurrentManagerConfig = async (event: IpcMainInvokeEvent, args: a
 
 export const finaManagerAll =  async (event: IpcMainInvokeEvent | null) => {
   const directoryList = await fs.readdir(`${app.getPath('documents')}/${app.getName()}/`)
-  console.log(directoryList)
   return {
     rows: await Promise.all(directoryList.map(async dirName => {
       return (await findManagerById(event, dirName)).data

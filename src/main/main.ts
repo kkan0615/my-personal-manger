@@ -8,7 +8,7 @@ import {
   getCurrentManager,
   getCurrentManagerConfig,
   getManagerImages,
-  setCurrentManagerConfig
+  setCurrentManagerConfig, updateCurrentManager
 } from './services/manager'
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
@@ -60,6 +60,7 @@ app.whenReady()
     ipcMain.handle('set-current-manager-config', setCurrentManagerConfig)
     ipcMain.handle('find-manager-by-id', findManagerById)
     ipcMain.handle('find-manager-all', finaManagerAll)
+    ipcMain.handle('update-current-manager', updateCurrentManager)
     ipcMain.handle('load-schedule-list', loadScheduleList)
     ipcMain.handle('create-schedule', createSchedule)
     ipcMain.handle('update-schedule', updateSchedule)
