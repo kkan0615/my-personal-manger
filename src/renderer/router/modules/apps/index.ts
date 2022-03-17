@@ -16,11 +16,22 @@ export const appRoutes: RouteRecordRaw = {
       path: 'manager',
       name: 'AppManagerLayout',
       component: () => import('@/views/apps/managers/index.vue'),
+      redirect: { name: 'AppManagerMain' },
       children: [
         {
           path: 'main',
           name: 'AppManagerMain',
           component: () => import('@/views/apps/managers/Main/index.vue'),
+        },
+        {
+          path: 'create/new',
+          name: 'AppManagerNewForm',
+          component: () => import('@/views/apps/managers/Form/index.vue'),
+        },
+        {
+          path: 'form/:id',
+          name: 'AppManagerUpdateForm',
+          component: () => import('@/views/apps/managers/Form/index.vue'),
         },
       ]
     },
@@ -28,6 +39,7 @@ export const appRoutes: RouteRecordRaw = {
       path: 'schedule',
       name: 'AppScheduleLayout',
       component: () => import('@/views/apps/schedules/index.vue'),
+      redirect: { name: 'AppScheduleMain' },
       children: [
         {
           path: 'main',
@@ -40,6 +52,7 @@ export const appRoutes: RouteRecordRaw = {
       path: 'setting',
       name: 'AppSettingLayout',
       component: () => import('@/views/apps/settings/index.vue'),
+      redirect: { name: 'AppSettingMain' },
       children: [
         {
           path: 'main',

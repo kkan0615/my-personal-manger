@@ -6,9 +6,9 @@
       v-model="isOpenDetail"
     >
       <q-card
-        style="width: 700px; max-width: 80vw;"
+        style="width: 450px; max-width: 80vw;"
       >
-        <q-card-section class="row items-center q-pb-none">
+        <q-card-section class="row full-width items-center q-py-sm col-shrink bg-primary text-white">
           <div class="text-h6">
             {{ manager.name }}
           </div>
@@ -22,6 +22,7 @@
           />
         </q-card-section>
         <app-manager-main-manager-detail
+          class="col-grow"
           :manager="manager"
         />
       </q-card>
@@ -79,6 +80,7 @@
         class="q-ml-auto q-gutter-sm "
       >
         <q-btn
+          :disable="managerStore.CurrentManger.id === 'default'"
           round
           color="primary"
           icon="edit"
@@ -119,6 +121,7 @@ import CRowInputContent from '@/components/commons/inputs/Row/components/Content
 import { useManagerStore } from '@/stores/manager'
 import AppManagerMainManagerDetail from '@/views/apps/managers/Main/components/ManagerDetail.vue'
 import { useQuasar } from 'quasar'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   manager: {
@@ -129,6 +132,7 @@ const props = defineProps({
 })
 
 const $q = useQuasar()
+const router = useRouter()
 const managerStore = useManagerStore()
 
 const isOpenDetail = ref(false)
@@ -136,7 +140,9 @@ const isOpenDetail = ref(false)
 const src = computed(() => props.manager ? window.URL.createObjectURL(new Blob([props.manager.main])) : '')
 
 const onClickEditBtn = () => {
-  console.log('onClickEditBtn')
+  if (props.manager) {
+    router.push({ name: 'AppManagerUpdateForm', params: { id: props.manager.id } })
+  }
 }
 
 const onClickSetManagerBtn = async () => {

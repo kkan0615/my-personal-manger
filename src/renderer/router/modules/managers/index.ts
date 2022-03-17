@@ -12,6 +12,5 @@ export const managerRoutes: RouteRecordRaw = {
       name: 'ManagerMain',
       component: () => import('@/views/managers/Main/index.vue'),
     },
-    //
   ],
 }

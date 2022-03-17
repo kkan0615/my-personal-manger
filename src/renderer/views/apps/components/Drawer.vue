@@ -18,9 +18,8 @@
       <q-item
         class="q-mx-sm"
         active-class="bg-grey-8 text-white q-mx-sm q-badge--rounded app-item--active"
-        :to="{ name: 'AppManagerMain' }"
+        :to="{ name: 'AppManagerLayout' }"
         clickable
-        exact
       >
         <q-item-section avatar>
           <q-icon name="manage_accounts" />
@@ -30,9 +29,8 @@
       <q-item
         class="q-mx-sm"
         active-class="bg-grey-8 text-white q-mx-sm q-badge--rounded app-item--active"
-        :to="{ name: 'AppScheduleMain' }"
+        :to="{ name: 'AppScheduleLayout' }"
         clickable
-        exact
       >
         <q-item-section avatar>
           <q-icon name="schedule" />
@@ -42,9 +40,8 @@
       <q-item
         class="q-mx-sm"
         active-class="bg-grey-8 text-white q-mx-sm q-badge--rounded app-item--active"
-        :to="{ name: 'AppSettingMain' }"
+        :to="{ name: 'AppSettingLayout' }"
         clickable
-        exact
       >
         <q-item-section avatar>
           <q-icon name="settings" />

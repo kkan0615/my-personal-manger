@@ -7,13 +7,24 @@
     <!--          :src="src"-->
     <!--        />-->
     <q-btn
-      class="q-mr-sm"
+      v-if="props.script.soundFile"
+      class="col-1"
       :icon="icon"
+      dense
       flat
       rounded
       @click="onClickPlayBtn"
     />
-    <div>
+    <div
+      v-else
+    >
+      <q-icon
+        name="close"
+      />
+    </div>
+    <div
+      class="col-11 q-pl-sm"
+    >
       {{ script.message }}
     </div>
   </div>
@@ -40,8 +51,6 @@ const managerStore = useManagerStore()
 
 const audioElement = ref<HTMLAudioElement>()
 const audioStatus = ref<'playing' | 'paused'>('paused')
-
-const src = computed(() => window.URL.createObjectURL(new Blob([props.script.soundFile])))
 
 onMounted(() => {
   if (props.script && props.script.soundFile) {
