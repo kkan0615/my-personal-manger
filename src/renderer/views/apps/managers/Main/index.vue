@@ -16,9 +16,28 @@
         class="col-grow q-ml-sm"
       >
         <q-card-section
-          class="text-h6 q-py-sm"
+          class="q-py-sm row items-center"
         >
-          Manager List
+          <div
+            class="text-h6 "
+          >
+            Manager List
+          </div>
+          <div
+            class="q-ml-auto"
+          >
+            <q-btn
+              round
+              color="primary"
+              icon="add"
+              size="sm"
+              @click="onClickAddBtn"
+            >
+              <q-tooltip>
+                Add new manager
+              </q-tooltip>
+            </q-btn>
+          </div>
         </q-card-section>
         <q-separator />
         <q-card-section
@@ -48,12 +67,14 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import CLayoutMenubar from '@/components/commons/layouts/Menubar/index.vue'
 import { useManagerStore } from '@/stores/manager'
 import AppManagerMainCurrentManager from '@/views/apps/managers/Main/components/CurrentManager.vue'
 import AppManagerMainManagerItem from '@/views/apps/managers/Main/components/ManagerItem.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const managerStore = useManagerStore()
 
 const src = computed(() => window.URL.createObjectURL(new Blob([managerStore.CurrentManger.main])))
@@ -61,11 +82,10 @@ const src = computed(() => window.URL.createObjectURL(new Blob([managerStore.Cur
 /* Created */
 managerStore.loadManagerList({})
 
-const onClickEditBtn = () => {
-  console.log('onClickEditBtn')
-}
-
-const onClickOpenManagerAppBtn = () => {
-  console.log('onClickEditBtn')
+/**
+ * add icon button click event
+ */
+const onClickAddBtn = () => {
+  router.push({ name: 'AppManagerNewForm' })
 }
 </script>

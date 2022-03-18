@@ -72,7 +72,7 @@
       class="q-pa-sm row"
     >
       <q-badge
-        v-if="managerStore.CurrentManger.id === manager.id"
+        v-if="manager.id === managerStore.CurrentManger.id"
       >
         current
       </q-badge>
@@ -80,7 +80,7 @@
         class="q-ml-auto q-gutter-sm "
       >
         <q-btn
-          :disable="managerStore.CurrentManger.id === 'default'"
+          :disable="manager.id === 'default'"
           round
           color="primary"
           icon="edit"

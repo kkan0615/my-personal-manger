@@ -50,6 +50,7 @@ export const finaManagerAll =  async (event: IpcMainInvokeEvent | null) => {
 }
 
 export const findManagerById = async (event: IpcMainInvokeEvent | null, payload: string) => {
+  console.log('id', payload)
   const filePath = `${app.getPath('documents')}/${app.getName()}/${payload}`
   const managerJson = JSON.parse((await fs.readFile(`${filePath}/manager.json`, 'utf-8'))) as Manager
   /* Set the sound file */
@@ -61,7 +62,6 @@ export const findManagerById = async (event: IpcMainInvokeEvent | null, payload:
   return {
     data: {
       ...managerJson,
-      id: payload,
       main: await fs.readFile(`${filePath}/${managerJson.mainImg}`),
     }
   }

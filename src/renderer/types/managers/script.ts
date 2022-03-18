@@ -8,3 +8,7 @@ export enum ManagerScriptKeywordEnum {
   'SCHEDULE'= '@schedule',
   'NAME' = '@name',
 }
+
+export type ManagerScriptForm = ManagerScript & {
+  status: 'CREATE' | 'UPDATE'
+}
