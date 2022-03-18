@@ -3,7 +3,7 @@
     padding
   >
     <c-layout-menubar
-      :tittle="$route.name"
+      tittle="Main Manager"
     />
     <div
       class="row"
@@ -76,8 +76,6 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const managerStore = useManagerStore()
-
-const src = computed(() => window.URL.createObjectURL(new Blob([managerStore.CurrentManger.main])))
 
 /* Created */
 managerStore.loadManagerList({})

@@ -3,7 +3,7 @@
     padding
   >
     <c-layout-menubar
-      :tittle="$route.name"
+      tittle="Schedule Main"
     />
     <div
       class="row q-mb-sm justify-end"
@@ -88,29 +88,29 @@ const scheduleStore = useScheduleStore()
 
 const isTableLoading = ref(false)
 const columns = ref([
-  {
-    name: 'name',
-    label: 'Key',
-    field: 'name',
-  },
+  // {
+  //   name: 'name',
+  //   label: 'Key',
+  //   field: 'name',
+  // },
   {
     name: 'date',
     label: 'date',
     field: 'date',
-    align: 'left',
+    align: 'left' as 'left' | 'right' | 'center',
     style: 'width: 200px;'
   },
   {
     name: 'content',
     label: 'content',
     field: 'content',
-    align: 'left',
+    align: 'left' as 'left' | 'right' | 'center',
   },
   {
     name: 'updatedAt',
     label: 'last Updated At',
     field: 'updatedAt',
-    align: 'left',
+    align: 'left' as 'left' | 'right' | 'center',
     style: 'width: 100px;',
     format: (val: string) => {
       return dayjs(val).format('ll')
@@ -120,7 +120,7 @@ const columns = ref([
     name: 'action',
     label: 'action',
     field: 'action',
-    align: 'center',
+    align: 'center' as 'left' | 'right' | 'center',
     style: 'width: 80px;'
   },
 ])

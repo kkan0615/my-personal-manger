@@ -1,6 +1,9 @@
 <template>
   <div
     class="col-3 text-caption"
+    :class="{
+      'q-pt-sm': !dense
+    }"
   >
     <slot />
   </div>
@@ -11,5 +14,13 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { defineProps } from 'vue'
+
+const props = defineProps({
+  dense: {
+    type: Boolean,
+    required: false,
+    default: false,
+  }
+})
 </script>

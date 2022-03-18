@@ -24,7 +24,9 @@
         </div>
         <!-- name -->
         <c-row-input>
-          <c-row-input-label>
+          <c-row-input-label
+            dense
+          >
             Name
           </c-row-input-label>
           <c-row-input-content>
@@ -33,7 +35,7 @@
         </c-row-input>
         <!-- color -->
         <c-row-input>
-          <c-row-input-label>
+          <c-row-input-label dense>
             Color
           </c-row-input-label>
           <c-row-input-content>
@@ -44,7 +46,7 @@
         </c-row-input>
         <!-- color -->
         <c-row-input>
-          <c-row-input-label>
+          <c-row-input-label dense>
             Age
           </c-row-input-label>
           <c-row-input-content>
@@ -125,15 +127,15 @@ export default {
 </script>
 <script setup lang="ts">
 import { computed, defineProps, PropType } from 'vue'
-import { Manager } from '@main/types/managers'
 import AppManagerMainScript from '@/views/apps/managers/Main/components/Script.vue'
 import CRowInput from '@/components/commons/inputs/Row/index.vue'
 import CRowInputLabel from '@/components/commons/inputs/Row/components/Label.vue'
 import CRowInputContent from '@/components/commons/inputs/Row/components/Content.vue'
+import { ManagerInfo } from '@/types/managers'
 
 const props = defineProps({
   manager: {
-    type: Object as PropType<Manager>,
+    type: Object as PropType<ManagerInfo>,
     required: true,
     default: () => {}
   }

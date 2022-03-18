@@ -1,10 +1,12 @@
 <template>
   <q-form
-    class="column full-height"
+    class="column full-height q-col-gutter-sm"
     @submit="onSubmit"
   >
     <c-row-input>
-      <c-row-input-label>
+      <c-row-input-label
+        dense
+      >
         Days
       </c-row-input-label>
       <c-row-input-content>
@@ -55,7 +57,7 @@
               >
                 <q-date
                   v-model="date"
-                  @update:model-value="() => $refs.qDateProxyRef.hide()"
+                  @update:model-value="() => onUpdateDate"
                 />
               </q-popup-proxy>
             </q-icon>
@@ -251,6 +253,8 @@ const emits = defineEmits(['finish:save'])
 const $q = useQuasar()
 const scheduleStore = useScheduleStore()
 
+const qDateProxyRef = ref<any>()
+
 const isSaveBtnLoading = ref(false)
 const loopDays = ref<number[]>([])
 const date = ref('')
@@ -335,5 +339,9 @@ const onClickIncBtn = (value:  number, type: 'hour' | 'minute') => {
   } else {
     minute.value = (dayjs().minute() + value) >= 60 ? 59 : dayjs().minute() + value
   }
+}
+
+const onUpdateDate = () => {
+  qDateProxyRef.value.hide()
 }
 </script>

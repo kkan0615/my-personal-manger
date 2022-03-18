@@ -39,7 +39,7 @@
     <q-card-section>
       <!-- name -->
       <c-row-input>
-        <c-row-input-label>
+        <c-row-input-label dense>
           Name
         </c-row-input-label>
         <c-row-input-content>
@@ -48,7 +48,7 @@
       </c-row-input>
       <!-- color -->
       <c-row-input>
-        <c-row-input-label>
+        <c-row-input-label dense>
           Color
         </c-row-input-label>
         <c-row-input-content>
@@ -59,7 +59,7 @@
       </c-row-input>
       <!-- color -->
       <c-row-input>
-        <c-row-input-label>
+        <c-row-input-label dense>
           Age
         </c-row-input-label>
         <c-row-input-content>

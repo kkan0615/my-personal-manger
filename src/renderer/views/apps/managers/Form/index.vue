@@ -3,7 +3,7 @@
     padding
   >
     <c-layout-menubar
-      :tittle="$route.name"
+      tittle="Manager Form"
     />
     <div>
       <q-form
@@ -37,19 +37,26 @@
             Age
           </c-row-input-label>
           <c-row-input-content
-            class="q-pr-sm"
+            class="q-pr-sm row items-center"
           >
+            <b
+              class="col-1"
+            >
+              {{ age }}
+            </b>
             <q-slider
               v-model="age"
+              class="col-11"
               :min="0"
               :max="100"
-              label-always
             />
           </c-row-input-content>
         </c-row-input>
 
         <!-- color -->
-        <c-row-input>
+        <c-row-input
+          no-center
+        >
           <c-row-input-label>
             Hello script list
           </c-row-input-label>
@@ -64,13 +71,16 @@
                 v-model="helloScriptList[i]"
               />
             </div>
-            <q-btn
+            <div
               class="q-mt-sm q-ml-sm"
-              color="primary"
-              @click="onClickAddHelloScriptBtn"
             >
-              Add new script
-            </q-btn>
+              <q-btn
+                color="primary"
+                @click="onClickAddHelloScriptBtn"
+              >
+                Add new script
+              </q-btn>
+            </div>
           </c-row-input-content>
         </c-row-input>
       </q-form>
@@ -97,8 +107,12 @@ const route = useRoute()
 const name = ref('')
 const color = ref('')
 const age = ref(0)
-const birthdayScript = ref<ManagerScriptForm>({})
+const birthdayScript = ref<ManagerScriptForm>({
+  message: '',
+  status: 'CREATE'
+})
 const helloScriptList = ref<ManagerScriptForm[]>([{
+  message: '',
   status: 'CREATE'
 }]) // @TODO: Delete default value
 const scheduleScriptList = ref<ManagerScriptForm[]>([])
@@ -117,6 +131,7 @@ const initData = () => {
 
 const onClickAddHelloScriptBtn = () => {
   helloScriptList.value.push({
+    message: '',
     status: 'CREATE'
   })
 }

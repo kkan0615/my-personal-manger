@@ -3,10 +3,11 @@
     class="row items-center q-col-gutter-sm"
   >
     <q-input
-      v-model="name"
+      :model-value="modelValue.message"
       class="col-grow"
       outlined
       dense
+      @update:model-value="onUpdateMessage"
     />
     <q-file
       :model-value="modelValue.soundFile"
@@ -46,17 +47,27 @@ const props = defineProps({
 const emits = defineEmits(['update:modelValue'])
 
 const src = computed(() => {
-  let result = null
+  let result = undefined
   if (props.modelValue && props.modelValue.soundFile) {
-    result = props.modelValue.status === 'CREATE' ? URL.createObjectURL(props.modelValue.soundFile) : null
+    result = props.modelValue.status === 'CREATE' ? URL.createObjectURL(props.modelValue.soundFile) : undefined
   }
 
   return result
 })
 
+const onUpdateMessage = (value: string | number | null) => {
+  emits('update:modelValue', {
+    message: value,
+    sound: props.modelValue ? props.modelValue.sound : '',
+    soundFile: value,
+    status: 'CREATE'
+  } as ManagerScriptForm)
+}
+
 const onUpdateSoundFile = (value: File) => {
   emits('update:modelValue', {
-    ...props.modelValue,
+    message: props.modelValue ? props.modelValue.message : '',
+    sound: props.modelValue ? props.modelValue.sound : '',
     soundFile: value,
     status: 'CREATE'
   } as ManagerScriptForm)
