@@ -8,6 +8,7 @@
     <div>
       <q-form
         class="q-col-gutter-sm"
+        @submit="onSubmit"
       >
         <div
           class="text-h6"
@@ -279,8 +280,10 @@ import AppManagerFormScript from '@/views/apps/managers/Form/components/Script.v
 import CColorPicker from '@/components/commons/forms/ColorPicker/index.vue'
 import AppManagerFormScriptHelper from '@/views/apps/managers/Form/components/ScriptHelper.vue'
 import { useManagerStore } from '@/stores/manager'
+import { useQuasar } from 'quasar'
 
 const route = useRoute()
+const $q = useQuasar()
 const managerStore = useManagerStore()
 
 const isSaveBtnLoading = ref(false)
@@ -342,8 +345,9 @@ const onClickRemoveScheduleScriptBtn = (index: number) => {
   scheduleScriptList.value.splice(index, 1)
 }
 
-const onClickSaveBtn = () => {
+const onSubmit = () => {
   try {
+    console.log('submit')
     isSaveBtnLoading.value = true
     // update mode
     if (isUpdateForm.value) {
@@ -351,8 +355,18 @@ const onClickSaveBtn = () => {
     } else {
       managerStore.createManager({})
     }
+    $q.notify({
+      message: 'success to save',
+      position: 'bottom-right'
+    })
   } catch (e) {
     console.error(e)
+    $q.notify({
+      icon: 'report_problem',
+      color: 'negative',
+      message: 'Fail to save',
+      position: 'bottom-right'
+    })
   } finally {
     isSaveBtnLoading.value = false
   }
