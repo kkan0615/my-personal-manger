@@ -85,8 +85,9 @@ const onUpdateSoundFile = (value: File) => {
   console.log('file', value)
   emits('update:modelValue', {
     message: props.modelValue ? props.modelValue.message : '',
-    sound: props.modelValue ? props.modelValue.sound : '',
+    sound:value.name,
     soundFile: value,
+    soundFileName: value.name,
     status: 'CREATE'
   } as ManagerScriptForm)
 }

@@ -324,7 +324,7 @@ const birthdayScript = ref<ManagerScriptForm>({
   message: '',
   status: 'CREATE'
 })
-const helloScriptList = ref<ManagerScriptForm[]>([]) // @TODO: Delete default value
+const helloScriptList = ref<ManagerScriptForm[]>([])
 const scheduleScriptList = ref<ManagerScriptForm[]>([])
 const clickScriptList = ref<ManagerScriptForm[]>([])
 
@@ -334,7 +334,33 @@ const pictureSrc = computed(() => picture.value ? window.URL.createObjectURL(new
 const initData = () => {
   // update mode
   if (isUpdateForm.value) {
-    //  test
+    helloScriptList.value = managerStore.Manager.helloScriptList.map(script => {
+      return {
+        soundFile: script.soundFile,
+        sound: script.sound,
+        message: script.message,
+        soundFileName: script.sound,
+        status: 'UPDATE',
+      } as ManagerScriptForm
+    })
+    scheduleScriptList.value = managerStore.Manager.scheduleScriptList.map(script => {
+      return {
+        soundFile: script.soundFile,
+        sound: script.sound,
+        message: script.message,
+        soundFileName: script.sound,
+        status: 'UPDATE',
+      } as ManagerScriptForm
+    })
+    clickScriptList.value = managerStore.Manager.clickScriptList.map(script => {
+      return {
+        soundFile: script.soundFile,
+        sound: script.sound,
+        message: script.message,
+        soundFileName: script.sound,
+        status: 'UPDATE',
+      } as ManagerScriptForm
+    })
   } else {
     // create form
   }
@@ -373,7 +399,7 @@ const onClickRemoveScheduleScriptBtn = (index: number) => {
   scheduleScriptList.value.splice(index, 1)
 }
 
-const onSubmit = () => {
+const onSubmit = async () => {
   try {
     console.log('submit')
     isSaveBtnLoading.value = true
@@ -383,7 +409,7 @@ const onSubmit = () => {
 
       } as ManagerUpdateForm)
     } else {
-      managerStore.createManager({
+      await managerStore.createManager({
         mainImg: new Int8Array(await picture.value.arrayBuffer()),
         mainImgName: picture.value.name,
         // mainImg: picture.value,
@@ -391,37 +417,37 @@ const onSubmit = () => {
         age: age.value,
         color: color.value,
         gender: 'unknown',
-        helloScriptList: helloScriptList.value.map(script => {
+        helloScriptList: await Promise.all(helloScriptList.value.map(async script => {
           return {
             message: script.message,
             sound:  script.sound,
             status:  script.status,
-            soundFile: script.soundFile ? (script.soundFile as File).arrayBuffer() : undefined
+            soundFile: script.soundFile ? new Int8Array(await (script.soundFile as File).arrayBuffer()) : undefined
             // soundFile: script.soundFile,
           }
-        }),
-        clickScriptList: clickScriptList.value.map(script => {
+        })),
+        clickScriptList: await Promise.all(clickScriptList.value.map(async script => {
           return {
             message: script.message,
             sound:  script.sound,
             status:  script.status,
-            soundFile: script.soundFile ? (script.soundFile as File).arrayBuffer() : undefined
+            soundFile: script.soundFile ? new Int8Array(await (script.soundFile as File).arrayBuffer()) : undefined
             // soundFile: script.soundFile,
           }
-        }),
-        scheduleScriptList: scheduleScriptList.value.map(script => {
+        })),
+        scheduleScriptList: await Promise.all(scheduleScriptList.value.map(async script => {
           return {
             message: script.message,
             sound:  script.sound,
             status:  script.status,
-            soundFile: script.soundFile ? (script.soundFile as File).arrayBuffer() : undefined,
+            soundFile: script.soundFile ? new Int8Array(await (script.soundFile as File).arrayBuffer()) : undefined,
             // soundFile: script.soundFile,
           }
-        }),
+        })),
         birthdayScript: {
           message: birthdayScript.value.message,
-          // soundFile:  birthdayScript.value.soundFile,
-          soundFile: birthdayScript.value.soundFile ? (birthdayScript.value.soundFile as File).arrayBuffer() : undefined,
+          sound:  birthdayScript.value.sound,
+          soundFile: birthdayScript.value.soundFile ? new Int8Array(await (birthdayScript.value.soundFile as File).arrayBuffer()) : undefined,
           status:  birthdayScript.value.status,
         },
       } as ManagerCreateForm)

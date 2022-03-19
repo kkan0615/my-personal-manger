@@ -11,4 +11,5 @@ export enum ManagerScriptKeywordEnum {
 
 export type ManagerScriptForm = ManagerScript & {
   status: 'CREATE' | 'UPDATE'
+  soundFileName?: string
 }

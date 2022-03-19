@@ -72,14 +72,15 @@ export const findManagerById = async (event: IpcMainInvokeEvent | null, payload:
 
 const _createManagerScript = async (id: string, payload: any) => {
   try {
+    console.log('payload', payload)
     const path = `${app.getPath('documents')}/${app.getName()}/${id}/audio`
     if (payload.soundFile) {
-      await fs.writeFile(`${path}/${payload.name}`, payload.soundFile)
+      await fs.writeFile(`${path}/${payload.sound}`, payload.soundFile)
     }
 
     return {
       message: payload.message,
-      sound: payload.soundFile ? payload.soundFile.name : ''
+      sound: payload.sound ? payload.sound : '',
     } as ManagerScript
   } catch (e) {
     console.error(e)
