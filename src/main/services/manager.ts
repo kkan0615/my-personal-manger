@@ -3,13 +3,16 @@ import fs from 'fs/promises'
 import { electronStore } from '../store'
 import { Manager } from '../types/managers'
 import { ManagerScript } from '../types/managers/script'
+import { DeleteCountResult, InsertOneResult, UpdateCountResult } from '../types/server'
+import { v4 } from 'uuid'
+import fileType from 'file-type'
 
 const setMessageSound = async (managerId: string, script: ManagerScript) => {
   const filePath = `${app.getPath('documents')}/${app.getName()}/${managerId}`
 
   return {
     ...script,
-    soundFile: script.sound ? await fs.readFile(`${filePath}/audio/${script.sound}`) : undefined,
+    soundFile: script.sound ? (await fs.readFile(`${filePath}/audio/${script.sound}`)) : undefined,
   }
 }
 
@@ -50,7 +53,6 @@ export const finaManagerAll =  async (event: IpcMainInvokeEvent | null) => {
 }
 
 export const findManagerById = async (event: IpcMainInvokeEvent | null, payload: string) => {
-  console.log('id', payload)
   const filePath = `${app.getPath('documents')}/${app.getName()}/${payload}`
   const managerJson = JSON.parse((await fs.readFile(`${filePath}/manager.json`, 'utf-8'))) as Manager
   /* Set the sound file */
@@ -58,11 +60,99 @@ export const findManagerById = async (event: IpcMainInvokeEvent | null, payload:
   managerJson.helloScriptList = await Promise.all(managerJson.helloScriptList.map(async (script) => setMessageSound(payload, script)))
   managerJson.scheduleScriptList = await Promise.all(managerJson.scheduleScriptList.map(async (script) => setMessageSound(payload, script)))
   managerJson.clickScriptList = await Promise.all(managerJson.clickScriptList.map(async (script) => setMessageSound(payload, script)))
-
+  console.log(await fs.readFile(`${filePath}/${managerJson.mainImg}`),)
+  /* Return */
   return {
     data: {
       ...managerJson,
-      main: await fs.readFile(`${filePath}/${managerJson.mainImg}`),
+      main: (await fs.readFile(`${filePath}/${managerJson.mainImg}`)),
     }
+  }
+}
+
+const _createManagerScript = async (id: string, payload: any) => {
+  try {
+    const path = `${app.getPath('documents')}/${app.getName()}/${id}/audio`
+    if (payload.soundFile) {
+      await fs.writeFile(`${path}/${payload.name}`, payload.soundFile)
+    }
+
+    return {
+      message: payload.message,
+      sound: payload.soundFile ? payload.soundFile.name : ''
+    } as ManagerScript
+  } catch (e) {
+    console.error(e)
+    throw e
+  }
+}
+
+export const createManager = async (event: IpcMainInvokeEvent | null, payload: any) => {
+  try {
+    const newId = v4()
+    const path = `${app.getPath('documents')}/${app.getName()}/${newId}`
+    /* Create directory */
+    await fs.mkdir(path)
+    /* Create audio files directory */
+    await fs.mkdir(`${path}/audio`)
+
+    const helloScriptList: ManagerScript[] = await Promise.all(payload.helloScriptList.map(async (script: any) => await _createManagerScript(newId, script)))
+    const clickScriptList: ManagerScript[] = await Promise.all(payload.clickScriptList.map(async (script: any) => await _createManagerScript(newId, script)))
+    const scheduleScriptList: ManagerScript[] = await Promise.all(payload.scheduleScriptList.map(async (script: any) => await _createManagerScript(newId, script)))
+    const birthdayScript: ManagerScript = await _createManagerScript(newId, payload.birthdayScript)
+    /* Create main img */
+    await fs.writeFile(`${path}/${payload.mainImgName}`, payload.mainImg)
+    /* Create manager.json */
+    await fs.writeFile(`${path}/manager.json`, JSON.stringify({
+      id: newId,
+      name: payload.name,
+      age: payload.age,
+      color: payload.color,
+      gender: payload.gender,
+      mainImg: payload.mainImgName,
+      helloScriptList,
+      clickScriptList,
+      scheduleScriptList,
+      birthdayScript,
+    } as Manager))
+
+    /* Return */
+    return {
+      insertedId: newId,
+    } as InsertOneResult
+  } catch (e) {
+    console.error(e)
+    throw e
+  }
+}
+
+export const updateManager = async (event: IpcMainInvokeEvent | null, payload: any) => {
+  try {
+    /* Delete Manager data */
+    await deleteManager(event, payload.id)
+    /* Create new manager */
+    delete payload.id
+    await createManager(event, payload)
+
+    return {
+      updatedCount: 1,
+    } as UpdateCountResult
+  } catch (e) {
+    console.error(e)
+    throw e
+  }
+}
+
+export const deleteManager = async (event: IpcMainInvokeEvent | null, payload: string) => {
+  try {
+    const filePath = `${app.getPath('documents')}/${app.getName()}/${payload}`
+    await fs.rmdir(filePath)
+
+    return {
+      deletedCount: 1,
+    } as DeleteCountResult
+  } catch (e) {
+    console.error(e)
+    throw e
   }
 }

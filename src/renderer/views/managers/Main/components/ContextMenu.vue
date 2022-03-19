@@ -151,7 +151,6 @@ export default {
 </script>
 <script setup lang="ts">
 import { useManagerStore } from '@/stores/manager'
-import ScheduleFormDialog from '@/components/ScheduleFormDialog/index.vue'
 import { ipcRenderer } from '@/utils/electron'
 
 const managerStore = useManagerStore()

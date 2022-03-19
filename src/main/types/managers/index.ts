@@ -1,4 +1,5 @@
 import { ManagerScript } from './script'
+import { ManagerScriptForm } from '../../../renderer/types/managers/script'
 
 export interface Manager {
   id: string
@@ -13,6 +14,21 @@ export interface Manager {
   clickScriptList: ManagerScript[]
 }
 
-export interface ManagerInfo extends Manager{
-  main: Blob
+export interface ManagerInfo extends Manager {
+  main: File
+}
+
+export type ManagerCreateForm = Omit<Manager, 'id' | 'mainImg'> & {
+  mainImg: File
+  birthdayScript: ManagerScriptForm
+  helloScriptList: ManagerScriptForm[]
+  scheduleScriptList: ManagerScriptForm[]
+  clickScriptList: ManagerScriptForm[]
+}
+
+export type ManagerUpdateForm = Manager & {
+  birthdayScript: ManagerScriptForm
+  helloScriptList: ManagerScriptForm[]
+  scheduleScriptList: ManagerScriptForm[]
+  clickScriptList: ManagerScriptForm[]
 }

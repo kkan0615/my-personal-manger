@@ -3,12 +3,13 @@ import { createAppWindow, destroyAppWindow, openAppWindow } from './windows/app'
 import { createManagerWindow, destroyManagerWindow, openManagerWindow } from './windows/manager'
 import fs from 'fs/promises'
 import {
+  createManager, deleteManager,
   finaManagerAll,
   findManagerById,
   getCurrentManager,
   getCurrentManagerConfig,
   getManagerImages,
-  setCurrentManagerConfig, updateCurrentManager
+  setCurrentManagerConfig, updateCurrentManager, updateManager
 } from './services/manager'
 import { electronStore } from './store'
 import isDev from 'electron-is-dev'
@@ -61,6 +62,9 @@ app.whenReady()
     ipcMain.handle('find-manager-by-id', findManagerById)
     ipcMain.handle('find-manager-all', finaManagerAll)
     ipcMain.handle('update-current-manager', updateCurrentManager)
+    ipcMain.handle('create-manager', createManager)
+    ipcMain.handle('update-manager', updateManager)
+    ipcMain.handle('delete-manager', deleteManager)
     ipcMain.handle('load-schedule-list', loadScheduleList)
     ipcMain.handle('create-schedule', createSchedule)
     ipcMain.handle('update-schedule', updateSchedule)

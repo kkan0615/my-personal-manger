@@ -65,16 +65,17 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { useQuasar } from 'quasar'
+import { useQuasar, ValidationRule } from 'quasar'
 import { qColorList } from '@/components/commons/forms/ColorPicker/colors'
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, PropType, ref } from 'vue'
+import { types } from 'sass'
 
 const options = ref(qColorList)
 
 const props = defineProps({
   modelValue: {
     type: [Object, Array, String],
-    required: true,
+    required: false,
     default: () => {},
   },
   dense: {
@@ -118,7 +119,7 @@ const props = defineProps({
     default: false,
   },
   rules: {
-    type: Array,
+    type: Array as PropType<ValidationRule<any>[]>,
     required: false,
     default: () => [],
   },

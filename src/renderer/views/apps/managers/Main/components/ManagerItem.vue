@@ -114,7 +114,6 @@ export default {
 </script>
 <script setup lang="ts">
 import { computed, defineProps, PropType, ref } from 'vue'
-import { ManagerInfo } from '@main/types/managers'
 import CRowInput from '@/components/commons/inputs/Row/index.vue'
 import CRowInputLabel from '@/components/commons/inputs/Row/components/Label.vue'
 import CRowInputContent from '@/components/commons/inputs/Row/components/Content.vue'
@@ -122,6 +121,7 @@ import { useManagerStore } from '@/stores/manager'
 import AppManagerMainManagerDetail from '@/views/apps/managers/Main/components/ManagerDetail.vue'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
+import { ManagerInfo } from '@/types/managers'
 
 const props = defineProps({
   manager: {

@@ -15,6 +15,34 @@
         >
           Manager Information
         </div>
+        <!-- picture -->
+        <c-row-input>
+          <c-row-input-label>
+            Picture
+          </c-row-input-label>
+          <c-row-input-content>
+            <q-file
+              v-model="picture"
+              class="col-2"
+              outlined
+              dense
+              accept="image/*"
+            >
+              <template #prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
+            <div
+              style="height: 300px; width: 300px;"
+            >
+              <q-img
+                class="full-height"
+                fit="contain"
+                :src="pictureSrc"
+              />
+            </div>
+          </c-row-input-content>
+        </c-row-input>
         <!-- name -->
         <c-row-input>
           <c-row-input-label>
@@ -281,27 +309,27 @@ import CColorPicker from '@/components/commons/forms/ColorPicker/index.vue'
 import AppManagerFormScriptHelper from '@/views/apps/managers/Form/components/ScriptHelper.vue'
 import { useManagerStore } from '@/stores/manager'
 import { useQuasar } from 'quasar'
+import { ManagerCreateForm, ManagerUpdateForm } from '@/types/managers'
 
 const route = useRoute()
 const $q = useQuasar()
 const managerStore = useManagerStore()
 
 const isSaveBtnLoading = ref(false)
+const picture = ref<File | null>(null)
 const name = ref('')
-const color = ref<string>(undefined)
+const color = ref<string | null>(null)
 const age = ref(0)
 const birthdayScript = ref<ManagerScriptForm>({
   message: '',
   status: 'CREATE'
 })
-const helloScriptList = ref<ManagerScriptForm[]>([{
-  message: '',
-  status: 'CREATE'
-}]) // @TODO: Delete default value
+const helloScriptList = ref<ManagerScriptForm[]>([]) // @TODO: Delete default value
 const scheduleScriptList = ref<ManagerScriptForm[]>([])
 const clickScriptList = ref<ManagerScriptForm[]>([])
 
 const isUpdateForm = computed(() => route.name === 'AppManagerUpdateForm')
+const pictureSrc = computed(() => picture.value ? window.URL.createObjectURL(new Blob([picture.value])) : '')
 
 const initData = () => {
   // update mode
@@ -351,9 +379,52 @@ const onSubmit = () => {
     isSaveBtnLoading.value = true
     // update mode
     if (isUpdateForm.value) {
-      managerStore.updateManager({})
+      managerStore.updateManager({
+
+      } as ManagerUpdateForm)
     } else {
-      managerStore.createManager({})
+      managerStore.createManager({
+        mainImg: new Int8Array(picture.value.arrayBuffer()),
+        mainImgName: picture.value.name,
+        // mainImg: picture.value,
+        name: name.value,
+        age: age.value,
+        color: color.value,
+        gender: 'unknown',
+        helloScriptList: helloScriptList.value.map(script => {
+          return {
+            message: script.message,
+            sound:  script.sound,
+            status:  script.status,
+            soundFile: script.soundFile ? (script.soundFile as File).arrayBuffer() : undefined
+            // soundFile: script.soundFile,
+          }
+        }),
+        clickScriptList: clickScriptList.value.map(script => {
+          return {
+            message: script.message,
+            sound:  script.sound,
+            status:  script.status,
+            soundFile: script.soundFile ? (script.soundFile as File).arrayBuffer() : undefined
+            // soundFile: script.soundFile,
+          }
+        }),
+        scheduleScriptList: scheduleScriptList.value.map(script => {
+          return {
+            message: script.message,
+            sound:  script.sound,
+            status:  script.status,
+            soundFile: script.soundFile ? (script.soundFile as File).arrayBuffer() : undefined,
+            // soundFile: script.soundFile,
+          }
+        }),
+        birthdayScript: {
+          message: birthdayScript.value.message,
+          // soundFile:  birthdayScript.value.soundFile,
+          soundFile: birthdayScript.value.soundFile ? (birthdayScript.value.soundFile as File).arrayBuffer() : undefined,
+          status:  birthdayScript.value.status,
+        },
+      } as ManagerCreateForm)
     }
     $q.notify({
       message: 'success to save',

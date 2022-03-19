@@ -5,7 +5,7 @@ import { DEFAULT_MANAGER_MESSAGE_TIMEOUT, ManagerCreateForm, ManagerUpdateForm }
 import { getRandElInArr } from '@/utils/commons'
 import { useSettingStore } from '@/stores/setting'
 import { ManagerConfig } from '@/types/managers/config'
-import { SelectListResult } from '@/types/commons/server'
+import { InsertOneResult, SelectListResult } from '@/types/commons/server'
 import { Manager } from '@main/types/managers'
 
 export interface ManagerState {
@@ -296,8 +296,17 @@ export const useManagerStore = defineStore('manager', {
      * Create Manager
      * @param payload - create form
      */
-    createManager (payload: ManagerCreateForm) {
-      return 0
+    async createManager (payload: ManagerCreateForm) {
+      try {
+        const res = await ipcRenderer.invoke('create-manager', payload) as InsertOneResult
+        if (!res.insertedId) {
+          throw new Error('No inserted Id')
+        }
+        return res.insertedId
+      } catch (e) {
+        console.error(e)
+        throw e
+      }
     },
     /**
      * Update Manager by id

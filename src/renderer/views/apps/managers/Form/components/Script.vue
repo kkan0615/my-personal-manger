@@ -65,7 +65,6 @@ const emits = defineEmits(['update:modelValue'])
 const src = computed(() => {
   let result = undefined
   if (props.modelValue && props.modelValue.soundFile) {
-    console.log(props.modelValue.soundFile)
     result = props.modelValue.status === 'CREATE' &&  props.modelValue.soundFile ? URL.createObjectURL(props.modelValue.soundFile) : undefined
   }
 
@@ -83,6 +82,7 @@ const onUpdateMessage = (value: string | number | null) => {
 }
 
 const onUpdateSoundFile = (value: File) => {
+  console.log('file', value)
   emits('update:modelValue', {
     message: props.modelValue ? props.modelValue.message : '',
     sound: props.modelValue ? props.modelValue.sound : '',

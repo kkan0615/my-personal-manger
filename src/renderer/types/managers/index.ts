@@ -16,10 +16,12 @@ export interface Manager {
 }
 
 export interface ManagerInfo extends Manager {
-  main: Blob
+  main: File
 }
 
-export type ManagerCreateForm = Omit<Manager, 'id'> & {
+export type ManagerCreateForm = Omit<Manager, 'id' | 'mainImg'> & {
+  mainImg: File | ArrayBuffer
+  mainImgName: string
   birthdayScript: ManagerScriptForm
   helloScriptList: ManagerScriptForm[]
   scheduleScriptList: ManagerScriptForm[]

@@ -101,6 +101,6 @@ const onClickEditBtn = () => {
 }
 
 const onClickOpenManagerAppBtn = () => {
-  console.log('onClickEditBtn')
+  console.log('onClickOpenManagerAppBtn')
 }
 </script>
