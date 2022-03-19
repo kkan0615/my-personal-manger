@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { IpcRendererEvent } from 'electron'
 import { ipcRenderer } from '@/utils/electron'
-import { DEFAULT_MANAGER_MESSAGE_TIMEOUT } from '@/types/managers'
+import { DEFAULT_MANAGER_MESSAGE_TIMEOUT, ManagerCreateForm, ManagerUpdateForm } from '@/types/managers'
 import { getRandElInArr } from '@/utils/commons'
 import { useSettingStore } from '@/stores/setting'
 import { ManagerConfig } from '@/types/managers/config'
@@ -296,21 +296,21 @@ export const useManagerStore = defineStore('manager', {
      * Create Manager
      * @param payload - create form
      */
-    createManager (payload: any) {
+    createManager (payload: ManagerCreateForm) {
       return 0
     },
     /**
      * Update Manager by id
      * @param payload - update form
      */
-    updateManager (payload: any) {
+    updateManager (payload: ManagerUpdateForm) {
       return 0
     },
     /**
      * Delete Manager by id
      * @param payload - target id
      */
-    deleteManager (payload: number) {
+    deleteManager (payload: string) {
       return 0
     },
     /**

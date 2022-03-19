@@ -4,14 +4,15 @@
   >
     <q-input
       :model-value="modelValue.message"
-      class="col-grow"
+      class="col-7"
       outlined
       dense
+      placeholder="message"
       @update:model-value="onUpdateMessage"
     />
     <q-file
       :model-value="modelValue.soundFile"
-      class="col-3"
+      class="col-2"
       outlined
       dense
       accept="audio/*"
@@ -42,24 +43,41 @@ const props = defineProps({
     type: Object as PropType<ManagerScriptForm>,
     required: true,
     default: () => {}
-  }
+  },
+  // script: {
+  //   type: Object as PropType<ManagerScriptForm>,
+  //   required: true,
+  //   default: () => {}
+  // },
+  // message: {
+  //   type: String,
+  //   required: true,
+  //   default: null
+  // },
+  // soundFile: {
+  //   type: File,
+  //   required: false,
+  //   default: null
+  // },
 })
 const emits = defineEmits(['update:modelValue'])
 
 const src = computed(() => {
   let result = undefined
   if (props.modelValue && props.modelValue.soundFile) {
-    result = props.modelValue.status === 'CREATE' ? URL.createObjectURL(props.modelValue.soundFile) : undefined
+    console.log(props.modelValue.soundFile)
+    result = props.modelValue.status === 'CREATE' &&  props.modelValue.soundFile ? URL.createObjectURL(props.modelValue.soundFile) : undefined
   }
 
   return result
 })
 
 const onUpdateMessage = (value: string | number | null) => {
+  console.log('value', value)
   emits('update:modelValue', {
     message: value,
     sound: props.modelValue ? props.modelValue.sound : '',
-    soundFile: value,
+    soundFile: props.modelValue?.soundFile,
     status: 'CREATE'
   } as ManagerScriptForm)
 }
