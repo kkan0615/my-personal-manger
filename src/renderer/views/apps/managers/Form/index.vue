@@ -384,7 +384,7 @@ const onSubmit = () => {
       } as ManagerUpdateForm)
     } else {
       managerStore.createManager({
-        mainImg: new Int8Array(picture.value.arrayBuffer()),
+        mainImg: new Int8Array(await picture.value.arrayBuffer()),
         mainImgName: picture.value.name,
         // mainImg: picture.value,
         name: name.value,
