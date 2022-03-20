@@ -21,6 +21,30 @@
             Picture
           </c-row-input-label>
           <c-row-input-content>
+            <div
+              class="text-subtitle1"
+            >
+              Image Preview (400px x 350px);
+            </div>
+            <q-card
+              class="q-mb-sm"
+              flat
+              bordered
+              style="height: 300px; width: 300px;"
+            >
+              <q-img
+                v-if="pictureSrc"
+                class="full-height"
+                fit="contain"
+                :src="pictureSrc"
+              />
+              <div
+                v-else
+                class="full-height row items-center justify-center text-h4"
+              >
+                (400px x 350px)
+              </div>
+            </q-card>
             <q-file
               v-model="picture"
               class="col-2"
@@ -32,15 +56,6 @@
                 <q-icon name="attach_file" />
               </template>
             </q-file>
-            <div
-              style="height: 300px; width: 300px;"
-            >
-              <q-img
-                class="full-height"
-                fit="contain"
-                :src="pictureSrc"
-              />
-            </div>
           </c-row-input-content>
         </c-row-input>
         <!-- name -->
@@ -298,8 +313,8 @@ export default {
 </script>
 <script setup lang="ts">
 import CLayoutMenubar from '@/components/commons/layouts/Menubar/index.vue'
-import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, onBeforeMount, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import CRowInput from '@/components/commons/inputs/Row/index.vue'
 import CRowInputLabel from '@/components/commons/inputs/Row/components/Label.vue'
 import CRowInputContent from '@/components/commons/inputs/Row/components/Content.vue'
@@ -312,6 +327,7 @@ import { useQuasar } from 'quasar'
 import { ManagerCreateForm, ManagerUpdateForm } from '@/types/managers'
 
 const route = useRoute()
+const router = useRouter()
 const $q = useQuasar()
 const managerStore = useManagerStore()
 
@@ -331,38 +347,63 @@ const clickScriptList = ref<ManagerScriptForm[]>([])
 const isUpdateForm = computed(() => route.name === 'AppManagerUpdateForm')
 const pictureSrc = computed(() => picture.value ? window.URL.createObjectURL(new Blob([picture.value])) : '')
 
+onBeforeMount(async () => {
+  if (isUpdateForm.value) {
+    const { id } = route.params
+    await managerStore.loadManager(id as string)
+  }
+  initData()
+})
+
 const initData = () => {
   // update mode
   if (isUpdateForm.value) {
-    helloScriptList.value = managerStore.Manager.helloScriptList.map(script => {
+    picture.value = managerStore.Manager.main ? new File([managerStore.Manager.main], managerStore.Manager.mainImg || '') : null
+    name.value = managerStore.Manager.name
+    age.value = managerStore.Manager.age
+    color.value = managerStore.Manager.color
+    helloScriptList.value = managerStore.Manager.helloScriptList.map((script: ManagerScriptForm) => {
       return {
-        soundFile: script.soundFile,
+        soundFile: script.soundFile ? new File([script.soundFile], script.sound || '') : undefined,
         sound: script.sound,
         message: script.message,
-        soundFileName: script.sound,
         status: 'UPDATE',
       } as ManagerScriptForm
     })
-    scheduleScriptList.value = managerStore.Manager.scheduleScriptList.map(script => {
+    scheduleScriptList.value = managerStore.Manager.scheduleScriptList.map((script: ManagerScriptForm) => {
       return {
-        soundFile: script.soundFile,
+        soundFile: script.soundFile ? new File([script.soundFile], script.sound || '') : undefined,
         sound: script.sound,
         message: script.message,
-        soundFileName: script.sound,
         status: 'UPDATE',
       } as ManagerScriptForm
     })
-    clickScriptList.value = managerStore.Manager.clickScriptList.map(script => {
+    clickScriptList.value = managerStore.Manager.clickScriptList.map((script: ManagerScriptForm) => {
       return {
-        soundFile: script.soundFile,
+        soundFile: script.soundFile ? new File([script.soundFile], script.sound || '') : undefined,
         sound: script.sound,
         message: script.message,
-        soundFileName: script.sound,
         status: 'UPDATE',
       } as ManagerScriptForm
     })
+    birthdayScript.value = {
+      soundFile: managerStore.Manager.birthdayScript.soundFile ? new File([managerStore.Manager.birthdayScript.soundFile], managerStore.Manager.birthdayScript.sound || '') : undefined,
+      sound: managerStore.Manager.birthdayScript.sound,
+      message: managerStore.Manager.birthdayScript.message,
+      status: 'UPDATE',
+    } as ManagerScriptForm
   } else {
-    // create form
+    picture.value = null
+    name.value = ''
+    age.value = 0
+    color.value = ''
+    helloScriptList.value = []
+    scheduleScriptList.value = []
+    clickScriptList.value = []
+    birthdayScript.value = {
+      message: '',
+      status: 'CREATE',
+    } as ManagerScriptForm
   }
 }
 
@@ -401,18 +442,16 @@ const onClickRemoveScheduleScriptBtn = (index: number) => {
 
 const onSubmit = async () => {
   try {
-    console.log('submit')
     isSaveBtnLoading.value = true
+    if (!picture.value) {
+      throw new Error('No picture')
+    }
     // update mode
     if (isUpdateForm.value) {
-      managerStore.updateManager({
-
-      } as ManagerUpdateForm)
-    } else {
-      await managerStore.createManager({
+      await managerStore.updateManager({
+        id: managerStore.Manager.id,
         mainImg: new Int8Array(await picture.value.arrayBuffer()),
         mainImgName: picture.value.name,
-        // mainImg: picture.value,
         name: name.value,
         age: age.value,
         color: color.value,
@@ -423,7 +462,6 @@ const onSubmit = async () => {
             sound:  script.sound,
             status:  script.status,
             soundFile: script.soundFile ? new Int8Array(await (script.soundFile as File).arrayBuffer()) : undefined
-            // soundFile: script.soundFile,
           }
         })),
         clickScriptList: await Promise.all(clickScriptList.value.map(async script => {
@@ -432,7 +470,6 @@ const onSubmit = async () => {
             sound:  script.sound,
             status:  script.status,
             soundFile: script.soundFile ? new Int8Array(await (script.soundFile as File).arrayBuffer()) : undefined
-            // soundFile: script.soundFile,
           }
         })),
         scheduleScriptList: await Promise.all(scheduleScriptList.value.map(async script => {
@@ -441,7 +478,45 @@ const onSubmit = async () => {
             sound:  script.sound,
             status:  script.status,
             soundFile: script.soundFile ? new Int8Array(await (script.soundFile as File).arrayBuffer()) : undefined,
-            // soundFile: script.soundFile,
+          }
+        })),
+        birthdayScript: {
+          message: birthdayScript.value.message,
+          sound:  birthdayScript.value.sound,
+          soundFile: birthdayScript.value.soundFile ? new Int8Array(await (birthdayScript.value.soundFile as File).arrayBuffer()) : undefined,
+          status:  birthdayScript.value.status,
+        },
+      } as ManagerUpdateForm)
+    } else {
+      await managerStore.createManager({
+        mainImg: new Int8Array(await picture.value.arrayBuffer()),
+        mainImgName: picture.value.name,
+        name: name.value,
+        age: age.value,
+        color: color.value,
+        gender: 'unknown',
+        helloScriptList: await Promise.all(helloScriptList.value.map(async script => {
+          return {
+            message: script.message,
+            sound:  script.sound,
+            status:  script.status,
+            soundFile: script.soundFile ? new Int8Array(await (script.soundFile as File).arrayBuffer()) : undefined
+          }
+        })),
+        clickScriptList: await Promise.all(clickScriptList.value.map(async script => {
+          return {
+            message: script.message,
+            sound:  script.sound,
+            status:  script.status,
+            soundFile: script.soundFile ? new Int8Array(await (script.soundFile as File).arrayBuffer()) : undefined
+          }
+        })),
+        scheduleScriptList: await Promise.all(scheduleScriptList.value.map(async script => {
+          return {
+            message: script.message,
+            sound:  script.sound,
+            status:  script.status,
+            soundFile: script.soundFile ? new Int8Array(await (script.soundFile as File).arrayBuffer()) : undefined,
           }
         })),
         birthdayScript: {
@@ -452,10 +527,13 @@ const onSubmit = async () => {
         },
       } as ManagerCreateForm)
     }
+    /* Notify */
     $q.notify({
       message: 'success to save',
       position: 'bottom-right'
     })
+    /* Redirect to main */
+    await router.push({ name: 'AppManagerMain' })
   } catch (e) {
     console.error(e)
     $q.notify({

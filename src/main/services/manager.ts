@@ -5,7 +5,6 @@ import { Manager } from '../types/managers'
 import { ManagerScript } from '../types/managers/script'
 import { DeleteCountResult, InsertOneResult, UpdateCountResult } from '../types/server'
 import { v4 } from 'uuid'
-import fileType from 'file-type'
 
 const setMessageSound = async (managerId: string, script: ManagerScript) => {
   const filePath = `${app.getPath('documents')}/${app.getName()}/${managerId}`
@@ -75,7 +74,9 @@ const _createManagerScript = async (id: string, payload: any) => {
     console.log('payload', payload)
     const path = `${app.getPath('documents')}/${app.getName()}/${id}/audio`
     if (payload.soundFile) {
-      await fs.writeFile(`${path}/${payload.sound}`, payload.soundFile)
+      const soundName = `${v4()}.${payload.sound.split('.')[1]}`
+      await fs.writeFile(`${path}/${soundName}`, payload.soundFile)
+      payload.sound = soundName
     }
 
     return {
@@ -102,7 +103,7 @@ export const createManager = async (event: IpcMainInvokeEvent | null, payload: a
     const scheduleScriptList: ManagerScript[] = await Promise.all(payload.scheduleScriptList.map(async (script: any) => await _createManagerScript(newId, script)))
     const birthdayScript: ManagerScript = await _createManagerScript(newId, payload.birthdayScript)
     /* Create main img */
-    await fs.writeFile(`${path}/${payload.mainImgName}`, payload.mainImg)
+    await fs.writeFile(`${path}/main.${payload.mainImgName.split('.')[1]}`, payload.mainImg)
     /* Create manager.json */
     await fs.writeFile(`${path}/manager.json`, JSON.stringify({
       id: newId,
@@ -147,7 +148,9 @@ export const updateManager = async (event: IpcMainInvokeEvent | null, payload: a
 export const deleteManager = async (event: IpcMainInvokeEvent | null, payload: string) => {
   try {
     const filePath = `${app.getPath('documents')}/${app.getName()}/${payload}`
-    await fs.rmdir(filePath)
+    await fs.rmdir(filePath, {
+      recursive: true,
+    })
 
     return {
       deletedCount: 1,

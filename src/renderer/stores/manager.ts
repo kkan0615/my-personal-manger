@@ -1,11 +1,17 @@
 import { defineStore } from 'pinia'
 import { IpcRendererEvent } from 'electron'
 import { ipcRenderer } from '@/utils/electron'
-import { DEFAULT_MANAGER_MESSAGE_TIMEOUT, ManagerCreateForm, ManagerUpdateForm } from '@/types/managers'
+import { DEFAULT_MANAGER_MESSAGE_TIMEOUT, ManagerCreateForm, ManagerInfo, ManagerUpdateForm } from '@/types/managers'
 import { getRandElInArr } from '@/utils/commons'
 import { useSettingStore } from '@/stores/setting'
 import { ManagerConfig } from '@/types/managers/config'
-import { InsertOneResult, SelectListResult } from '@/types/commons/server'
+import {
+  DeleteCountResult,
+  InsertOneResult,
+  SelectListResult,
+  SelectOneResult,
+  UpdateCountResult
+} from '@/types/commons/server'
 import { Manager } from '@main/types/managers'
 
 export interface ManagerState {
@@ -283,8 +289,17 @@ export const useManagerStore = defineStore('manager', {
     /**
      * Load Manager
      */
-    loadManager () {
-      this.manager = {}
+    async loadManager (payload: string) {
+      try {
+        const res = await ipcRenderer.invoke('find-manager-by-id', payload) as SelectOneResult<ManagerInfo>
+        if (!res.data) {
+          throw new Error('No data')
+        }
+        this.manager = res.data
+      } catch (e) {
+        console.error(e)
+        throw e
+      }
     },
     /**
      * Reset Manager
@@ -312,15 +327,33 @@ export const useManagerStore = defineStore('manager', {
      * Update Manager by id
      * @param payload - update form
      */
-    updateManager (payload: ManagerUpdateForm) {
-      return 0
+    async updateManager (payload: ManagerUpdateForm) {
+      try {
+        const res = await ipcRenderer.invoke('update-manager', payload) as UpdateCountResult
+        if (!res.updatedCount) {
+          throw new Error('No updated count')
+        }
+        return res.updatedCount
+      } catch (e) {
+        console.error(e)
+        throw e
+      }
     },
     /**
      * Delete Manager by id
      * @param payload - target id
      */
-    deleteManager (payload: string) {
-      return 0
+    async deleteManager (payload: string) {
+      try {
+        const res = await ipcRenderer.invoke('delete-manager', payload) as DeleteCountResult
+        if (!res.deletedCount) {
+          throw new Error('No deleted count')
+        }
+        return res.deletedCount
+      } catch (e) {
+        console.error(e)
+        throw e
+      }
     },
     /**
      * Change current manager

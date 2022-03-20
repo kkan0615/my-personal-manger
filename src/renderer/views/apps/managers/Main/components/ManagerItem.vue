@@ -1,6 +1,6 @@
 <template>
   <q-card
-    @click="onClickCard"
+    @click.stop="onClickCard"
   >
     <q-dialog
       v-model="isOpenDetail"

@@ -28,7 +28,9 @@ export type ManagerCreateForm = Omit<Manager, 'id' | 'mainImg'> & {
   clickScriptList: ManagerScriptForm[]
 }
 
-export type ManagerUpdateForm = Manager & {
+export type ManagerUpdateForm = Omit<Manager, 'mainImg'> & {
+  mainImg: File | ArrayBuffer
+  mainImgName: string
   birthdayScript: ManagerScriptForm
   helloScriptList: ManagerScriptForm[]
   scheduleScriptList: ManagerScriptForm[]
