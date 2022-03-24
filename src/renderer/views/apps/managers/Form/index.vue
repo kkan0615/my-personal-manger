@@ -334,7 +334,7 @@ const managerStore = useManagerStore()
 const isSaveBtnLoading = ref(false)
 const picture = ref<File | null>(null)
 const name = ref('')
-const color = ref<string | null>(null)
+const color = ref<string | undefined>(undefined)
 const age = ref(0)
 const birthdayScript = ref<ManagerScriptForm>({
   message: '',

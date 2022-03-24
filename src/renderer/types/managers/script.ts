@@ -1,5 +1,5 @@
 export interface ManagerScript {
-  soundFile?: File | ArrayBuffer // Buffer | File | Blob
+  soundFile?: File | ArrayBuffer | any // Buffer | File | Blob
   sound?: string | null
   message: string
 }
