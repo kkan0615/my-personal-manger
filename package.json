@@ -3,7 +3,7 @@
   "private": true,
   "author": "Youngjin Kwak",
   "description": "Create your personal manager",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "src/main/main.js",
   "scripts": {
     "vite:dev": "vite",
@@ -49,6 +49,15 @@
     "files": [
       "dist/**/*",
       "src/main/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "./src/main/assets/",
+        "to": "assets",
+        "filter": [
+          "**/*"
+        ]
+      }
     ]
   },
   "dependencies": {
