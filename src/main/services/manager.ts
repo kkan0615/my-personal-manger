@@ -1,10 +1,42 @@
 import { app, IpcMainInvokeEvent } from 'electron'
 import fs from 'fs/promises'
+import unFs from 'fs'
+import unZipper from 'unzipper'
 import { electronStore } from '../store'
 import { Manager } from '../types/managers'
 import { ManagerScript } from '../types/managers/script'
 import { DeleteCountResult, InsertOneResult, UpdateCountResult } from '../types/server'
 import { v4 } from 'uuid'
+import isDev from 'electron-is-dev'
+import path from 'path'
+
+export const initManager = async () => {
+  try {
+    const docDirPath = `${app.getPath('documents')}/${app.getName()}`
+    await fs.mkdir(docDirPath)
+  } catch (e:any) {
+    if (e.code !== 'EEXIST')
+      console.error(e)
+  }
+
+  try {
+    const docDirPath = `${app.getPath('documents')}/${app.getName()}`
+    const defaultDirPath = `${docDirPath}/default`
+    await fs.access(defaultDirPath)
+  } catch (e) {
+    if (e) {
+      const docDirPath = `${app.getPath('documents')}/${app.getName()}`
+      const defaultDirPath = `${docDirPath}/default`
+      /* create directory */
+      const defaultZip = isDev
+        ? path.join(__dirname, '..', 'assets', 'default.zip')
+        : path.join(process.resourcesPath, 'assets', 'default.zip')
+      unFs.mkdirSync(defaultDirPath)
+      unFs.createReadStream(defaultZip)
+        .pipe(unZipper.Extract({ path: defaultDirPath }))
+    }
+  }
+}
 
 const setMessageSound = async (managerId: string, script: ManagerScript) => {
   const filePath = `${app.getPath('documents')}/${app.getName()}/${managerId}`

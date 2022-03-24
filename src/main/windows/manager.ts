@@ -39,7 +39,6 @@ export const createManagerWindow = () => {
       managerWindow.webContents.send('redirect-to-manager')
     }
   })
-  // managerWindow.maximize()
   // if (isDev) {
   managerWindow.webContents.openDevTools()
   // }

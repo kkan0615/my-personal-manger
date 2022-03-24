@@ -35,9 +35,9 @@ export const createScheduleWindow = () => {
       scheduleWindow.webContents.send('redirect-to-schedule')
     }
   })
-  // if (isDev) {
-  scheduleWindow.webContents.openDevTools()
-  // }
+  if (isDev) {
+    scheduleWindow.webContents.openDevTools()
+  }
 
   scheduleWindow.on('closed', () => {
     scheduleWindow = undefined
