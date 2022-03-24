@@ -103,6 +103,19 @@
             Set manager
           </q-tooltip>
         </q-btn>
+        <q-btn
+          v-if="manager.id !== 'default'"
+          round
+          :disable="manager.id === 'default' || managerStore.CurrentManger.id === manager.id"
+          color="negative"
+          icon="delete"
+          size="sm"
+          @click.stop="onClickDeleteBtn"
+        >
+          <q-tooltip>
+            Delete manager
+          </q-tooltip>
+        </q-btn>
       </div>
     </q-card-section>
   </q-card>
@@ -150,6 +163,27 @@ const onClickSetManagerBtn = async () => {
     if (props.manager) {
       await managerStore.changeCurrentManager(props.manager.id)
       await managerStore.loadCurrentManager()
+      $q.notify({
+        message: 'Success to change current manager',
+        position: 'bottom-right'
+      })
+    }
+  } catch (e) {
+    console.error(e)
+    $q.notify({
+      icon: 'report_problem',
+      color: 'negative',
+      message: 'Fail to change',
+      position: 'bottom-right'
+    })
+  }
+}
+
+const onClickDeleteBtn = async () => {
+  try {
+    if (props.manager) {
+      await managerStore.deleteManager(props.manager.id)
+      await managerStore.loadManagerList({})
       $q.notify({
         message: 'Success to change current manager',
         position: 'bottom-right'

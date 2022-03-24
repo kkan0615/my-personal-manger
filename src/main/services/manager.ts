@@ -59,7 +59,6 @@ export const findManagerById = async (event: IpcMainInvokeEvent | null, payload:
   managerJson.helloScriptList = await Promise.all(managerJson.helloScriptList.map(async (script) => setMessageSound(payload, script)))
   managerJson.scheduleScriptList = await Promise.all(managerJson.scheduleScriptList.map(async (script) => setMessageSound(payload, script)))
   managerJson.clickScriptList = await Promise.all(managerJson.clickScriptList.map(async (script) => setMessageSound(payload, script)))
-  console.log(await fs.readFile(`${filePath}/${managerJson.mainImg}`),)
   /* Return */
   return {
     data: {
@@ -71,7 +70,6 @@ export const findManagerById = async (event: IpcMainInvokeEvent | null, payload:
 
 const _createManagerScript = async (id: string, payload: any) => {
   try {
-    console.log('payload', payload)
     const path = `${app.getPath('documents')}/${app.getName()}/${id}/audio`
     if (payload.soundFile) {
       const soundName = `${v4()}.${payload.sound.split('.')[1]}`

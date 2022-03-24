@@ -17,7 +17,7 @@ const router = useRouter()
 settingStore.loadAppSetting()
 
 const redirectToApp = () => {
-  router.push({ name: 'AppHome' })
+  router.push({ name: 'AppManagerMain' })
 }
 
 const redirectToManger = () => {

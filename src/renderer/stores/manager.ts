@@ -3,7 +3,6 @@ import { IpcRendererEvent } from 'electron'
 import { ipcRenderer } from '@/utils/electron'
 import { DEFAULT_MANAGER_MESSAGE_TIMEOUT, ManagerCreateForm, ManagerInfo, ManagerUpdateForm } from '@/types/managers'
 import { getRandElInArr } from '@/utils/commons'
-import { useSettingStore } from '@/stores/setting'
 import { ManagerConfig } from '@/types/managers/config'
 import {
   DeleteCountResult,

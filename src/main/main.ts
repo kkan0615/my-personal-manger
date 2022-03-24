@@ -23,6 +23,7 @@ import {
 } from './services/scehdule'
 import { destroyScheduleWindow, openScheduleWindow } from './windows/schedule'
 import { createTray } from './windows/tray'
+import { initMasterConfig, loadMasterConfig, updateMasterConfig } from './services/master'
 
 const checkMangerDir = async () => {
   try {
@@ -37,6 +38,7 @@ const checkMangerDir = async () => {
 app.whenReady()
   .then(async () => {
     await checkMangerDir()
+    initMasterConfig()
     if (!electronStore.get('currentManagerId')) {
       electronStore.set('currentManagerId', 'default')
     }
@@ -70,6 +72,8 @@ app.whenReady()
     ipcMain.handle('update-schedule', updateSchedule)
     ipcMain.handle('delete-schedule', deleteSchedule)
     ipcMain.handle('delete-schedule-permanently', deleteSchedulePermanently)
+    ipcMain.handle('load-master-config', loadMasterConfig)
+    ipcMain.handle('update-master-config', updateMasterConfig)
     ipcMain.on('open-app-window', openAppWindow)
     ipcMain.on('destroy-app-window', destroyAppWindow)
     ipcMain.on('open-manager-window', openManagerWindow)

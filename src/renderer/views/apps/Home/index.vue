@@ -1,12 +1,6 @@
 <template>
   <div>
-    Home !
-    <q-btn
-      color="primary"
-      @click="onClickTestBtn"
-    >
-      test
-    </q-btn>
+    <!--  -->
   </div>
 </template>
 <script lang="ts">
