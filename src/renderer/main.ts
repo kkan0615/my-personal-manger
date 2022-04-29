@@ -8,6 +8,8 @@ import '@/router/beforeRoute'
 import '@/styles/index.scss'
 /* quasar */
 import 'quasar/src/css/index.sass'
+/* Animate css  */
+// @ref: https://animate.style/
 import 'animate.css'
 // Import icon libraries
 import '@quasar/extras/material-icons/material-icons.css'
@@ -17,6 +19,7 @@ import '@quasar/extras/material-icons-round/material-icons-round.css'
 /* Font awesome v6 */
 import '@/utils/libs/fontAwesomeIcon'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+/* Dayjs */
 import { initDayjsPlugins } from '@/utils/libs/dayjs'
 initDayjsPlugins()
 
